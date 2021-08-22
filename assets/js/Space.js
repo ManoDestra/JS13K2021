@@ -27,8 +27,18 @@ const SpaceGame = (() => {
 		for (let i = 0; i < COUNT; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
+			context.strokeStyle = GREEN;
 			context.fillStyle = LIGHT;
-			context.fillRect(x, y, 2, 2);
+
+			/*
+			context.beginPath();
+			context.arc(x, y, 10, 0, Math.PI * 2);
+			//context.stroke();
+			context.fill();
+			context.closePath();
+			*/
+
+			context.fillRect(x, y, 3, 3);
 		}
 	}
 
@@ -36,13 +46,13 @@ const SpaceGame = (() => {
 		context.fillStyle = DARK;
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
+		randomStars();
+
 		context.fillStyle = GREEN;
 		context.font = FONT;
 		//context.fillText('Frame: ' + instant.frame, 50, 50);
-		context.fillText('FPS: ' + instant.fps().toFixed(3), 20, 100);
 		//context.fillText('Random: ' + Math.random(), 50, 100);
-
-		randomStars();
+		context.fillText('FPS: ' + instant.fps().toFixed(3), 20, canvas.height - 20);
 	}
 
 	return {
