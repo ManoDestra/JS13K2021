@@ -99,7 +99,8 @@ Nucleus.Clock = (() => {
 			return this.tick - this.lastTick;
 		},
 		fps() {
-			return 1000 / this.elapsed();
+			const e = this.elapsed();
+			return e > 0 ? (1000 / e) : 60;
 		}
 	};
 	let hook = undefined;

@@ -25,5 +25,5 @@ Nucleus.Clock.start(instant => {
 	context.fillStyle = COLOR_FG;
 	context.font = FONT;
 	//const fps = parseInt(1000 / instant.elapsed);
-	context.fillText(parseInt(instant.fps()), 50, 50);
+	context.fillText('FPS: ' + instant.fps().toFixed(3), 50, 50);
 });
