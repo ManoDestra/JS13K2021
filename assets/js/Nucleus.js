@@ -1,4 +1,4 @@
-const Nucleus = (function() {
+const Nucleus = (() => {
 	function $(selector, root) {
 		const rootElement = typeof(root) === 'string' ? $(root) : root;
 		const rootToUse = rootElement ?? document;
@@ -10,7 +10,7 @@ const Nucleus = (function() {
 	};
 })();
 
-Nucleus.Model = (function() {
+Nucleus.Model = (() => {
 	function isObject(obj) {
 		return typeof(obj) === 'object';
 	}
@@ -88,14 +88,19 @@ Nucleus.Model = (function() {
 	};
 })();
 
-Nucleus.Clock = (function() {
+Nucleus.Clock = (() => {
 	const DEFAULT_FRAME_RATE = 30;
 	let active = false;
 	const instant = {
 		frame: 0,
 		tick: 0,
 		lastTick: 0,
-		elapsed: 0
+		elapsed() {
+			return this.tick - this.lastTick;
+		},
+		fps() {
+			return 1000 / this.elapsed();
+		}
 	};
 	let hook = undefined;
 
@@ -145,7 +150,6 @@ Nucleus.Clock = (function() {
 		if (active) {
 			instant.lastTick = instant.tick;
 			instant.tick = tick;
-			instant.elapsed = instant.tick - instant.lastTick;
 			instant.frame = raf(loop);
 			if (hook) {
 				hook(instant);
@@ -169,7 +173,7 @@ Nucleus.Clock = (function() {
 	};
 })();
 
-Nucleus.KeyInputHandler = (function() {
+Nucleus.KeyInputHandler = (() => {
 	let keyBindings = null;
 
 	function handleKeyDown(e) {
@@ -197,7 +201,7 @@ Nucleus.KeyInputHandler = (function() {
 	}
 
 	function checkKey(key, ignoreCase) {
-		const ignoreCaseToUse = ignoreCase === undefined ? true : ignoreCase;
+		const ignoreCaseToUse = !!ignoreCase || ignoreCase;
 		return keyBindings.filter(function(element) {
 			return element != undefined && (ignoreCaseToUse ? element.key.toLowerCase() === key.toLowerCase() : element.key == key);
 		}).length > 0;
@@ -226,7 +230,7 @@ Nucleus.KeyInputHandler = (function() {
 	};
 })();
 
-Nucleus.MouseInputHandler = (function() {
+Nucleus.MouseInputHandler = (() => {
 	// TODO: work on scroll offset.
 	// TODO: implement touch handler.
 
@@ -310,7 +314,7 @@ Nucleus.MouseInputHandler = (function() {
 		return {
 			x : event.clientX - canvas.offsetLeft,
 			y : event.clientY - canvas.offsetTop,
-			toString : function() { return '[' + this.x + ', ' + this.y + ']'; }
+			toString : () => { return '[' + this.x + ', ' + this.y + ']'; }
 		};
 	}
 
