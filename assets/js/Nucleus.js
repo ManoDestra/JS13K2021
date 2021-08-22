@@ -88,6 +88,87 @@ Nucleus.Model = (function() {
 	};
 })();
 
+Nucleus.Clock = (function() {
+	const DEFAULT_FRAME_RATE = 30;
+	let active = false;
+	const instant = {
+		frame: 0,
+		tick: 0,
+		lastTick: 0,
+		elapsed: 0
+	};
+	let hook = undefined;
+
+	function raf(e) {
+		const func = window.requestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			function(e) {
+				return setTimeout(e, parseInt(1000 / DEFAULT_FRAME_RATE));
+			};
+		return func(e);
+	}
+
+	function start(callback) {
+		if (!active) {
+			active = true;
+			if (callback) {
+				if (Nucleus.Model.isFunction(callback)) {
+					hook = callback;
+				} else {
+					hook = undefined;
+					console.warn('Callback Must Be A Function:', callback);
+				}
+			} else {
+				hook = undefined;
+			}
+
+			instant.lastTick = instant.tick;
+			instant.frame = raf(loop);
+			console.log('Clock Started');
+		} else {
+			console.warn('Clock Is Already Started');
+		}
+	}
+
+	function stop() {
+		if (active) {
+			active = false;
+			console.log('Clock Stopped');
+		} else {
+			console.warn('Clock Is Already Stopped');
+		}
+	}
+
+	function loop(tick) {
+		if (active) {
+			instant.lastTick = instant.tick;
+			instant.tick = tick;
+			instant.elapsed = instant.tick - instant.lastTick;
+			instant.frame = raf(loop);
+			if (hook) {
+				hook(instant);
+			}
+		}
+	}
+
+	function isActive() {
+		return active;
+	}
+
+	function getInstant() {
+		return instant;
+	}
+
+	return {
+		start,
+		stop,
+		isActive,
+		getInstant
+	};
+})();
+
 Nucleus.KeyInputHandler = (function() {
 	let keyBindings = null;
 
