@@ -18,12 +18,17 @@ const FONT = '1.2em Segoe UI';
 
 Nucleus.KeyInputHandler.start();
 
-Nucleus.Clock.start(instant => {
-	context.fillStyle = COLOR_BG;
-	context.fillRect(0, 0, canvas.width, canvas.height);
+const SpaceGame = {
+	loop(instant) {
+		context.fillStyle = COLOR_BG;
+		context.fillRect(0, 0, canvas.width, canvas.height);
 
-	context.fillStyle = COLOR_FG;
-	context.font = FONT;
-	//context.fillText('Frame: ' + instant.frame, 50, 50);
-	context.fillText('FPS: ' + instant.fps().toFixed(3), 50, 50);
-});
+		context.fillStyle = COLOR_FG;
+		context.font = FONT;
+		//context.fillText('Frame: ' + instant.frame, 50, 50);
+		context.fillText('FPS: ' + instant.fps().toFixed(3), 50, 50);
+		context.fillText('Random: ' + Math.random(), 50, 100);
+	}
+};
+
+Nucleus.Clock.start(SpaceGame.loop);

@@ -11,35 +11,8 @@ const Nucleus = (() => {
 })();
 
 Nucleus.Model = (() => {
-	function isObject(obj) {
-		return typeof(obj) === 'object';
-	}
-
-	function isNonNullObject(obj) {
-		return isObject(obj) && obj !== null;
-	}
-
 	function isFunction(obj) {
 		return typeof(obj) === 'function';
-	}
-
-	function isString(obj) {
-		return typeof(obj) === 'string';
-	}
-
-	function isNumber(obj) {
-		return typeof(obj) === 'number';
-	}
-
-	function isBoolean(obj) {
-		return typeof(obj) === 'boolean';
-	}
-
-	function isIdentifiable(objComponent) {
-		let valid = true;
-		valid = valid && isNonNullObject(objComponent);
-		valid = valid && isFunction(objComponent.getId);
-		return valid;
 	}
 
 	function getEmptyArray(size) {
@@ -74,13 +47,7 @@ Nucleus.Model = (() => {
 	}
 
 	return {
-		isObject,
-		isNonNullObject,
 		isFunction,
-		isString,
-		isNumber,
-		isBoolean,
-		isIdentifiable,
 		getEmptyArray,
 		getEmptyArray2d,
 		getEmptyArray3d,
