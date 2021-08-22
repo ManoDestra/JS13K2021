@@ -294,19 +294,6 @@ Nucleus.MouseInputHandler = (() => {
 		return null;
 	}
 
-	function toString() {
-		let out = '';
-		out += 'Inside: ' + inside + '\r\n';
-		out += 'Left Pressed: ' + leftPressed + '\r\n';
-		out += 'Right Pressed: ' + rightPressed + '\r\n';
-		out += 'Middle Pressed: ' + middlePressed + '\r\n';
-		for (let i = 0; i < positions.length; i++) {
-			out += positions[i] + '\r\n';
-		}
-
-		return out;
-	}
-
 	return {
 		start,
 		stop,
@@ -315,8 +302,7 @@ Nucleus.MouseInputHandler = (() => {
 		isRightPressed,
 		isMiddlePressed,
 		positions,
-		getCurrentPosition,
-		toString
+		getCurrentPosition
 	};
 })();
 

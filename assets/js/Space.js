@@ -21,24 +21,39 @@ const FONT = '4em Segoe UI';
 Nucleus.KeyInputHandler.start();
 
 const SpaceGame = (() => {
-	const COUNT = 250;
+	const COUNT_STARS = 250;
+	const COUNT_PLANETS = 10;
+
+	let GRADIENT_LIGHT = context.createLinearGradient(0, 0, 0, canvas.height);
+	GRADIENT_LIGHT.addColorStop(0, 'darkred');
+	GRADIENT_LIGHT.addColorStop(0.5, GREEN);
+	GRADIENT_LIGHT.addColorStop(1, 'darkred');
 
 	function randomStars() {
-		for (let i = 0; i < COUNT; i++) {
+		context.strokeStyle = GREEN;
+		context.fillStyle = LIGHT;
+		for (let i = 0; i < COUNT_STARS; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
-			context.strokeStyle = GREEN;
-			context.fillStyle = LIGHT;
+			context.fillRect(x, y, 3, 3);
+		}
+	}
 
-			/*
+	function randomPlanets() {
+		for (let i = 0; i < COUNT_PLANETS; i++) {
+			const x = parseInt(Math.random() * canvas.width);
+			const y = parseInt(Math.random() * canvas.height);
+			const r = parseInt(Math.random() * 30) + 20;
+			const g = context.createLinearGradient(x + r, y, x + r, y + (r * 1));
+			g.addColorStop(0, 'darkred');
+			g.addColorStop(0.5, GREEN);
+			g.addColorStop(1, 'darkred');
+			context.fillStyle = g;
+
 			context.beginPath();
-			context.arc(x, y, 10, 0, Math.PI * 2);
-			//context.stroke();
+			context.arc(x, y, r, 0, Math.PI * 2);
 			context.fill();
 			context.closePath();
-			*/
-
-			context.fillRect(x, y, 3, 3);
 		}
 	}
 
@@ -47,6 +62,7 @@ const SpaceGame = (() => {
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
 		randomStars();
+		randomPlanets();
 
 		context.fillStyle = GREEN;
 		context.font = FONT;
@@ -56,7 +72,6 @@ const SpaceGame = (() => {
 	}
 
 	return {
-		randomStars,
 		loop
 	};
 })();
