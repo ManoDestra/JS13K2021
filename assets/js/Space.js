@@ -15,7 +15,7 @@ Nucleus.KeyInputHandler.start();
 
 const SpaceGame = (() => {
 	const COUNT_STARS = 250;
-	const COUNT_PLANETS = 10;
+	const COUNT_PLANETS = 7;
 	let patternMoon = null;
 
 	async function init() {
@@ -29,6 +29,11 @@ const SpaceGame = (() => {
 	function onResize() {
 		canvas.width = document.body.clientWidth;
 		canvas.height = document.body.clientHeight;
+	}
+
+	function clearDisplay() {
+		context.fillStyle = DARK;
+		context.fillRect(0, 0, canvas.width, canvas.height);
 	}
 
 	function drawStars() {
@@ -46,7 +51,7 @@ const SpaceGame = (() => {
 		for (let i = 0; i < COUNT_PLANETS; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
-			const r = parseInt(Math.random() * 30) + 20;
+			const r = parseInt(Math.random() * 50) + 20;
 			const g = context.createLinearGradient(x + r, y, x + r, y + (r * 1));
 			g.addColorStop(0, '#333');
 			g.addColorStop(0.5, '#fff');
@@ -63,18 +68,17 @@ const SpaceGame = (() => {
 		}
 	}
 
-	function loop(instant) {
-		context.fillStyle = DARK;
-		context.fillRect(0, 0, canvas.width, canvas.height);
-
-		drawStars();
-		drawPlanets();
-
+	function drawHud(instant) {
 		context.fillStyle = GREEN;
 		context.font = FONT;
-		//context.fillText('Frame: ' + instant.frame, 50, 50);
-		//context.fillText('Random: ' + Math.random(), 50, 100);
 		context.fillText('FPS: ' + instant.fps().toFixed(3), 20, canvas.height - 20);
+	}
+
+	function loop(instant) {
+		clearDisplay();
+		drawStars();
+		drawPlanets();
+		drawHud(instant);
 	}
 
 	return {
