@@ -3,13 +3,6 @@ canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
 //canvas.onclick = e => canvas.requestFullscreen();
 
-function handleResize(e) {
-	canvas.width = document.body.clientWidth;
-	canvas.height = document.body.clientHeight;
-}
-
-window.onresize = e => handleResize();
-
 const context = canvas.getContext('2d');
 
 const COLOR_FG = '#0a0';
@@ -28,6 +21,11 @@ const SpaceGame = (() => {
 	GRADIENT_LIGHT.addColorStop(0, 'darkred');
 	GRADIENT_LIGHT.addColorStop(0.5, GREEN);
 	GRADIENT_LIGHT.addColorStop(1, 'darkred');
+
+	function onResize() {
+		canvas.width = document.body.clientWidth;
+		canvas.height = document.body.clientHeight;
+	}
 
 	function randomStars() {
 		context.strokeStyle = GREEN;
@@ -72,8 +70,10 @@ const SpaceGame = (() => {
 	}
 
 	return {
+		onResize,
 		loop
 	};
 })();
 
+window.onresize = SpaceGame.onResize;
 Nucleus.Clock.start(SpaceGame.loop);
