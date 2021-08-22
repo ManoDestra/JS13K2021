@@ -15,7 +15,7 @@ Nucleus.KeyInputHandler.start();
 
 const SpaceGame = (() => {
 	const COUNT_STARS = 250;
-	const COUNT_PLANETS = 7;
+	const COUNT_PLANETS = 5;
 	let patternMoon = null;
 
 	async function init() {
@@ -42,7 +42,7 @@ const SpaceGame = (() => {
 		for (let i = 0; i < COUNT_STARS; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
-			const size = parseInt(Math.random() * 3) + 1;
+			const size = parseInt(Math.random() * 4) + 1;
 			context.fillRect(x, y, size, size);
 		}
 	}
