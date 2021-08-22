@@ -16,37 +16,45 @@ Nucleus.KeyInputHandler.start();
 const SpaceGame = (() => {
 	const COUNT_STARS = 250;
 	const COUNT_PLANETS = 10;
+	let patternMoon = null;
 
-	let GRADIENT_LIGHT = context.createLinearGradient(0, 0, 0, canvas.height);
-	GRADIENT_LIGHT.addColorStop(0, 'darkred');
-	GRADIENT_LIGHT.addColorStop(0.5, GREEN);
-	GRADIENT_LIGHT.addColorStop(1, 'darkred');
+	async function init() {
+		const moon = new Image();
+		moon.src = 'assets/images/Moon01.jpg';
+		await moon.decode();
+		this.patternMoon = context.createPattern(moon, 'repeat');
+		console.log(this.patternMoon);
+	}
 
 	function onResize() {
 		canvas.width = document.body.clientWidth;
 		canvas.height = document.body.clientHeight;
 	}
 
-	function randomStars() {
+	function drawStars() {
 		context.strokeStyle = GREEN;
 		context.fillStyle = LIGHT;
 		for (let i = 0; i < COUNT_STARS; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
-			context.fillRect(x, y, 3, 3);
+			const size = parseInt(Math.random() * 3) + 1;
+			context.fillRect(x, y, size, size);
 		}
 	}
 
-	function randomPlanets() {
+	function drawPlanets() {
 		for (let i = 0; i < COUNT_PLANETS; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
 			const r = parseInt(Math.random() * 30) + 20;
 			const g = context.createLinearGradient(x + r, y, x + r, y + (r * 1));
-			g.addColorStop(0, 'darkred');
-			g.addColorStop(0.5, GREEN);
-			g.addColorStop(1, 'darkred');
-			context.fillStyle = g;
+			g.addColorStop(0, '#333');
+			g.addColorStop(0.5, '#fff');
+			g.addColorStop(1, '#333');
+			context.strokeStyle = LIGHT;
+			//context.fillStyle = g;
+			context.fillStyle = this.patternMoon;
+			//context.fillStyle = 'url(assets/images/Moon01.jpg)';
 
 			context.beginPath();
 			context.arc(x, y, r, 0, Math.PI * 2);
@@ -59,8 +67,8 @@ const SpaceGame = (() => {
 		context.fillStyle = DARK;
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
-		randomStars();
-		randomPlanets();
+		drawStars();
+		drawPlanets();
 
 		context.fillStyle = GREEN;
 		context.font = FONT;
@@ -70,10 +78,17 @@ const SpaceGame = (() => {
 	}
 
 	return {
+		init,
 		onResize,
 		loop
 	};
 })();
 
-window.onresize = SpaceGame.onResize;
-Nucleus.Clock.start(SpaceGame.loop);
+(async () => {
+	await SpaceGame.init();
+	window.onresize = SpaceGame.onResize;
+	SpaceGame.loop({
+		fps: () => 60
+	});
+	//Nucleus.Clock.start(SpaceGame.loop);
+})();
