@@ -112,6 +112,7 @@ const SpaceGame = (() => {
 	const playingScreen = new PlayingScreen();
 	const Screens = [startScreen, menuScreen, skillsScreen, playingScreen];
 	console.log(Screens);
+
 	Screens[GameScreen.START].init();
 	Screens[GameScreen.MENU].init();
 	Screens[GameScreen.SKILLS].init();
@@ -122,6 +123,12 @@ const SpaceGame = (() => {
 
 		function getScreenState() {
 			return current;
+		}
+
+		function update(instant) {
+		}
+
+		function draw(instant) {
 		}
 
 		return {
