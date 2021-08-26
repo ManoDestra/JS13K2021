@@ -159,11 +159,7 @@ const SpaceGame = (() => {
 	console.log(SpaceState);
 
 	async function init() {
-		const moon = new Image();
-		moon.src = 'assets/images/Moon01.jpg';
-		await moon.decode();
-		this.patternMoon = context.createPattern(moon, 'repeat');
-		console.log('Moon Pattern:', this.patternMoon);
+
 	}
 
 	function onResize() {
