@@ -18,12 +18,115 @@ const SpaceGame = (() => {
 	const COUNT_PLANETS = 5;
 	let patternMoon = null;
 
+	class GameComponent {
+		constructor() {
+		}
+
+		update(instant) {
+		}
+	}
+
+	class DrawableGameComponent extends GameComponent {
+		constructor() {
+			super();
+		}
+
+		draw(instant) {
+		}
+	}
+
+	class Screen extends DrawableGameComponent {
+		constructor() {
+			super();
+		}
+
+		init() {
+		}
+
+		term() {
+		}
+	}
+
+	class StartScreen extends Screen {
+		constructor() {
+			super();
+		}
+
+		init() {
+			console.log('Initializing Start Screen...')
+		}
+	}
+
+	class PlayingScreen extends Screen {
+		constructor() {
+			super();
+		}
+
+		init() {
+			console.log('Initializing Playing Screen...')
+		}
+	}
+
+	const ScreenState = {
+		START: 0,
+		PLAYING: 1
+	};
+
+	const Screens = [new StartScreen(), new PlayingScreen()];
+	console.log(Screens);
+	Screens[ScreenState.START].init();
+	Screens[ScreenState.PLAYING].init();
+
+	Object.freeze(ScreenState);
+	console.log(ScreenState);
+
+	const ScreenManager = (() => {
+		let current = ScreenState.START;
+
+		function getScreenState() {
+			return current;
+		}
+
+		return {
+			getScreenState
+		};
+	})();
+	console.log(ScreenManager);
+	console.log("Manager: Screen State: " + ScreenManager.getScreenState());
+
+	const GameState = {
+		START: 0,
+		INTRO: 1,
+		PLAYING: 2,
+		PAUSED: 3,
+		DEATH: 4,
+		GAME_OVER: 5
+	};
+	Object.freeze(GameState);
+	console.log(GameState);
+
+	const SpaceState = {
+		state: GameState.START,
+		level: 1,
+		player: {
+			health: 100,
+			shield: 0,
+			xp: 0
+		},
+		skills: {
+			health: 100,
+			shield: 0,
+			xp: 0
+		}
+	};
+	console.log(SpaceState);
+
 	async function init() {
 		const moon = new Image();
 		moon.src = 'assets/images/Moon01.jpg';
 		await moon.decode();
 		this.patternMoon = context.createPattern(moon, 'repeat');
-		console.log(this.patternMoon);
+		console.log('Moon Pattern:', this.patternMoon);
 	}
 
 	function onResize() {
@@ -74,11 +177,19 @@ const SpaceGame = (() => {
 		context.fillText('FPS: ' + instant.fps().toFixed(3), 20, canvas.height - 20);
 	}
 
-	function loop(instant) {
+	function update(instant) {
+	}
+
+	function draw(instant) {
 		clearDisplay();
 		drawStars();
 		drawPlanets();
 		drawHud(instant);
+	}
+
+	function loop(instant) {
+		update(instant);
+		draw(instant);
 	}
 
 	return {
