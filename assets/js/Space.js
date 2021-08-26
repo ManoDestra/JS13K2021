@@ -71,14 +71,15 @@ const SpaceGame = (() => {
 		START: 0,
 		PLAYING: 1
 	};
+	Object.freeze(ScreenState);
+	console.log(ScreenState);
 
-	const Screens = [new StartScreen(), new PlayingScreen()];
+	const startScreen = new StartScreen();
+	const playingScreen = new PlayingScreen();
+	const Screens = [startScreen, playingScreen];
 	console.log(Screens);
 	Screens[ScreenState.START].init();
 	Screens[ScreenState.PLAYING].init();
-
-	Object.freeze(ScreenState);
-	console.log(ScreenState);
 
 	const ScreenManager = (() => {
 		let current = ScreenState.START;
