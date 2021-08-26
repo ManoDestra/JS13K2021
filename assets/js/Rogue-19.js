@@ -18,6 +18,25 @@ const SpaceGame = (() => {
 	const COUNT_PLANETS = 5;
 	let patternMoon = null;
 
+	const GameScreen = {
+		START: 0,
+		MENU: 1,
+		SKILLS: 2,
+		PLAYING: 3,
+		PAUSED: 4,
+		GAME_OVER: 5
+	};
+	Object.freeze(GameScreen);
+	const ScreenState = {
+		INACTIVE: 0,
+		INITIALIZING: 1,
+		ACTIVE: 2,
+		TERMINATING: 3
+	};
+	Object.freeze(ScreenState);
+	console.log(GameScreen);
+    console.log(ScreenState);
+
 	class GameComponent {
 		constructor() {
 		}
@@ -57,6 +76,26 @@ const SpaceGame = (() => {
 		}
 	}
 
+	class MenuScreen extends Screen {
+		constructor() {
+			super();
+		}
+
+		init() {
+			console.log('Initializing Menu Screen...')
+		}
+	}
+
+	class SkillsScreen extends Screen {
+		constructor() {
+			super();
+		}
+
+		init() {
+			console.log('Initializing Skills Screen...')
+		}
+	}
+
 	class PlayingScreen extends Screen {
 		constructor() {
 			super();
@@ -67,22 +106,19 @@ const SpaceGame = (() => {
 		}
 	}
 
-	const ScreenState = {
-		START: 0,
-		PLAYING: 1
-	};
-	Object.freeze(ScreenState);
-	console.log(ScreenState);
-
 	const startScreen = new StartScreen();
+	const menuScreen = new MenuScreen();
+	const skillsScreen = new SkillsScreen();
 	const playingScreen = new PlayingScreen();
-	const Screens = [startScreen, playingScreen];
+	const Screens = [startScreen, menuScreen, skillsScreen, playingScreen];
 	console.log(Screens);
-	Screens[ScreenState.START].init();
-	Screens[ScreenState.PLAYING].init();
+	Screens[GameScreen.START].init();
+	Screens[GameScreen.MENU].init();
+	Screens[GameScreen.SKILLS].init();
+	Screens[GameScreen.PLAYING].init();
 
 	const ScreenManager = (() => {
-		let current = ScreenState.START;
+		let current = GameScreen.START;
 
 		function getScreenState() {
 			return current;
