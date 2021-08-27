@@ -34,14 +34,12 @@ const SpaceGame = (() => {
 		TERMINATING: 3
 	};
 	Object.freeze(ScreenState);
-	console.log(GameScreen);
-    console.log(ScreenState);
 
 	class GameComponent {
 		constructor() {
 		}
 
-		update(instant) {
+		update(context, instant) {
 		}
 	}
 
@@ -111,7 +109,6 @@ const SpaceGame = (() => {
 	const skillsScreen = new SkillsScreen();
 	const playingScreen = new PlayingScreen();
 	const Screens = [startScreen, menuScreen, skillsScreen, playingScreen];
-	console.log(Screens);
 
 	Screens[GameScreen.START].init();
 	Screens[GameScreen.MENU].init();
@@ -125,32 +122,31 @@ const SpaceGame = (() => {
 			return current;
 		}
 
+		function clearDisplay() {
+			context.fillStyle = DARK;
+			context.fillRect(0, 0, canvas.width, canvas.height);
+		}
+
+		function init(context) {
+		}
+
 		function update(instant) {
 		}
 
 		function draw(instant) {
+			clearDisplay();
 		}
 
 		return {
-			getScreenState
+			getScreenState,
+			init,
+			update,
+			draw
 		};
 	})();
-	console.log(ScreenManager);
-	console.log("Manager: Screen State: " + ScreenManager.getScreenState());
-
-	const GameState = {
-		START: 0,
-		INTRO: 1,
-		PLAYING: 2,
-		PAUSED: 3,
-		DEATH: 4,
-		GAME_OVER: 5
-	};
-	Object.freeze(GameState);
-	console.log(GameState);
 
 	const SpaceState = {
-		state: GameState.START,
+		state: Screen.START,
 		level: 1,
 		player: {
 			health: 100,
@@ -163,7 +159,6 @@ const SpaceGame = (() => {
 			xp: 0
 		}
 	};
-	console.log(SpaceState);
 
 	async function init() {
 
@@ -228,8 +223,10 @@ const SpaceGame = (() => {
 	}
 
 	function loop(instant) {
-		update(instant);
-		draw(instant);
+		ScreenManager.update(instant);
+		ScreenManager.draw(instant);
+		//update(instant);
+		//draw(instant);
 	}
 
 	return {
@@ -242,8 +239,8 @@ const SpaceGame = (() => {
 (async () => {
 	await SpaceGame.init();
 	window.onresize = SpaceGame.onResize;
-	SpaceGame.loop({
-		fps: () => 60
-	});
-	//Nucleus.Clock.start(SpaceGame.loop);
+	//SpaceGame.loop({
+	//	fps: () => 60
+	//});
+	Nucleus.Clock.start(SpaceGame.loop);
 })();
