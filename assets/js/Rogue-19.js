@@ -243,8 +243,12 @@ const Rogue = (() => {
 
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
-	canvas.onresize = onResize;
-	onResize();
+	init();
+
+	function init() {
+		onResize();
+		canvas.onresize = onResize;
+	}
 
 	function onResize() {
 		canvas.width = document.body.clientWidth;
