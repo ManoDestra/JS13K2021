@@ -170,7 +170,7 @@ Nucleus.KeyInputHandler = (() => {
 
 	function checkKey(key, ignoreCase) {
 		const ignoreCaseToUse = !!ignoreCase || ignoreCase;
-		return keyBindings.filter(function(element) {
+		return keyBindings.filter(element => {
 			return element != undefined && (ignoreCaseToUse ? element.key.toLowerCase() === key.toLowerCase() : element.key == key);
 		}).length > 0;
 	}

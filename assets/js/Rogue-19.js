@@ -264,6 +264,7 @@ const Rogue = (async () => {
 			super();
 			this.x = 0;
 			this.y = 0;
+			this.image = options.image;
 			this.scrollSeconds = options?.scrollSeconds ?? 10;
 			this.offsetX = options?.offsetX ?? 0;
 			this.offsetY = options?.offsetY ?? 0;
@@ -291,11 +292,11 @@ const Rogue = (async () => {
 		}
 
 		draw(instant) {
-			ctx.drawImage(assets.starField, this.x + this.offsetX, this.y + this.offsetY, canvas.width, canvas.height);
+			ctx.drawImage(this.image, this.x + this.offsetX, this.y + this.offsetY, canvas.width, canvas.height);
 			if (isPortrait()) {
-				ctx.drawImage(assets.starField, this.x + this.offsetX, this.y + this.offsetY - canvas.height, canvas.width, canvas.height);
+				ctx.drawImage(this.image, this.x + this.offsetX, this.y + this.offsetY - canvas.height, canvas.width, canvas.height);
 			} else {
-				ctx.drawImage(assets.starField, this.x + this.offsetX + canvas.width, this.y + this.offsetY, canvas.width, canvas.height);
+				ctx.drawImage(this.image, this.x + this.offsetX + canvas.width, this.y + this.offsetY, canvas.width, canvas.height);
 			}
 		}
 	}
@@ -303,12 +304,44 @@ const Rogue = (async () => {
 	class ShipComponent extends DrawableGameComponent {
 		constructor() {
 			super();
+			this.x = 0;
+			this.y = 0;
+			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
 		}
 
 		update(instant) {
+			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
+			const delta = this.size * 4 * instant.elapsed() / 1000;
+			super.debug(instant, delta);
+			if (Nucleus.KeyInputHandler.checkKey('w', true)) {
+				this.y -= delta;
+			}
+
+			if (Nucleus.KeyInputHandler.checkKey('s', true)) {
+				this.y += delta;
+			}
+
+			if (Nucleus.KeyInputHandler.checkKey('a', true)) {
+				this.x -= delta;
+			}
+
+			if (Nucleus.KeyInputHandler.checkKey('d', true)) {
+				this.x += delta;
+			}
+
+			this.x = Math.max(0, this.x);
+			this.y = Math.max(0, this.y);
+			this.x = Math.min((canvas.width * 0.4) - this.size, this.x);
+			this.y = Math.min(canvas.height - this.size, this.y);
+
+			if (Nucleus.KeyInputHandler.checkKey(' ')) {
+				// TODO: code fire button code, add bullet components
+			}
 		}
 
 		draw(instant) {
+			ctx.fillStyle = 'cornflowerblue';
+			ctx.fillRect(this.x, this.y, this.size, this.size);
 		}
 	}
 
@@ -323,14 +356,24 @@ const Rogue = (async () => {
 	let assets = await init();
 
 	const components = [];
-	components.push(new StarFieldComponent({ scrollSeconds: 12 }));
-	components.push(new StarFieldComponent({ scrollSeconds: 11, offsetX: 15, offsetY: 30 }));
-	components.push(new StarFieldComponent({ scrollSeconds: 10, offsetX: 20, offsetY: 10 }));
+	components.push(new StarFieldComponent({
+		image: assets.starField1,
+		scrollSeconds: 12
+	}));
+	components.push(new StarFieldComponent({
+		image: assets.starField2,
+		scrollSeconds: 11
+	}));
+	components.push(new StarFieldComponent({
+		image: assets.starField3,
+		scrollSeconds: 10
+	}));
 	components.push(new ShipComponent());
 
 	async function init() {
 		onResize();
 		window.onresize = onResize;
+		Nucleus.KeyInputHandler.start();
 		const assets = await preRender();
 		console.log('Generated Assets:', assets);
 		//document.body.appendChild(assets.starField);
@@ -342,11 +385,13 @@ const Rogue = (async () => {
 	}
 
 	async function preRender() {
-		const [starField] = await Promise.all([
+		const [starField1, starField2, starField3] = await Promise.all([
+			getStarField(),
+			getStarField(),
 			getStarField()
 		]);
 		return {
-			starField
+			starField1, starField2, starField3
 		};
 	}
 
@@ -422,14 +467,7 @@ const Rogue = (async () => {
 	function draw(instant) {
 		clear();
 		components.filter(c => c instanceof DrawableGameComponent).forEach(c => c.draw(instant));
-
-		//drawStarFields(instant);
-		//drawHud(instant);
-	}
-
-	function drawStarFields(instant) {
-		const portrait = isPortrait();
-		ctx.drawImage(assets.starField, 0, 0, canvas.width, canvas.height);
+		drawHud(instant);
 	}
 
 	function drawHud(instant) {
