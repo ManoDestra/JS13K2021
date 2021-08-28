@@ -298,6 +298,18 @@ const Rogue = (async () => {
 		}
 	}
 
+	class ShipComponent extends DrawableGameComponent {
+		constructor() {
+			super();
+		}
+
+		update(instant) {
+		}
+
+		draw(instant) {
+		}
+	}
+
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
@@ -310,6 +322,7 @@ const Rogue = (async () => {
 
 	const components = [];
 	components.push(new StarFieldComponent());
+	components.push(new ShipComponent());
 
 	async function init() {
 		onResize();
