@@ -1,3 +1,4 @@
+/*
 const canvas = Nucleus.$('canvas');
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
@@ -110,13 +111,9 @@ const SpaceGame = (() => {
 	const playingScreen = new PlayingScreen();
 	const Screens = [startScreen, menuScreen, skillsScreen, playingScreen];
 
-	Screens[GameScreen.START].init();
-	Screens[GameScreen.MENU].init();
-	Screens[GameScreen.SKILLS].init();
-	Screens[GameScreen.PLAYING].init();
-
 	const ScreenManager = (() => {
 		let current = GameScreen.START;
+		let context = null;
 
 		function getScreenState() {
 			return current;
@@ -128,6 +125,7 @@ const SpaceGame = (() => {
 		}
 
 		function init(context) {
+			this.context = context;
 		}
 
 		function update(instant) {
@@ -235,12 +233,63 @@ const SpaceGame = (() => {
 		loop
 	};
 })();
+*/
+
+const Rogue = (() => {
+	const DARK = '#111';
+	const GREEN = '#0a0';
+	const LIGHT = '#eee';
+	const FONT = '4em Segoe UI';
+
+	const canvas = Nucleus.$('canvas');
+	const ctx = canvas.getContext('2d');
+	canvas.onresize = onResize;
+	onResize();
+
+	function onResize() {
+		canvas.width = document.body.clientWidth;
+		canvas.height = document.body.clientHeight;
+	}
+
+	function clear() {
+		ctx.fillStyle = DARK;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+	}
+
+	function update(instant) {
+	}
+
+	function draw(instant) {
+		clear();
+		drawHud(instant);
+	}
+
+	function updateAndDraw(instant) {
+		if (instant.frame == 5) {
+			// DEBUG
+		}
+
+		update(instant);
+		draw(instant);
+	}
+
+	function drawHud(instant) {
+		ctx.fillStyle = GREEN;
+		ctx.font = FONT;
+		ctx.fillText('FPS: ' + instant.fps().toFixed(3), 20, canvas.height - 20);
+	}
+
+	return {
+		updateAndDraw
+	};
+})();
 
 (async () => {
-	await SpaceGame.init();
-	window.onresize = SpaceGame.onResize;
+	//await SpaceGame.init();
+	//window.onresize = SpaceGame.onResize;
 	//SpaceGame.loop({
 	//	fps: () => 60
 	//});
-	Nucleus.Clock.start(SpaceGame.loop);
+
+	Nucleus.Clock.start(Rogue.updateAndDraw);
 })();
