@@ -254,16 +254,18 @@ const Rogue = (async () => {
 	}
 
 	async function preRender() {
-		const starField = await generateImage({
-			consumer: x => {
-				x.fillStyle = 'cornflowerblue';
-				//x.fillRect(8, 8, 48, 48);
-				x.beginPath();
-				x.arc(128, 128, 56, 0, Math.PI * 2);
-				x.fill();
-				x.closePath();
-			}
-		});
+		const [starField] = await Promise.all([
+			generateImage({
+				consumer: x => {
+					x.fillStyle = 'cornflowerblue';
+					//x.fillRect(8, 8, 48, 48);
+					x.beginPath();
+					x.arc(128, 128, 56, 0, Math.PI * 2);
+					x.fill();
+					x.closePath();
+				}
+			})
+		]);
 		return {
 			starField
 		};
