@@ -235,7 +235,7 @@ const SpaceGame = (() => {
 })();
 */
 
-const Rogue = (() => {
+const Rogue = (async () => {
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
@@ -243,29 +243,59 @@ const Rogue = (() => {
 
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
-	init();
+	await init();
 
-	function init() {
+	async function init() {
 		onResize();
 		window.onresize = onResize;
+		const images = await preRender();
+		console.log('Generated Images:', images);
+	}
+
+	async function preRender() {
+		const i = await generateImage({
+			consumer: x => {
+				x.fillStyle = 'cornflowerblue';
+				//x.fillRect(8, 8, 48, 48);
+				x.beginPath();
+				x.arc(128, 128, 56, 0, Math.PI * 2);
+				x.fill();
+				x.closePath();
+			}
+		});
+		return [i];
+	}
+
+	async function generateImage(options) {
+		const f = options?.consumer;
+		const w = options?.width ?? 256;
+		const h = options?.height ?? 256;
+		const t = options?.type ?? 'image/png';
+		const q = options?.quality ?? 1;
+
+		const i = new Image();
+		const c = document.createElement('canvas');
+		c.width = w;
+		c.height = h;
+		const x = c.getContext('2d');
+		if (f) {
+			f(x);
+		}
+
+		i.src = c.toDataURL();
+		await i.decode();
+		return i;
 	}
 
 	function onResize() {
-		canvas.width = document.body.clientWidth;
-		canvas.height = document.body.clientHeight;
+		const b = document.body;
+		canvas.width = b.clientWidth;
+		canvas.height = b.clientHeight;
 	}
 
 	function clear() {
 		ctx.fillStyle = DARK;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-	}
-
-	function update(instant) {
-	}
-
-	function draw(instant) {
-		clear();
-		drawHud(instant);
 	}
 
 	function updateAndDraw(instant) {
@@ -275,6 +305,14 @@ const Rogue = (() => {
 
 		update(instant);
 		draw(instant);
+	}
+
+	function update(instant) {
+	}
+
+	function draw(instant) {
+		clear();
+		drawHud(instant);
 	}
 
 	function drawHud(instant) {
@@ -295,5 +333,6 @@ const Rogue = (() => {
 	//	fps: () => 60
 	//});
 
-	Nucleus.Clock.start(Rogue.updateAndDraw);
+	const r = await Rogue;
+	Nucleus.Clock.start(r.updateAndDraw);
 })();
