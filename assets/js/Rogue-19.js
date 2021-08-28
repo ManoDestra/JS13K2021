@@ -247,7 +247,7 @@ const Rogue = (() => {
 
 	function init() {
 		onResize();
-		canvas.onresize = onResize;
+		window.onresize = onResize;
 	}
 
 	function onResize() {
