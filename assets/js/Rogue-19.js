@@ -243,17 +243,18 @@ const Rogue = (async () => {
 
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
-	await init();
+	let assets = await init();
 
 	async function init() {
 		onResize();
 		window.onresize = onResize;
-		const images = await preRender();
-		console.log('Generated Images:', images);
+		const assets = await preRender();
+		console.log('Generated Assets:', assets);
+		return assets;
 	}
 
 	async function preRender() {
-		const i = await generateImage({
+		const starField = await generateImage({
 			consumer: x => {
 				x.fillStyle = 'cornflowerblue';
 				//x.fillRect(8, 8, 48, 48);
@@ -263,7 +264,9 @@ const Rogue = (async () => {
 				x.closePath();
 			}
 		});
-		return [i];
+		return {
+			starField
+		};
 	}
 
 	async function generateImage(options) {
