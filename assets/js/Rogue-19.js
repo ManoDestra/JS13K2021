@@ -260,16 +260,18 @@ const Rogue = (async () => {
 	}
 
 	class StarFieldComponent extends DrawableGameComponent {
-		constructor() {
+		constructor(options) {
 			super();
 			this.x = 0;
 			this.y = 0;
+			this.scrollSeconds = options?.scrollSeconds ?? 10;
+			this.offsetX = options?.offsetX ?? 0;
+			this.offsetY = options?.offsetY ?? 0;
 		}
 
 		update(instant) {
 			const portrait = isPortrait();
-			const scrollSeconds = 10;
-			const pixelCount = parseFloat((portrait ? canvas.height : canvas.width) / scrollSeconds);
+			const pixelCount = parseFloat((portrait ? canvas.height : canvas.width) / this.scrollSeconds);
 			const pixelsToMove = pixelCount * instant.elapsed() / 1000;
 			if (portrait) {
 				this.x = 0;
@@ -289,11 +291,11 @@ const Rogue = (async () => {
 		}
 
 		draw(instant) {
-			ctx.drawImage(assets.starField, this.x, this.y, canvas.width, canvas.height);
+			ctx.drawImage(assets.starField, this.x + this.offsetX, this.y + this.offsetY, canvas.width, canvas.height);
 			if (isPortrait()) {
-				ctx.drawImage(assets.starField, this.x, this.y - canvas.height, canvas.width, canvas.height);
+				ctx.drawImage(assets.starField, this.x + this.offsetX, this.y + this.offsetY - canvas.height, canvas.width, canvas.height);
 			} else {
-				ctx.drawImage(assets.starField, this.x + canvas.width, this.y, canvas.width, canvas.height);
+				ctx.drawImage(assets.starField, this.x + this.offsetX + canvas.width, this.y + this.offsetY, canvas.width, canvas.height);
 			}
 		}
 	}
@@ -321,7 +323,9 @@ const Rogue = (async () => {
 	let assets = await init();
 
 	const components = [];
-	components.push(new StarFieldComponent());
+	components.push(new StarFieldComponent({ scrollSeconds: 12 }));
+	components.push(new StarFieldComponent({ scrollSeconds: 11, offsetX: 15, offsetY: 30 }));
+	components.push(new StarFieldComponent({ scrollSeconds: 10, offsetX: 20, offsetY: 10 }));
 	components.push(new ShipComponent());
 
 	async function init() {
