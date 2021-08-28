@@ -236,47 +236,137 @@ const SpaceGame = (() => {
 */
 
 const Rogue = (async () => {
+	class GameComponent {
+		constructor() {
+		}
+
+		update(context, instant) {
+		}
+
+		debug(instant, message) {
+			if (instant.frame % 60 == 0) {
+				console.log(message);
+			}
+		}
+	}
+
+	class DrawableGameComponent extends GameComponent {
+		constructor() {
+			super();
+		}
+
+		draw(instant) {
+		}
+	}
+
+	class StarFieldComponent extends DrawableGameComponent {
+		constructor() {
+			super();
+			this.x = 0;
+			this.y = 0;
+		}
+
+		update(instant) {
+			const portrait = isPortrait();
+			const scrollSeconds = 10;
+			const pixelCount = parseFloat((portrait ? canvas.height : canvas.width) / scrollSeconds);
+			const pixelsToMove = pixelCount * instant.elapsed() / 1000;
+			if (portrait) {
+				this.x = 0;
+				this.y += pixelsToMove;
+			} else {
+				this.y = 0;
+				this.x -= pixelsToMove;
+			}
+
+			while (this.x < -canvas.width) {
+				this.x += canvas.width;
+			}
+
+			while (this.y > canvas.height) {
+				this.y -= canvas.height;
+			}
+		}
+
+		draw(instant) {
+			ctx.drawImage(assets.starField, this.x, this.y, canvas.width, canvas.height);
+			if (isPortrait()) {
+				ctx.drawImage(assets.starField, this.x, this.y - canvas.height, canvas.width, canvas.height);
+			} else {
+				ctx.drawImage(assets.starField, this.x + canvas.width, this.y, canvas.width, canvas.height);
+			}
+		}
+	}
+
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
 	const FONT = '4em Segoe UI';
+	const COUNT_STARS = 250;
 
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
 	let assets = await init();
+
+	const components = [];
+	components.push(new StarFieldComponent());
 
 	async function init() {
 		onResize();
 		window.onresize = onResize;
 		const assets = await preRender();
 		console.log('Generated Assets:', assets);
+		//document.body.appendChild(assets.starField);
 		return assets;
+	}
+
+	function isPortrait() {
+		return canvas.width < canvas.height;
 	}
 
 	async function preRender() {
 		const [starField] = await Promise.all([
-			generateImage({
-				consumer: x => {
-					x.fillStyle = 'cornflowerblue';
-					//x.fillRect(8, 8, 48, 48);
-					x.beginPath();
-					x.arc(128, 128, 56, 0, Math.PI * 2);
-					x.fill();
-					x.closePath();
-				}
-			})
+			getStarField()
 		]);
 		return {
 			starField
 		};
 	}
 
+	function getStarField() {
+		return generateImage({
+			width: canvas.width,
+			height: canvas.height,
+			consumer: c => {
+				c.strokeStyle = GREEN;
+				c.fillStyle = LIGHT;
+				for (let i = 0; i < COUNT_STARS; i++) {
+					const x = parseInt(Math.random() * canvas.width);
+					const y = parseInt(Math.random() * canvas.height);
+					const size = parseInt(Math.random() * 4) + 1;
+					c.fillRect(x, y, size, size);
+				}
+
+				//x.fillRect(8, 8, 48, 48);
+
+				/*
+				x.beginPath();
+				x.arc(128, 128, 56, 0, Math.PI * 2);
+				x.fill();
+				x.closePath();
+				*/
+			}
+		});
+	}
+
 	async function generateImage(options) {
-		const f = options?.consumer;
-		const w = options?.width ?? 256;
-		const h = options?.height ?? 256;
-		const t = options?.type ?? 'image/png';
-		const q = options?.quality ?? 1;
+		const {
+			consumer: f,
+			width : w = 256,
+			height : h = 256,
+			type : t = 'image/png',
+			quality : q = 1.0
+		} = options;
 
 		const i = new Image();
 		const c = document.createElement('canvas');
@@ -304,20 +394,25 @@ const Rogue = (async () => {
 	}
 
 	function updateAndDraw(instant) {
-		if (instant.frame == 5) {
-			// DEBUG
-		}
-
 		update(instant);
 		draw(instant);
 	}
 
 	function update(instant) {
+		components.filter(c => c instanceof GameComponent).forEach(c => c.update(instant));
 	}
 
 	function draw(instant) {
 		clear();
-		drawHud(instant);
+		components.filter(c => c instanceof DrawableGameComponent).forEach(c => c.draw(instant));
+
+		//drawStarFields(instant);
+		//drawHud(instant);
+	}
+
+	function drawStarFields(instant) {
+		const portrait = isPortrait();
+		ctx.drawImage(assets.starField, 0, 0, canvas.width, canvas.height);
 	}
 
 	function drawHud(instant) {
