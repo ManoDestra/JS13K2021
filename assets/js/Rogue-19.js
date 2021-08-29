@@ -343,8 +343,13 @@ const Rogue = (async () => {
 		}
 
 		draw(instant) {
-			ctx.fillStyle = 'cornflowerblue';
-			ctx.fillRect(this.x, this.y, this.size, this.size);
+			//ctx.fillStyle = 'cornflowerblue';
+			//ctx.fillRect(this.x, this.y, this.size, this.size);
+			ctx.fillStyle = 'darkgreen';
+			ctx.beginPath();
+			ctx.arc(this.x + (this.size / 2), this.y + (this.size / 2), this.size / 2, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.closePath();
 		}
 	}
 
@@ -404,8 +409,13 @@ const Rogue = (async () => {
 			height: canvas.height,
 			consumer: c => {
 				c.strokeStyle = GREEN;
-				c.fillStyle = LIGHT;
+				//c.fillStyle = LIGHT;
+				c.fillStyle = 'cornflowerblue';
 				for (let i = 0; i < COUNT_STARS; i++) {
+					const r = parseInt(Math.random() * 256);
+					const g = parseInt(Math.random() * 256);
+					const b = parseInt(Math.random() * 128) + 128;
+					c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
 					const x = parseInt(Math.random() * canvas.width);
 					const y = parseInt(Math.random() * canvas.height);
 					const size = parseInt(Math.random() * 4) + 1;

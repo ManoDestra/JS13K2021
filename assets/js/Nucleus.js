@@ -198,6 +198,81 @@ Nucleus.KeyInputHandler = (() => {
 	};
 })();
 
+Nucleus.Storage = (() => {
+	function get(id, persist) {
+		let objOut;
+		const storage = getStorage(persist);
+		if (storage) {
+			const strOut = storage.getItem(id);
+			if (Nucleus.Model.isString(strOut)) {
+				objOut = JSON.parse(strOut);
+			}
+		}
+
+		if (!Nucleus.Model.isObject(objOut)) {
+			objOut = null;
+		}
+
+		return objOut;
+	}
+
+	function set(id, value, persist) {
+		const storage = getStorage(persist);
+		if (storage) {
+			const strValue = JSON.stringify(value);
+			storage.setItem(id, strValue);
+		}
+	}
+
+	function remove(id, persist) {
+		const storage = getStorage(persist);
+		if (storage) {
+			storage.removeItem(id);
+		}
+	}
+
+	function clear(persist) {
+		const storage = getStorage(persist);
+		if (storage) {
+			storage.clear();
+		}
+	}
+
+	function getStorage(persist) {
+		if (typeof persist == 'undefined') {
+			persist = true;
+		}
+
+		const storage = persist ? localStorage : sessionStorage;
+		return storage ? storage : null;
+	}
+
+	function toString() {
+		let lines = [];
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			const value = localStorage.getItem(key);
+			lines.push('Local: ' + key + ' = ' + value);
+		}
+
+		for (let i = 0; i < sessionStorage.length; i++) {
+			const key = sessionStorage.key(i);
+			const value = sessionStorage.getItem(key);
+			lines.push('Session: ' + key + ' = ' + value);
+		}
+
+		return lines.join('\r\n');
+	}
+
+	return {
+		get,
+		set,
+		remove,
+		clear,
+		toString
+	};
+})();
+
 Nucleus.MouseInputHandler = (() => {
 	// TODO: work on scroll offset.
 	// TODO: implement touch handler.
@@ -306,7 +381,7 @@ Nucleus.MouseInputHandler = (() => {
 	};
 })();
 
-Nucleus.PointerLock = (function() {
+Nucleus.PointerLock = (() => {
 	let element = null;
 	let changeHook = null;
 	let movement = {
