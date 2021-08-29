@@ -312,7 +312,6 @@ const Rogue = (async () => {
 		update(instant) {
 			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
 			const delta = this.size * 4 * instant.elapsed() / 1000;
-			//super.debug(instant, delta);
 			if (Nucleus.KeyInputHandler.checkKey('w', true)) {
 				this.y -= delta;
 			}
