@@ -312,7 +312,7 @@ const Rogue = (async () => {
 		update(instant) {
 			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
 			const delta = this.size * 4 * instant.elapsed() / 1000;
-			super.debug(instant, delta);
+			//super.debug(instant, delta);
 			if (Nucleus.KeyInputHandler.checkKey('w', true)) {
 				this.y -= delta;
 			}
@@ -343,12 +343,27 @@ const Rogue = (async () => {
 		}
 
 		draw(instant) {
+			const halfSize = this.size / 2;
 			//ctx.fillStyle = 'cornflowerblue';
 			//ctx.fillRect(this.x, this.y, this.size, this.size);
-			ctx.fillStyle = 'darkgreen';
+			ctx.strokeStyle = LIGHT;
+			ctx.lineWidth = 2;
+			ctx.fillStyle = 'darkred';
 			ctx.beginPath();
-			ctx.arc(this.x + (this.size / 2), this.y + (this.size / 2), this.size / 2, 0, Math.PI * 2);
-			ctx.fill();
+			//ctx.arc(this.x + halfSize, this.y + halfSize, halfSize, 0, Math.PI * 2);
+			//ctx.fill();
+			const points = [
+				[this.x + this.size, this.y + (this.size / 3)],
+				[this.x + this.size, this.y + (this.size * 2 / 3)],
+				[this.x, this.y + this.size],
+				[this.x, this.y]
+			];
+			ctx.moveTo(points[3][0], points[3][1]);
+			points.forEach(p => {
+				ctx.lineTo(p[0], p[1]);
+				ctx.stroke();
+				ctx.fill();
+			});
 			ctx.closePath();
 		}
 	}
