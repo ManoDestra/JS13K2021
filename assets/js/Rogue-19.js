@@ -6,14 +6,6 @@ canvas.height = document.body.clientHeight;
 
 const context = canvas.getContext('2d');
 
-const COLOR_FG = '#0a0';
-const DARK = '#111';
-const GREEN = '#0a0';
-const LIGHT = '#eee';
-const FONT = '4em Segoe UI';
-
-Nucleus.KeyInputHandler.start();
-
 const SpaceGame = (() => {
 	const COUNT_STARS = 250;
 	const COUNT_PLANETS = 5;
@@ -36,113 +28,6 @@ const SpaceGame = (() => {
 	};
 	Object.freeze(ScreenState);
 
-	class GameComponent {
-		constructor() {
-		}
-
-		update(context, instant) {
-		}
-	}
-
-	class DrawableGameComponent extends GameComponent {
-		constructor() {
-			super();
-		}
-
-		draw(instant) {
-		}
-	}
-
-	class Screen extends DrawableGameComponent {
-		constructor() {
-			super();
-		}
-
-		init() {
-		}
-
-		term() {
-		}
-	}
-
-	class StartScreen extends Screen {
-		constructor() {
-			super();
-		}
-
-		init() {
-			console.log('Initializing Start Screen...')
-		}
-	}
-
-	class MenuScreen extends Screen {
-		constructor() {
-			super();
-		}
-
-		init() {
-			console.log('Initializing Menu Screen...')
-		}
-	}
-
-	class SkillsScreen extends Screen {
-		constructor() {
-			super();
-		}
-
-		init() {
-			console.log('Initializing Skills Screen...')
-		}
-	}
-
-	class PlayingScreen extends Screen {
-		constructor() {
-			super();
-		}
-
-		init() {
-			console.log('Initializing Playing Screen...')
-		}
-	}
-
-	const startScreen = new StartScreen();
-	const menuScreen = new MenuScreen();
-	const skillsScreen = new SkillsScreen();
-	const playingScreen = new PlayingScreen();
-	const Screens = [startScreen, menuScreen, skillsScreen, playingScreen];
-
-	const ScreenManager = (() => {
-		let current = GameScreen.START;
-		let context = null;
-
-		function getScreenState() {
-			return current;
-		}
-
-		function clearDisplay() {
-			context.fillStyle = DARK;
-			context.fillRect(0, 0, canvas.width, canvas.height);
-		}
-
-		function init(context) {
-			this.context = context;
-		}
-
-		function update(instant) {
-		}
-
-		function draw(instant) {
-			clearDisplay();
-		}
-
-		return {
-			getScreenState,
-			init,
-			update,
-			draw
-		};
-	})();
-
 	const SpaceState = {
 		state: Screen.START,
 		level: 1,
@@ -157,31 +42,6 @@ const SpaceGame = (() => {
 			xp: 0
 		}
 	};
-
-	async function init() {
-
-	}
-
-	function onResize() {
-		canvas.width = document.body.clientWidth;
-		canvas.height = document.body.clientHeight;
-	}
-
-	function clearDisplay() {
-		context.fillStyle = DARK;
-		context.fillRect(0, 0, canvas.width, canvas.height);
-	}
-
-	function drawStars() {
-		context.strokeStyle = GREEN;
-		context.fillStyle = LIGHT;
-		for (let i = 0; i < COUNT_STARS; i++) {
-			const x = parseInt(Math.random() * canvas.width);
-			const y = parseInt(Math.random() * canvas.height);
-			const size = parseInt(Math.random() * 4) + 1;
-			context.fillRect(x, y, size, size);
-		}
-	}
 
 	function drawPlanets() {
 		for (let i = 0; i < COUNT_PLANETS; i++) {
@@ -203,63 +63,11 @@ const SpaceGame = (() => {
 			context.closePath();
 		}
 	}
-
-	function drawHud(instant) {
-		context.fillStyle = GREEN;
-		context.font = FONT;
-		context.fillText('FPS: ' + instant.fps().toFixed(3), 20, canvas.height - 20);
-	}
-
-	function update(instant) {
-	}
-
-	function draw(instant) {
-		clearDisplay();
-		drawStars();
-		drawPlanets();
-		drawHud(instant);
-	}
-
-	function loop(instant) {
-		ScreenManager.update(instant);
-		ScreenManager.draw(instant);
-		//update(instant);
-		//draw(instant);
-	}
-
-	return {
-		init,
-		onResize,
-		loop
-	};
 })();
 */
 
 const Rogue = (async () => {
-	class GameComponent {
-		constructor() {
-		}
-
-		update(context, instant) {
-		}
-
-		debug(instant, message) {
-			if (instant.frame % 60 == 0) {
-				console.log(message);
-			}
-		}
-	}
-
-	class DrawableGameComponent extends GameComponent {
-		constructor() {
-			super();
-		}
-
-		draw(instant) {
-		}
-	}
-
-	class StarFieldComponent extends DrawableGameComponent {
+	class StarFieldComponent extends Pure.RenderComponent {
 		constructor(options) {
 			super();
 			this.x = 0;
@@ -291,7 +99,7 @@ const Rogue = (async () => {
 			}
 		}
 
-		draw(instant) {
+		render(instant) {
 			ctx.drawImage(this.image, this.x + this.offsetX, this.y + this.offsetY, canvas.width, canvas.height);
 			if (isPortrait()) {
 				ctx.drawImage(this.image, this.x + this.offsetX, this.y + this.offsetY - canvas.height, canvas.width, canvas.height);
@@ -301,7 +109,7 @@ const Rogue = (async () => {
 		}
 	}
 
-	class ShipComponent extends DrawableGameComponent {
+	class ShipComponent extends Pure.RenderComponent {
 		constructor() {
 			super();
 			this.x = 0;
@@ -341,7 +149,7 @@ const Rogue = (async () => {
 			}
 		}
 
-		draw(instant) {
+		render(instant) {
 			const halfSize = this.size / 2;
 			//ctx.fillStyle = 'cornflowerblue';
 			//ctx.fillRect(this.x, this.y, this.size, this.size);
@@ -488,18 +296,18 @@ const Rogue = (async () => {
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	}
 
-	function updateAndDraw(instant) {
+	function updateAndRender(instant) {
 		update(instant);
-		draw(instant);
+		render(instant);
 	}
 
 	function update(instant) {
-		components.filter(c => c instanceof GameComponent).forEach(c => c.update(instant));
+		components.filter(c => c instanceof Pure.Component).forEach(c => c.update(instant));
 	}
 
-	function draw(instant) {
+	function render(instant) {
 		clear();
-		components.filter(c => c instanceof DrawableGameComponent).forEach(c => c.draw(instant));
+		components.filter(c => c instanceof Pure.RenderComponent).forEach(c => c.render(instant));
 		drawHud(instant);
 	}
 
@@ -510,17 +318,26 @@ const Rogue = (async () => {
 	}
 
 	return {
-		updateAndDraw
+		updateAndRender
+	};
+})();
+
+const Test = (() => {
+	function foobar(clazz) {
+		if (clazz.prototype instanceof Pure.Component) {
+			const instance = new clazz();
+			console.log('Instance:', instance);
+		} else {
+			console.log('Not A GameComponent:', clazz);
+		}
+	}
+
+	return {
+		foobar
 	};
 })();
 
 (async () => {
-	//await SpaceGame.init();
-	//window.onresize = SpaceGame.onResize;
-	//SpaceGame.loop({
-	//	fps: () => 60
-	//});
-
 	const r = await Rogue;
-	Nucleus.Clock.start(r.updateAndDraw);
+	Nucleus.Clock.start(r.updateAndRender);
 })();
