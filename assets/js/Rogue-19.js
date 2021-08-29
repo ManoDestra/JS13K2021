@@ -7,8 +7,6 @@ canvas.height = document.body.clientHeight;
 const context = canvas.getContext('2d');
 
 const SpaceGame = (() => {
-	const COUNT_STARS = 250;
-	const COUNT_PLANETS = 5;
 	let patternMoon = null;
 
 	const GameScreen = {
@@ -44,7 +42,7 @@ const SpaceGame = (() => {
 	};
 
 	function drawPlanets() {
-		for (let i = 0; i < COUNT_PLANETS; i++) {
+		for (let i = 0; i < 5; i++) {
 			const x = parseInt(Math.random() * canvas.width);
 			const y = parseInt(Math.random() * canvas.height);
 			const r = parseInt(Math.random() * 50) + 20;
