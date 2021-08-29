@@ -247,29 +247,11 @@ Nucleus.Storage = (() => {
 		return storage ? storage : null;
 	}
 
-	function toString() {
-		let lines = [];
-		for (let i = 0; i < localStorage.length; i++) {
-			const key = localStorage.key(i);
-			const value = localStorage.getItem(key);
-			lines.push('Local: ' + key + ' = ' + value);
-		}
-
-		for (let i = 0; i < sessionStorage.length; i++) {
-			const key = sessionStorage.key(i);
-			const value = sessionStorage.getItem(key);
-			lines.push('Session: ' + key + ' = ' + value);
-		}
-
-		return lines.join('\r\n');
-	}
-
 	return {
 		get,
 		set,
 		remove,
-		clear,
-		toString
+		clear
 	};
 })();
 
