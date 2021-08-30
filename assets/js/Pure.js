@@ -30,7 +30,6 @@ const Pure = (() => {
 	}
 
 	class Manager extends RenderComponent {
-		// TODO: this should be a private instance variable. Maybe use a module for Pure?
 		#components = [];
 
 		constructor() {
