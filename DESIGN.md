@@ -41,3 +41,15 @@ end boss and defeat it.
 - Health regeneration delay/speed
 - Shield regeneration delay/speed
 - Special attack
+
+## Enemy Types
+
+Proximity causes infection rate to rise.
+
+- Cells
+- Splitters (Mitosis)
+- Homing Infection
+- Swooping Cough :D
+- Explosive
+- Shooters
+- Boss (Incubator Mothership)
