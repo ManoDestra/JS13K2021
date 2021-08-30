@@ -134,12 +134,13 @@ const Rogue = (async () => {
 				this.x += delta;
 			}
 
+			const sideLimit = 10;
 			if (isPortrait()) {
-				this.x = Math.min((canvas.width) - this.size, Math.max(0, this.x));
-				this.y = Math.max((canvas.height * 0.6), Math.min(canvas.height - this.size, this.y));
+				this.x = Math.min((canvas.width) - this.size - sideLimit, Math.max(sideLimit, this.x));
+				this.y = Math.max((canvas.height * 0.6), Math.min(canvas.height - this.size - sideLimit, this.y));
 			} else {
-				this.x = Math.min((canvas.width * 0.4) - this.size, Math.max(0, this.x));
-				this.y = Math.min(canvas.height - this.size, Math.max(0, this.y));
+				this.x = Math.min((canvas.width * 0.4) - this.size, Math.max(sideLimit, this.x));
+				this.y = Math.min(canvas.height - this.size - sideLimit, Math.max(sideLimit, this.y));
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey(' ')) {
