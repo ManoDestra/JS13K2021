@@ -149,15 +149,16 @@ const Rogue = (async () => {
 		}
 
 		render(instant) {
+			// TODO: code points
 			const points = isPortrait() ? [
-				[this.x + (this.size * 2 / 3), this.y],
+				[this.x + (this.size / 2), this.y],
 				[this.x + this.size, this.y + this.size],
-				[this.x, this.y + this.size],
-				[this.x + (this.size / 3), this.y]
+				[this.x + (this.size / 2), this.y + (this.size * 2 / 3)],
+				[this.x, this.y + this.size]
 			] : [
-				[this.x + this.size, this.y + (this.size / 3)],
-				[this.x + this.size, this.y + (this.size * 2 / 3)],
+				[this.x + this.size, this.y + (this.size / 2)],
 				[this.x, this.y + this.size],
+				[this.x + (this.size / 3), this.y + (this.size / 2)],
 				[this.x, this.y]
 			];
 			ctx.strokeStyle = 'cornflowerblue';
@@ -168,8 +169,8 @@ const Rogue = (async () => {
 			points.forEach(p => {
 				ctx.lineTo(p[0], p[1]);
 				ctx.stroke();
-				ctx.fill();
 			});
+			ctx.fill();
 			ctx.closePath();
 		}
 	}
