@@ -237,7 +237,7 @@ const Rogue = (async () => {
 					c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
 					const x = parseInt(Math.random() * canvas.width);
 					const y = parseInt(Math.random() * canvas.height);
-					const size = parseInt(Math.random() * 4) + 1;
+					const size = parseInt(Math.random() * 3) + 1;
 					c.fillRect(x, y, size, size);
 				}
 
