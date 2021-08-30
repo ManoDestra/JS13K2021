@@ -149,16 +149,6 @@ const Rogue = (async () => {
 		}
 
 		render(instant) {
-			const halfSize = this.size / 2;
-			//ctx.fillStyle = 'cornflowerblue';
-			//ctx.fillRect(this.x, this.y, this.size, this.size);
-			ctx.strokeStyle = LIGHT;
-			ctx.lineWidth = 3;
-			ctx.fillStyle = 'darkred';
-			ctx.beginPath();
-			//ctx.arc(this.x + halfSize, this.y + halfSize, halfSize, 0, Math.PI * 2);
-			//ctx.fill();
-
 			const points = isPortrait() ? [
 				[this.x + (this.size * 2 / 3), this.y],
 				[this.x + this.size, this.y + this.size],
@@ -170,6 +160,10 @@ const Rogue = (async () => {
 				[this.x, this.y + this.size],
 				[this.x, this.y]
 			];
+			ctx.strokeStyle = 'cornflowerblue';
+			ctx.lineWidth = 3;
+			ctx.fillStyle = 'darkred';
+			ctx.beginPath();
 			ctx.moveTo(points[3][0], points[3][1]);
 			points.forEach(p => {
 				ctx.lineTo(p[0], p[1]);
