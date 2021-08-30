@@ -182,30 +182,28 @@ const Rogue = (async () => {
 
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
-	let assets = await init();
-
 	const components = [];
-	components.push(new StarFieldComponent({
-		image: assets.starField1,
-		scrollSeconds: 12
-	}));
-	components.push(new StarFieldComponent({
-		image: assets.starField2,
-		scrollSeconds: 11
-	}));
-	components.push(new StarFieldComponent({
-		image: assets.starField3,
-		scrollSeconds: 10
-	}));
-	components.push(new ShipComponent());
+	await init();
 
 	async function init() {
 		onResize();
 		window.onresize = onResize;
 		Nucleus.KeyInputHandler.start();
 		const assets = await preRender();
-		console.log('Generated Assets:', assets);
-		//document.body.appendChild(assets.starField);
+		components.push(new StarFieldComponent({
+			image: assets.starField1,
+			scrollSeconds: 12
+		}));
+		components.push(new StarFieldComponent({
+			image: assets.starField2,
+			scrollSeconds: 11
+		}));
+		components.push(new StarFieldComponent({
+			image: assets.starField3,
+			scrollSeconds: 10
+		}));
+		components.push(new ShipComponent());
+
 		return assets;
 	}
 
