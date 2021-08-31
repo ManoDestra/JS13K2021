@@ -1,4 +1,21 @@
 /*
+const Test = (() => {
+	function foobar(clazz) {
+		if (clazz.prototype instanceof Pure.Component) {
+			const instance = new clazz();
+			console.log('Instance:', instance);
+		} else {
+			console.log('Not A GameComponent:', clazz);
+		}
+	}
+
+	return {
+		foobar
+	};
+})();
+*/
+
+/*
 const canvas = Nucleus.$('canvas');
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
@@ -64,7 +81,7 @@ const SpaceGame = (() => {
 })();
 */
 
-const Rogue = (async () => {
+const Rogue = (() => {
 	class StarFieldComponent extends Pure.RenderComponent {
 		constructor(options) {
 			super();
@@ -183,7 +200,11 @@ const Rogue = (async () => {
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
 	const components = [];
-	await init();
+
+	async function start() {
+		await init();
+		Nucleus.Clock.start(updateAndRender);;
+	}
 
 	async function init() {
 		onResize();
@@ -299,6 +320,8 @@ const Rogue = (async () => {
 	function render(instant) {
 		clear();
 		components.filter(c => c instanceof Pure.RenderComponent).forEach(c => c.render(instant));
+
+		// TODO: create HUD component
 		drawHud(instant);
 	}
 
@@ -309,28 +332,12 @@ const Rogue = (async () => {
 	}
 
 	return {
-		updateAndRender
+		start
 	};
 })();
-
-/*
-const Test = (() => {
-	function foobar(clazz) {
-		if (clazz.prototype instanceof Pure.Component) {
-			const instance = new clazz();
-			console.log('Instance:', instance);
-		} else {
-			console.log('Not A GameComponent:', clazz);
-		}
-	}
-
-	return {
-		foobar
-	};
-})();
-*/
 
 (async () => {
-	const r = await Rogue;
-	Nucleus.Clock.start(r.updateAndRender);
+	await Rogue.start();
+	//const r = await Rogue;
+	//Nucleus.Clock.start(r.updateAndRender);
 })();
