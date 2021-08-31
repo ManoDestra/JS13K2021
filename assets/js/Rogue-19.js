@@ -82,6 +82,36 @@ const SpaceGame = (() => {
 */
 
 const Rogue = (() => {
+	class BoundingBox {
+		#x;
+		#y;
+		#width;
+		#height;
+
+		constructor(x, y, width, height) {
+			this.#x = x;
+			this.#y = y;
+			this.#width = width;
+			this.#height = height;
+		}
+
+		getX() {
+			return this.#x;
+		}
+
+		getY() {
+			return this.#y;
+		}
+
+		getWidth() {
+			return this.#width;
+		}
+
+		getHeight() {
+			return this.#height;
+		}
+	}
+
 	class StarFieldComponent extends Pure.RenderComponent {
 		constructor(options) {
 			super();
@@ -130,6 +160,10 @@ const Rogue = (() => {
 			this.x = 0;
 			this.y = 0;
 			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
+		}
+
+		getBoundingBox() {
+			return new BoundingBox(this.x, this.y, this.size, this.size);
 		}
 
 		update(instant) {
@@ -201,9 +235,12 @@ const Rogue = (() => {
 	const ctx = canvas.getContext('2d');
 	const components = [];
 
-	async function start() {
-		await init();
-		Nucleus.Clock.start(updateAndRender);;
+	function start() {
+		console.log('Start');
+		init()
+			.then(r => Nucleus.Clock.start(updateAndRender))
+			.catch(e => console.error(e))
+			.finally(() => console.log('Started'));
 	}
 
 	async function init() {
@@ -336,8 +373,5 @@ const Rogue = (() => {
 	};
 })();
 
-(async () => {
-	await Rogue.start();
-	//const r = await Rogue;
-	//Nucleus.Clock.start(r.updateAndRender);
-})();
+Rogue.start();
+//window.addEventListener('load', Rogue.start, false);
