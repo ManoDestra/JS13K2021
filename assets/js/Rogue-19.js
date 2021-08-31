@@ -247,17 +247,19 @@ const Rogue = (() => {
 		}
 
 		update(instant) {
+			const bulletSpeed = 40;
+			const ratio = bulletSpeed * instant.elapsed() / 1000;
 			if (isPortrait()) {
-				this.#y -= this.#height * instant.elapsed() * 20 / 1000;
+				this.#y -= this.#height * ratio;
 			} else {
-				this.#x += this.#width * instant.elapsed() * 20 / 1000;
+				this.#x += this.#width * ratio;
 			}
 		}
 
 		render(instant) {
 			ctx.fillStyle = 'yellow';
 			if (isPortrait()) {
-				ctx.fillRect(this.#x - this.#height, this.#y - this.#height, this.#height, this.#width);
+				ctx.fillRect(this.#x - this.#width, this.#y - this.#height, this.#width, this.#height);
 			} else {
 				ctx.fillRect(this.#x, this.#y, this.#width, this.#height);
 			}
@@ -299,21 +301,21 @@ const Rogue = (() => {
 			image: assets.starField3,
 			scrollSeconds: 10
 		}));
-		components.push(new ShipComponent(send));
+		components.push(new ShipComponent(receive));
 
 		return assets;
 	}
 
-	function send(message) {
+	function receive(message) {
 		console.log(message);
 		switch (message) {
 			case 'PLAYER_BULLET':
 				const player = components.filter(c => c instanceof ShipComponent)[0];
 				const box = player.getBoundingBox();
-				const x = box.getX() + box.getWidth();
-				const y = box.getY() + (box.getHeight() / 2);
-				const width = 20;
-				const height = 5;
+				const x = box.getX() + (isPortrait() ? box.getWidth() / 2 : box.getWidth());
+				const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
+				const width = isPortrait() ? 5 : 20;
+				const height = isPortrait() ? 20 : 5;
 				components.push(new PlayerBulletComponent(x, y, width, height));
 				break;
 			default:
