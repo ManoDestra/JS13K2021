@@ -155,61 +155,68 @@ const Rogue = (() => {
 	}
 
 	class ShipComponent extends Pure.RenderComponent {
-		constructor() {
+		#x = 0;
+		#y = 0;
+		#size = 0;
+		#send = null;
+
+		constructor(send) {
 			super();
-			this.x = 0;
-			this.y = 0;
-			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
+			this.#x = 0;
+			this.#y = 0;
+			this.#size = (isPortrait() ? canvas.height : canvas.width) / 15;
+			this.#send = send;
 		}
 
 		getBoundingBox() {
-			return new BoundingBox(this.x, this.y, this.size, this.size);
+			return new BoundingBox(this.#x, this.#y, this.#size, this.#size);
 		}
 
 		update(instant) {
 			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
-			const delta = this.size * 4 * instant.elapsed() / 1000;
+			const delta = this.#size * 4 * instant.elapsed() / 1000;
 			if (Nucleus.KeyInputHandler.checkKey('w', true)) {
-				this.y -= delta;
+				this.#y -= delta;
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey('s', true)) {
-				this.y += delta;
+				this.#y += delta;
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey('a', true)) {
-				this.x -= delta;
+				this.#x -= delta;
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey('d', true)) {
-				this.x += delta;
+				this.#x += delta;
 			}
 
 			const sideLimit = 10;
 			if (isPortrait()) {
-				this.x = Math.min((canvas.width) - this.size - sideLimit, Math.max(sideLimit, this.x));
-				this.y = Math.max((canvas.height * 0.6), Math.min(canvas.height - this.size - sideLimit, this.y));
+				this.#x = Math.min((canvas.width) - this.#size - sideLimit, Math.max(sideLimit, this.#x));
+				this.#y = Math.max((canvas.height * 0.6), Math.min(canvas.height - this.#size - sideLimit, this.#y));
 			} else {
-				this.x = Math.min((canvas.width * 0.4) - this.size, Math.max(sideLimit, this.x));
-				this.y = Math.min(canvas.height - this.size - sideLimit, Math.max(sideLimit, this.y));
+				this.#x = Math.min((canvas.width * 0.4) - this.#size, Math.max(sideLimit, this.#x));
+				this.#y = Math.min(canvas.height - this.#size - sideLimit, Math.max(sideLimit, this.#y));
 			}
 
-			if (Nucleus.KeyInputHandler.checkKey(' ')) {
-				// TODO: code fire button code, add bullet components for rendering
+			//TODO: handle the fire rate
+			if (Nucleus.KeyInputHandler.checkKey(' ') && instant.frame % 30 == 0) {
+				this.#send('PLAYER_BULLET');
 			}
 		}
 
 		render(instant) {
 			const points = isPortrait() ? [
-				[this.x + this.size, this.y + this.size],
-				[this.x + (this.size / 2), this.y + (this.size * 2 / 3)],
-				[this.x, this.y + this.size],
-				[this.x + (this.size / 2), this.y]
+				[this.#x + this.#size, this.#y + this.#size],
+				[this.#x + (this.#size / 2), this.#y + (this.#size * 2 / 3)],
+				[this.#x, this.#y + this.#size],
+				[this.#x + (this.#size / 2), this.#y]
 			] : [
-				[this.x, this.y + this.size],
-				[this.x + (this.size / 3), this.y + (this.size / 2)],
-				[this.x, this.y],
-				[this.x + this.size, this.y + (this.size / 2)]
+				[this.#x, this.#y + this.#size],
+				[this.#x + (this.#size / 3), this.#y + (this.#size / 2)],
+				[this.#x, this.#y],
+				[this.#x + this.#size, this.#y + (this.#size / 2)]
 			];
 			ctx.strokeStyle = 'cornflowerblue';
 			ctx.lineWidth = 3;
@@ -222,6 +229,38 @@ const Rogue = (() => {
 			});
 			ctx.fill();
 			ctx.closePath();
+		}
+	}
+
+	class PlayerBulletComponent extends Pure.RenderComponent {
+		#x = 0;
+		#y = 0;
+		#width = 20;
+		#height = 5;
+
+		constructor(x, y, width, height) {
+			super();
+			this.#x = x;
+			this.#y = y;
+			this.#width = width;
+			this.#height = height;
+		}
+
+		update(instant) {
+			if (isPortrait()) {
+				this.#y -= this.#height * instant.elapsed() * 20 / 1000;
+			} else {
+				this.#x += this.#width * instant.elapsed() * 20 / 1000;
+			}
+		}
+
+		render(instant) {
+			ctx.fillStyle = 'yellow';
+			if (isPortrait()) {
+				ctx.fillRect(this.#x - this.#height, this.#y - this.#height, this.#height, this.#width);
+			} else {
+				ctx.fillRect(this.#x, this.#y, this.#width, this.#height);
+			}
 		}
 	}
 
@@ -260,9 +299,25 @@ const Rogue = (() => {
 			image: assets.starField3,
 			scrollSeconds: 10
 		}));
-		components.push(new ShipComponent());
+		components.push(new ShipComponent(send));
 
 		return assets;
+	}
+
+	function send(message) {
+		console.log(message);
+		switch (message) {
+			case 'PLAYER_BULLET':
+				const player = components.filter(c => c instanceof ShipComponent)[0];
+				const box = player.getBoundingBox();
+				const x = box.getX() + box.getWidth();
+				const y = box.getY() + (box.getHeight() / 2);
+				const width = 20;
+				const height = 5;
+				components.push(new PlayerBulletComponent(x, y, width, height));
+				break;
+			default:
+		}
 	}
 
 	function isPortrait() {
@@ -351,6 +406,11 @@ const Rogue = (() => {
 	}
 
 	function update(instant) {
+		// TODO: remove any components that are no longer required
+		//		- bullets off screen
+		//		- bullets that have collided with enemies
+		//		- enemies that have been killed
+
 		components.filter(c => c instanceof Pure.Component).forEach(c => c.update(instant));
 	}
 
