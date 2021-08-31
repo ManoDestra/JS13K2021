@@ -313,6 +313,7 @@ const Rogue = (async () => {
 	};
 })();
 
+/*
 const Test = (() => {
 	function foobar(clazz) {
 		if (clazz.prototype instanceof Pure.Component) {
@@ -327,6 +328,7 @@ const Test = (() => {
 		foobar
 	};
 })();
+*/
 
 (async () => {
 	const r = await Rogue;
