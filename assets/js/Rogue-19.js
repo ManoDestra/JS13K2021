@@ -425,7 +425,7 @@ const Rogue = (() => {
 	function drawHud(instant) {
 		ctx.fillStyle = GREEN;
 		ctx.font = FONT;
-		ctx.fillText('FPS: ' + instant.fps().toFixed(3), 20, canvas.height - 20);
+		ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Comps: ' + components.length, 20, canvas.height - 20);
 	}
 
 	return {
@@ -434,4 +434,3 @@ const Rogue = (() => {
 })();
 
 Rogue.start();
-//window.addEventListener('load', Rogue.start, false);
