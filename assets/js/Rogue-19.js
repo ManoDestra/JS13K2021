@@ -266,6 +266,18 @@ const Rogue = (() => {
 		}
 	}
 
+	class HudComponent extends Pure.RenderComponent {
+		constructor() {
+			super();
+		}
+
+		render(instant) {
+			ctx.fillStyle = GREEN;
+			ctx.font = FONT;
+			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Comps: ' + components.length, 20, canvas.height - 20);
+		}
+	}
+
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
@@ -302,12 +314,12 @@ const Rogue = (() => {
 			scrollSeconds: 10
 		}));
 		components.push(new ShipComponent(receive));
+		components.push(new HudComponent());
 
 		return assets;
 	}
 
 	function receive(message) {
-		console.log(message);
 		switch (message) {
 			case 'PLAYER_BULLET':
 				const player = components.filter(c => c instanceof ShipComponent)[0];
@@ -419,15 +431,6 @@ const Rogue = (() => {
 	function render(instant) {
 		clear();
 		components.filter(c => c instanceof Pure.RenderComponent).forEach(c => c.render(instant));
-
-		// TODO: create HUD component
-		drawHud(instant);
-	}
-
-	function drawHud(instant) {
-		ctx.fillStyle = GREEN;
-		ctx.font = FONT;
-		ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Comps: ' + components.length, 20, canvas.height - 20);
 	}
 
 	return {
