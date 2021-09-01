@@ -436,10 +436,9 @@ const Rogue = (() => {
 			const c = components[i];
 			if (c instanceof PlayerBulletComponent) {
 				const box = c.getBoundingBox();
-				const removalA = isPortrait() && box.getY() + box.getHeight() < 0;
-				const removalB = !isPortrait() && box.getX() > canvas.width;
-				const removal = removalA || removalB;
-				if (removal) {
+				const portraitRemoval = isPortrait() && box.getY() + box.getHeight() < 0;
+				const nonPortraitRemoval = !isPortrait() && box.getX() > canvas.width;
+				if (portraitRemoval || nonPortraitRemoval) {
 					components.splice(i, 1);
 				}
 			}
