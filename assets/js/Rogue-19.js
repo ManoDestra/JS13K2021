@@ -264,6 +264,10 @@ const Rogue = (() => {
 				ctx.fillRect(this.#x, this.#y, this.#width, this.#height);
 			}
 		}
+
+		getBoundingBox() {
+			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
+		}
 	}
 
 	class HudComponent extends Pure.RenderComponent {
@@ -426,6 +430,29 @@ const Rogue = (() => {
 		//		- enemies that have been killed
 
 		components.filter(c => c instanceof Pure.Component).forEach(c => c.update(instant));
+
+		components.filter(c => c instanceof PlayerBulletComponent).forEach((c, i) => {
+			const box = c.getBoundingBox();
+			if (isPortrait()) {
+				if (box.getY() + box.getHeight() < 0) {
+					try {
+						// TODO: doesn't work, probably as we're currently looping through the array.
+						//components.splice(i, 1);
+					} catch(e) {
+						console.warn(e);
+					}
+				}
+			} else {
+				if (box.getX() > canvas.width) {
+					try {
+						// TODO: doesn't work, probably as we're currently looping through the array.
+						//components.splice(i, 1);
+					} catch(e) {
+						console.warn(e);
+					}
+				}
+			}
+		});
 	}
 
 	function render(instant) {
