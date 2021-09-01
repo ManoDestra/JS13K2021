@@ -424,6 +424,7 @@ const Rogue = (() => {
 	}
 
 	function update(instant) {
+		// TODO: process bullet collisions with enemies
 		// TODO: remove any components that are no longer required
 		//		- bullets off screen
 		//		- bullets that have collided with enemies
