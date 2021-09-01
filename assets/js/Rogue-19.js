@@ -154,6 +154,41 @@ const Rogue = (() => {
 		}
 	}
 
+	class SpriteComponent extends Pure.RenderComponent {
+		#x = 0;
+		#y = 0;
+		#width = 0;
+		#height = 0;
+
+		constructor(x, y, width, height) {
+			super();
+			this.#x = x;
+			this.#y = y;
+			this.#width = width;
+			this.#height = height;
+		}
+
+		getX() {
+			return this.#x;
+		}
+
+		getY() {
+			return this.#y;
+		}
+
+		getWidth() {
+			return this.#width;
+		}
+
+		getHeight() {
+			return this.#height;
+		}
+
+		getBoundingBox() {
+			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
+		}
+	}
+
 	class ShipComponent extends Pure.RenderComponent {
 		#x = 0;
 		#y = 0;
@@ -267,6 +302,18 @@ const Rogue = (() => {
 
 		getBoundingBox() {
 			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
+		}
+	}
+
+	class EnemyComponent extends Pure.RenderComponent {
+		constructor() {
+			super();
+		}
+
+		update(instant) {
+		}
+
+		render(instant) {
 		}
 	}
 
