@@ -431,28 +431,18 @@ const Rogue = (() => {
 
 		components.filter(c => c instanceof Pure.Component).forEach(c => c.update(instant));
 
-		components.filter(c => c instanceof PlayerBulletComponent).forEach((c, i) => {
-			const box = c.getBoundingBox();
-			if (isPortrait()) {
-				if (box.getY() + box.getHeight() < 0) {
-					try {
-						// TODO: doesn't work, probably as we're currently looping through the array.
-						//components.splice(i, 1);
-					} catch(e) {
-						console.warn(e);
-					}
-				}
-			} else {
-				if (box.getX() > canvas.width) {
-					try {
-						// TODO: doesn't work, probably as we're currently looping through the array.
-						//components.splice(i, 1);
-					} catch(e) {
-						console.warn(e);
-					}
+		for (let i = components.length - 1; i >= 0; i--) {
+			const c = components[i];
+			if (c instanceof PlayerBulletComponent) {
+				const box = c.getBoundingBox();
+				const removalA = isPortrait() && box.getY() + box.getHeight() < 0;
+				const removalB = !isPortrait() && box.getX() > canvas.width;
+				const removal = removalA || removalB;
+				if (removal) {
+					components.splice(i, 1);
 				}
 			}
-		});
+		}
 	}
 
 	function render(instant) {
