@@ -59,6 +59,57 @@ const Pure = (() => {
 		}
 	}
 
+	class Sprite extends RenderComponent {
+		#x = 0;
+		#y = 0;
+		#width = 0;
+		#height = 0;
+
+		constructor(x, y, width, height) {
+			super();
+			this.#x = x;
+			this.#y = y;
+			this.#width = width;
+			this.#height = height;
+		}
+
+		getX() {
+			return this.#x;
+		}
+
+		setX(x) {
+			this.#x = x;
+		}
+
+		offsetX(delta) {
+			this.#x += delta;
+		}
+
+		getY() {
+			return this.#y;
+		}
+
+		setY(y) {
+			this.#y = y;
+		}
+
+		offsetY(delta) {
+			this.#y += delta;
+		}
+
+		getWidth() {
+			return this.#width;
+		}
+
+		getHeight() {
+			return this.#height;
+		}
+
+		getBoundingBox() {
+			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
+		}
+	}
+
 	class Manager extends RenderComponent {
 		#components = [];
 
@@ -89,6 +140,7 @@ const Pure = (() => {
 		BoundingBox,
 		Component,
 		RenderComponent,
+		Sprite,
 		Manager
 	};
 })();

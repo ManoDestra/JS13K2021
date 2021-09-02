@@ -124,58 +124,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Sprite extends Pure.RenderComponent {
-		#x = 0;
-		#y = 0;
-		#width = 0;
-		#height = 0;
-
-		constructor(x, y, width, height) {
-			super();
-			this.#x = x;
-			this.#y = y;
-			this.#width = width;
-			this.#height = height;
-		}
-
-		getX() {
-			return this.#x;
-		}
-
-		setX(x) {
-			this.#x = x;
-		}
-
-		offsetX(delta) {
-			this.#x += delta;
-		}
-
-		getY() {
-			return this.#y;
-		}
-
-		setY(y) {
-			this.#y = y;
-		}
-
-		offsetY(delta) {
-			this.#y += delta;
-		}
-
-		getWidth() {
-			return this.#width;
-		}
-
-		getHeight() {
-			return this.#height;
-		}
-
-		getBoundingBox() {
-			return new Pure.BoundingBox(this.#x, this.#y, this.#width, this.#height);
-		}
-	}
-
-	class Ship extends Sprite {
+	class Ship extends Pure.Sprite {
 		#send = null;
 
 		constructor(x, y, size, send) {
@@ -243,7 +192,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class PlayerBullet extends Sprite {
+	class PlayerBullet extends Pure.Sprite {
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
 		}
