@@ -16,12 +16,7 @@ const Test = (() => {
 */
 
 /*
-const canvas = Nucleus.$('canvas');
-canvas.width = document.body.clientWidth;
-canvas.height = document.body.clientHeight;
 //canvas.onclick = e => canvas.requestFullscreen();
-
-const context = canvas.getContext('2d');
 
 const SpaceGame = (() => {
 	let patternMoon = null;
@@ -306,6 +301,7 @@ const Rogue = (() => {
 	const FONT = '4em Segoe UI';
 
 	const canvas = Nucleus.$('canvas');
+	canvas.onclick = e => canvas.requestFullscreen();
 	const ctx = canvas.getContext('2d');
 	const components = [];
 
