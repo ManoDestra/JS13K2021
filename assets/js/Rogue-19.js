@@ -495,11 +495,7 @@ const Rogue = (() => {
 	};
 })();
 
-console.log(Nucleus.Cryo);
-
-const all = Nucleus.Cryo.getAll({
-	namespace: 'com.manodestra.rogue'
-});
+const all = Nucleus.Cryo.getAll('com.manodestra.rogue');
 console.log(all);
 
 //Rogue.start();
