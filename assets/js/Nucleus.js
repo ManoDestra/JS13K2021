@@ -202,8 +202,7 @@ Nucleus.Cryo = class {
 	constructor() {
 	}
 
-	static getAll(options) {
-		const { namespace = '', persist = true } = options;
+	static getAll(namespace = '', persist = true) {
 		const prefix = namespace ? namespace + '.' : '';
 		const storage = Nucleus.Cryo.#getStorage(persist);
 		const all = {};
@@ -238,6 +237,7 @@ Nucleus.Cryo = class {
 	}
 
 	static removeByNamespace(namespace = '', persist = true) {
+		//TODO: code
 	}
 
 	static removeAll(persist = true) {
@@ -250,8 +250,8 @@ Nucleus.Cryo = class {
 	}
 
 	static #getKey(key, namespace = '') {
-		const namespaceToUse = namespace ? namespace + '.' : '';
-		return namespaceToUse + key;
+		const prefix = namespace ? namespace + '.' : '';
+		return prefix + key;
 	}
 };
 
