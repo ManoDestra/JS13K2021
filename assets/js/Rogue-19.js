@@ -467,6 +467,17 @@ const Rogue = (() => {
 				const portraitRemoval = isPortrait() && box.getY() + box.getHeight() < 0;
 				const nonPortraitRemoval = !isPortrait() && box.getX() > canvas.width;
 				if (portraitRemoval || nonPortraitRemoval) {
+					console.log('Player Bullet Removal:', c, box);
+					components.splice(i, 1);
+				}
+			}
+
+			if (c instanceof Enemy) {
+				const box = c.getBoundingBox();
+				const portraitRemoval = isPortrait() && box.getY() - (box.getHeight() / 2) > canvas.height;
+				const nonPortraitRemoval = !isPortrait() && box.getX() + box.getWidth() < 0;
+				if (portraitRemoval || nonPortraitRemoval) {
+					console.log('Enemy Removal:', c, box);
 					components.splice(i, 1);
 				}
 			}
