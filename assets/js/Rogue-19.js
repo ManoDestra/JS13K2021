@@ -13,10 +13,6 @@ const Test = (() => {
 		foobar
 	};
 })();
-*/
-
-/*
-//canvas.onclick = e => canvas.requestFullscreen();
 
 const SpaceGame = (() => {
 	let patternMoon = null;
@@ -295,13 +291,14 @@ const Rogue = (() => {
 		}
 	}
 
+	// 13,312 Bytes Max Limit For Zipped File
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
 	const FONT = '4em Segoe UI';
 
 	const canvas = Nucleus.$('canvas');
-	canvas.onclick = e => canvas.requestFullscreen();
+	//canvas.onclick = e => canvas.requestFullscreen();
 	const ctx = canvas.getContext('2d');
 	const components = [];
 
