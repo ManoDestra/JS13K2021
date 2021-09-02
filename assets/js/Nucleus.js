@@ -198,6 +198,63 @@ Nucleus.KeyInputHandler = (() => {
 	};
 })();
 
+Nucleus.Cryo = class {
+	constructor() {
+	}
+
+	static getAll(options) {
+		const { namespace = '', persist = true } = options;
+		const prefix = namespace ? namespace + '.' : '';
+		const storage = Nucleus.Cryo.#getStorage(persist);
+		const all = {};
+		for (let i = 0; i < storage.length; i++) {
+			const key = storage.key(i);
+			const value = storage.getItem(key);
+			const model = JSON.parse(value);
+			all[key] = model;
+		}
+
+		return all;
+	}
+
+	static get(key, namespace = '', persist = true) {
+		const keyToUse = Nucleus.Cryo.#getKey(key, namespace);
+		const storage = Nucleus.Cryo.#getStorage(persist);
+		const value = storage.getItem(keyToUse);
+		return JSON.parse(value);
+	}
+
+	static set(key, model, namespace = '', persist = true) {
+		const keyToUse = Nucleus.Cryo.#getKey(key, namespace);
+		const storage = Nucleus.Cryo.#getStorage(persist);
+		const value = JSON.stringify(model);
+		storage.setItem(keyToUse, value);
+	}
+
+	static remove(key, namespace = '', persist = true) {
+		const keyToUse = Nucleus.Cryo.#getKey(key, namespace);
+		const storage = Nucleus.Cryo.#getStorage(persist);
+		storage.removeItem(keyToUse);
+	}
+
+	static removeByNamespace(namespace = '', persist = true) {
+	}
+
+	static removeAll(persist = true) {
+		const storage = Nucleus.Cryo.#getStorage(persist);
+		storage.clear();
+	}
+
+	static #getStorage(persist = true) {
+		return persist ? localStorage : sessionStorage;
+	}
+
+	static #getKey(key, namespace = '') {
+		const namespaceToUse = namespace ? namespace + '.' : '';
+		return namespaceToUse + key;
+	}
+};
+
 Nucleus.Storage = (() => {
 	function get(id, persist) {
 		let objOut;

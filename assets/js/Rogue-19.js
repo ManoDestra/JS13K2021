@@ -488,7 +488,6 @@ const Rogue = (() => {
 		components.filter(c => c instanceof PlayerBullet).forEach(c => c.render(instant));
 		components.filter(c => c instanceof Enemy).forEach(c => c.render(instant));
 		components.filter(c => c instanceof Hud).forEach(c => c.render(instant));
-		//components.filter(c => c instanceof Urge.RenderComponent).forEach(c => c.render(instant));
 	}
 
 	return {
@@ -496,6 +495,11 @@ const Rogue = (() => {
 	};
 })();
 
-const all = Urge.Storage.getAll('com.manodestra.rogue');
+console.log(Nucleus.Cryo);
+
+const all = Nucleus.Cryo.getAll({
+	namespace: 'com.manodestra.rogue'
+});
 console.log(all);
-Rogue.start();
+
+//Rogue.start();
