@@ -172,8 +172,24 @@ const Rogue = (() => {
 			return this.#x;
 		}
 
+		setX(x) {
+			this.#x = x;
+		}
+
+		offsetX(delta) {
+			this.#x += delta;
+		}
+
 		getY() {
 			return this.#y;
+		}
+
+		setY(y) {
+			this.#y = y;
+		}
+
+		offsetY(delta) {
+			this.#y += delta;
 		}
 
 		getWidth() {
@@ -189,50 +205,40 @@ const Rogue = (() => {
 		}
 	}
 
-	class ShipComponent extends Pure.RenderComponent {
-		#x = 0;
-		#y = 0;
-		#size = 0;
+	class ShipComponent extends SpriteComponent {
 		#send = null;
 
 		constructor(send) {
-			super();
-			this.#x = 0;
-			this.#y = 0;
-			this.#size = (isPortrait() ? canvas.height : canvas.width) / 15;
+			super(0, 0, (isPortrait() ? canvas.height : canvas.width) / 15, (isPortrait() ? canvas.height : canvas.width) / 15);
 			this.#send = send;
-		}
-
-		getBoundingBox() {
-			return new BoundingBox(this.#x, this.#y, this.#size, this.#size);
 		}
 
 		update(instant) {
 			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
-			const delta = this.#size * 4 * instant.elapsed() / 1000;
+			const delta = this.getWidth() * 4 * instant.elapsed() / 1000;
 			if (Nucleus.KeyInputHandler.checkKey('w', true)) {
-				this.#y -= delta;
+				this.offsetY(-delta);
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey('s', true)) {
-				this.#y += delta;
+				this.offsetY(delta);
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey('a', true)) {
-				this.#x -= delta;
+				this.offsetX(-delta);
 			}
 
 			if (Nucleus.KeyInputHandler.checkKey('d', true)) {
-				this.#x += delta;
+				this.offsetX(delta);
 			}
 
 			const sideLimit = 10;
 			if (isPortrait()) {
-				this.#x = Math.min((canvas.width) - this.#size - sideLimit, Math.max(sideLimit, this.#x));
-				this.#y = Math.max((canvas.height * 0.6), Math.min(canvas.height - this.#size - sideLimit, this.#y));
+				this.setX(Math.min((canvas.width) - this.getWidth() - sideLimit, Math.max(sideLimit, this.getX())));
+				this.setY(Math.max((canvas.height * 0.6), Math.min(canvas.height - this.getWidth() - sideLimit, this.getY())));
 			} else {
-				this.#x = Math.min((canvas.width * 0.4) - this.#size, Math.max(sideLimit, this.#x));
-				this.#y = Math.min(canvas.height - this.#size - sideLimit, Math.max(sideLimit, this.#y));
+				this.setX(Math.min((canvas.width * 0.4) - this.getWidth(), Math.max(sideLimit, this.getX())));
+				this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
 			}
 
 			//TODO: handle the fire rate
@@ -243,15 +249,15 @@ const Rogue = (() => {
 
 		render(instant) {
 			const points = isPortrait() ? [
-				[this.#x + this.#size, this.#y + this.#size],
-				[this.#x + (this.#size / 2), this.#y + (this.#size * 2 / 3)],
-				[this.#x, this.#y + this.#size],
-				[this.#x + (this.#size / 2), this.#y]
+				[this.getX() + this.getWidth(), this.getY() + this.getWidth()],
+				[this.getX() + (this.getWidth() / 2), this.getY() + (this.getWidth() * 2 / 3)],
+				[this.getX(), this.getY() + this.getWidth()],
+				[this.getX() + (this.getWidth() / 2), this.getY()]
 			] : [
-				[this.#x, this.#y + this.#size],
-				[this.#x + (this.#size / 3), this.#y + (this.#size / 2)],
-				[this.#x, this.#y],
-				[this.#x + this.#size, this.#y + (this.#size / 2)]
+				[this.getX(), this.getY() + this.getWidth()],
+				[this.getX() + (this.getWidth() / 3), this.getY() + (this.getWidth() / 2)],
+				[this.getX(), this.getY()],
+				[this.getX() + this.getWidth(), this.getY() + (this.getWidth() / 2)]
 			];
 			ctx.strokeStyle = 'cornflowerblue';
 			ctx.lineWidth = 3;
@@ -267,41 +273,28 @@ const Rogue = (() => {
 		}
 	}
 
-	class PlayerBulletComponent extends Pure.RenderComponent {
-		#x = 0;
-		#y = 0;
-		#width = 20;
-		#height = 5;
-
+	class PlayerBulletComponent extends SpriteComponent {
 		constructor(x, y, width, height) {
-			super();
-			this.#x = x;
-			this.#y = y;
-			this.#width = width;
-			this.#height = height;
+			super(x, y, width, height);
 		}
 
 		update(instant) {
 			const bulletSpeed = 40;
 			const ratio = bulletSpeed * instant.elapsed() / 1000;
 			if (isPortrait()) {
-				this.#y -= this.#height * ratio;
+				this.offsetY(-this.getHeight() * ratio);
 			} else {
-				this.#x += this.#width * ratio;
+				this.offsetX(this.getWidth() * ratio);
 			}
 		}
 
 		render(instant) {
 			ctx.fillStyle = 'yellow';
 			if (isPortrait()) {
-				ctx.fillRect(this.#x - this.#width, this.#y - this.#height, this.#width, this.#height);
+				ctx.fillRect(this.getX() - this.getWidth(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 			} else {
-				ctx.fillRect(this.#x, this.#y, this.#width, this.#height);
+				ctx.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 			}
-		}
-
-		getBoundingBox() {
-			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
 		}
 	}
 
