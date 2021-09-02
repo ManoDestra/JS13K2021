@@ -358,7 +358,9 @@ const Rogue = (() => {
 			scrollSeconds: 10
 		}));
 		const size = (isPortrait() ? canvas.height : canvas.width) / 15;
-		components.push(new ShipComponent(0, 0, size, receive));
+		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
+        const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
+		components.push(new ShipComponent(startX, startY, size, receive));
 		components.push(new HudComponent());
 
 		return assets;
