@@ -1,7 +1,7 @@
 /*
 const Test = (() => {
 	function foobar(clazz) {
-		if (clazz.prototype instanceof Pure.Component) {
+		if (clazz.prototype instanceof Purge.Component) {
 			const instance = new clazz();
 			console.log('Instance:', instance);
 		} else {
@@ -82,7 +82,7 @@ const SpaceGame = (() => {
 */
 
 const Rogue = (() => {
-	class StarField extends Pure.RenderComponent {
+	class StarField extends Purge.RenderComponent {
 		constructor(options) {
 			super();
 			this.x = 0;
@@ -124,7 +124,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Ship extends Pure.Sprite {
+	class Ship extends Purge.Sprite {
 		#send = null;
 
 		constructor(x, y, size, send) {
@@ -192,7 +192,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class PlayerBullet extends Pure.Sprite {
+	class PlayerBullet extends Purge.Sprite {
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
 		}
@@ -217,7 +217,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class TimeLine extends Pure.Component {
+	class TimeLine extends Purge.Component {
 		#totalElapsed;
 		#send;
 
@@ -253,7 +253,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Enemy extends Pure.Sprite {
+	class Enemy extends Purge.Sprite {
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
 		}
@@ -285,7 +285,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Hud extends Pure.RenderComponent {
+	class Hud extends Purge.RenderComponent {
 		#tmp;
 
 		constructor(tmp) {
@@ -462,7 +462,7 @@ const Rogue = (() => {
 		//		- bullets that have collided with enemies
 		//		- enemies that have been killed
 
-		components.filter(c => c instanceof Pure.Component).forEach(c => c.update(instant));
+		components.filter(c => c instanceof Purge.Component).forEach(c => c.update(instant));
 
 		for (let i = components.length - 1; i >= 0; i--) {
 			const c = components[i];
@@ -490,7 +490,7 @@ const Rogue = (() => {
 
 	function render(instant) {
 		clear();
-		components.filter(c => c instanceof Pure.RenderComponent).forEach(c => c.render(instant));
+		components.filter(c => c instanceof Purge.RenderComponent).forEach(c => c.render(instant));
 	}
 
 	return {
