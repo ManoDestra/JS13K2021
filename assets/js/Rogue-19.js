@@ -304,7 +304,6 @@ const Rogue = (() => {
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
 	const FONT = '4em Segoe UI';
-	const COUNT_STARS = 250;
 
 	const canvas = Nucleus.$('canvas');
 	const ctx = canvas.getContext('2d');
@@ -383,24 +382,23 @@ const Rogue = (() => {
 
 	async function preRender() {
 		const [starField1, starField2, starField3] = await Promise.all([
-			getStarField(),
-			getStarField(),
-			getStarField()
+			getStarField(250),
+			getStarField(200),
+			getStarField(150)
 		]);
 		return {
 			starField1, starField2, starField3
 		};
 	}
 
-	function getStarField() {
+	function getStarField(count = 250) {
 		return generateImage({
 			width: canvas.width,
 			height: canvas.height,
 			consumer: c => {
 				c.strokeStyle = GREEN;
-				//c.fillStyle = LIGHT;
 				c.fillStyle = 'cornflowerblue';
-				for (let i = 0; i < COUNT_STARS; i++) {
+				for (let i = 0; i < count; i++) {
 					const r = parseInt(Math.random() * 256);
 					const g = parseInt(Math.random() * 256);
 					const b = parseInt(Math.random() * 128) + 128;
@@ -410,15 +408,6 @@ const Rogue = (() => {
 					const size = parseInt(Math.random() * 3) + 1;
 					c.fillRect(x, y, size, size);
 				}
-
-				//x.fillRect(8, 8, 48, 48);
-
-				/*
-				x.beginPath();
-				x.arc(128, 128, 56, 0, Math.PI * 2);
-				x.fill();
-				x.closePath();
-				*/
 			}
 		});
 	}

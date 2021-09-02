@@ -108,6 +108,16 @@ const Pure = (() => {
 		getBoundingBox() {
 			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
 		}
+
+		moveTo(x, y) {
+			this.setX(x);
+			this.setY(y);
+		}
+
+		moveBy(deltaX, deltaY) {
+			this.offsetX(deltaX);
+			this.offsetY(deltaY);
+		}
 	}
 
 	// TODO: complete this, but allow for plugin style logic
