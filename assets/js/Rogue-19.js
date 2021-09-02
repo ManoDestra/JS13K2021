@@ -268,6 +268,35 @@ const Rogue = (() => {
 		}
 	}
 
+	class Spawner extends Pure.Component {
+		#totalElapsed;
+
+		constructor() {
+			super();
+			this.#totalElapsed = 0;
+		}
+
+		update(instant) {
+			this.#totalElapsed += instant.elapsed();
+		}
+
+		getTotalElapsed() {
+			return this.#totalElapsed;
+		}
+
+		getTotalSeconds() {
+			return Math.floor(this.#totalElapsed / 1000);
+		}
+
+		getTotalMinutes() {
+			return Math.floor(this.getTotalSeconds() / 60);
+		}
+
+		getSeconds() {
+			return this.getTotalSeconds() % 60;
+		}
+	}
+
 	class Enemy extends Pure.RenderComponent {
 		constructor() {
 			super();
@@ -281,14 +310,17 @@ const Rogue = (() => {
 	}
 
 	class Hud extends Pure.RenderComponent {
-		constructor() {
+		#tmp;
+
+		constructor(tmp) {
 			super();
+			this.#tmp = tmp;
 		}
 
 		render(instant) {
 			ctx.fillStyle = GREEN;
 			ctx.font = FONT;
-			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Comps: ' + components.length, 20, canvas.height - 20);
+			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Total: ' + this.#tmp.getTotalMinutes() + ': ' + this.#tmp.getSeconds(), 20, canvas.height - 20);
 		}
 	}
 
@@ -303,7 +335,6 @@ const Rogue = (() => {
 	const components = [];
 
 	function start() {
-		console.log('Start');
 		init()
 			.then(r => Nucleus.Clock.start(updateAndRender))
 			.catch(e => console.error(e))
@@ -331,7 +362,9 @@ const Rogue = (() => {
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
 		components.push(new Ship(startX, startY, size, receive));
-		components.push(new Hud());
+		const spawner = new Spawner();
+		components.push(spawner);
+		components.push(new Hud(spawner));
 
 		return assets;
 	}
