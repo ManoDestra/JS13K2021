@@ -82,36 +82,6 @@ const SpaceGame = (() => {
 */
 
 const Rogue = (() => {
-	class BoundingBox {
-		#x;
-		#y;
-		#width;
-		#height;
-
-		constructor(x, y, width, height) {
-			this.#x = x;
-			this.#y = y;
-			this.#width = width;
-			this.#height = height;
-		}
-
-		getX() {
-			return this.#x;
-		}
-
-		getY() {
-			return this.#y;
-		}
-
-		getWidth() {
-			return this.#width;
-		}
-
-		getHeight() {
-			return this.#height;
-		}
-	}
-
 	class StarField extends Pure.RenderComponent {
 		constructor(options) {
 			super();
@@ -201,7 +171,7 @@ const Rogue = (() => {
 		}
 
 		getBoundingBox() {
-			return new BoundingBox(this.#x, this.#y, this.#width, this.#height);
+			return new Pure.BoundingBox(this.#x, this.#y, this.#width, this.#height);
 		}
 	}
 
