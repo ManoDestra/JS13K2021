@@ -1,7 +1,7 @@
 /*
 const Test = (() => {
 	function foobar(clazz) {
-		if (clazz.prototype instanceof Purge.Component) {
+		if (clazz.prototype instanceof Urge.Component) {
 			const instance = new clazz();
 			console.log('Instance:', instance);
 		} else {
@@ -73,7 +73,7 @@ const SpaceGame = (() => {
 */
 
 const Rogue = (() => {
-	class StarField extends Purge.RenderComponent {
+	class StarField extends Urge.RenderComponent {
 		constructor(options) {
 			super();
 			this.x = 0;
@@ -115,7 +115,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Ship extends Purge.Sprite {
+	class Ship extends Urge.Sprite {
 		#send = null;
 
 		constructor(x, y, size, send) {
@@ -183,7 +183,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class PlayerBullet extends Purge.Sprite {
+	class PlayerBullet extends Urge.Sprite {
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
 		}
@@ -208,7 +208,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class TimeLine extends Purge.Component {
+	class TimeLine extends Urge.Component {
 		#totalElapsed;
 		#send;
 
@@ -244,7 +244,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Enemy extends Purge.Sprite {
+	class Enemy extends Urge.Sprite {
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
 		}
@@ -276,7 +276,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Hud extends Purge.RenderComponent {
+	class Hud extends Urge.RenderComponent {
 		#tmp;
 
 		constructor(tmp) {
@@ -455,7 +455,7 @@ const Rogue = (() => {
 		//		- bullets that have collided with enemies
 		//		- enemies that have been killed
 
-		components.filter(c => c instanceof Purge.Component).forEach(c => c.update(instant));
+		components.filter(c => c instanceof Urge.Component).forEach(c => c.update(instant));
 
 		for (let i = components.length - 1; i >= 0; i--) {
 			const c = components[i];
@@ -488,7 +488,7 @@ const Rogue = (() => {
 		components.filter(c => c instanceof PlayerBullet).forEach(c => c.render(instant));
 		components.filter(c => c instanceof Enemy).forEach(c => c.render(instant));
 		components.filter(c => c instanceof Hud).forEach(c => c.render(instant));
-		//components.filter(c => c instanceof Purge.RenderComponent).forEach(c => c.render(instant));
+		//components.filter(c => c instanceof Urge.RenderComponent).forEach(c => c.render(instant));
 	}
 
 	return {
@@ -496,6 +496,6 @@ const Rogue = (() => {
 	};
 })();
 
-const all = Purge.Storage.getAll('com.manodestra.rogue');
+const all = Urge.Storage.getAll('com.manodestra.rogue');
 console.log(all);
 Rogue.start();

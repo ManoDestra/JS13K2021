@@ -1,5 +1,5 @@
 // PURGE (Programmable Update Render Game Engine)
-const Purge = (() => {
+const Urge = (() => {
 	class BoundingBox {
 		#x;
 		#y;
