@@ -1,4 +1,4 @@
-// PURGE (Programmable Update Render Game Engine)
+// URGE (Update Render Game Engine)
 const Urge = (() => {
 	class BoundingBox {
 		#x;
