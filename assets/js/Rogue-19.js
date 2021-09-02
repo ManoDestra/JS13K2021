@@ -180,7 +180,7 @@ const Rogue = (() => {
 			];
 			ctx.strokeStyle = 'cornflowerblue';
 			ctx.lineWidth = 3;
-			ctx.fillStyle = 'darkred';
+			ctx.fillStyle = 'darkgreen';
 			ctx.beginPath();
 			ctx.moveTo(points[3][0], points[3][1]);
 			points.forEach(p => {
