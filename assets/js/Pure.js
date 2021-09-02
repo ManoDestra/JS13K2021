@@ -110,6 +110,7 @@ const Pure = (() => {
 		}
 	}
 
+	// TODO: complete this, but allow for plugin style logic
 	class Manager extends RenderComponent {
 		#components = [];
 
@@ -140,7 +141,6 @@ const Pure = (() => {
 		BoundingBox,
 		Component,
 		RenderComponent,
-		Sprite,
-		Manager
+		Sprite
 	};
 })();
