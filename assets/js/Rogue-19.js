@@ -217,7 +217,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class Spawner extends Pure.Component {
+	class TimeLine extends Pure.Component {
 		#totalElapsed;
 		#send;
 
@@ -273,7 +273,7 @@ const Rogue = (() => {
 		render(instant) {
 			ctx.fillStyle = GREEN;
 			ctx.font = FONT;
-			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Total: ' + this.#tmp.getTotalMinutes() + ': ' + this.#tmp.getSeconds(), 20, canvas.height - 20);
+			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Total: ' + this.#tmp.getTotalMinutes() + ':' + this.#tmp.getSeconds(), 20, canvas.height - 20);
 		}
 	}
 
@@ -315,9 +315,9 @@ const Rogue = (() => {
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
 		components.push(new Ship(startX, startY, size, receive));
-		const spawner = new Spawner(receive);
-		components.push(spawner);
-		components.push(new Hud(spawner));
+		const timeLine = new TimeLine(receive);
+		components.push(timeLine);
+		components.push(new Hud(timeLine));
 
 		return assets;
 	}
