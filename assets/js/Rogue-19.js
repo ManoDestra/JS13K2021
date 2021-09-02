@@ -270,14 +270,17 @@ const Rogue = (() => {
 
 	class Spawner extends Pure.Component {
 		#totalElapsed;
+		#send;
 
-		constructor() {
+		constructor(send) {
 			super();
 			this.#totalElapsed = 0;
+			this.#send = send;
 		}
 
 		update(instant) {
 			this.#totalElapsed += instant.elapsed();
+			// TODO: add enemy spawn logic here via this.#send
 		}
 
 		getTotalElapsed() {
@@ -362,7 +365,7 @@ const Rogue = (() => {
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
 		components.push(new Ship(startX, startY, size, receive));
-		const spawner = new Spawner();
+		const spawner = new Spawner(receive);
 		components.push(spawner);
 		components.push(new Hud(spawner));
 
