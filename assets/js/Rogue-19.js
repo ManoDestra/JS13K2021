@@ -112,7 +112,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class StarFieldComponent extends Pure.RenderComponent {
+	class StarField extends Pure.RenderComponent {
 		constructor(options) {
 			super();
 			this.x = 0;
@@ -154,7 +154,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class SpriteComponent extends Pure.RenderComponent {
+	class Sprite extends Pure.RenderComponent {
 		#x = 0;
 		#y = 0;
 		#width = 0;
@@ -205,7 +205,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class ShipComponent extends SpriteComponent {
+	class Ship extends Sprite {
 		#send = null;
 
 		constructor(x, y, size, send) {
@@ -273,7 +273,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class PlayerBulletComponent extends SpriteComponent {
+	class PlayerBullet extends Sprite {
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
 		}
@@ -298,7 +298,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class EnemyComponent extends Pure.RenderComponent {
+	class Enemy extends Pure.RenderComponent {
 		constructor() {
 			super();
 		}
@@ -310,7 +310,7 @@ const Rogue = (() => {
 		}
 	}
 
-	class HudComponent extends Pure.RenderComponent {
+	class Hud extends Pure.RenderComponent {
 		constructor() {
 			super();
 		}
@@ -345,23 +345,23 @@ const Rogue = (() => {
 		window.onresize = onResize;
 		Nucleus.KeyInputHandler.start();
 		const assets = await preRender();
-		components.push(new StarFieldComponent({
+		components.push(new StarField({
 			image: assets.starField1,
 			scrollSeconds: 12
 		}));
-		components.push(new StarFieldComponent({
+		components.push(new StarField({
 			image: assets.starField2,
 			scrollSeconds: 11
 		}));
-		components.push(new StarFieldComponent({
+		components.push(new StarField({
 			image: assets.starField3,
 			scrollSeconds: 10
 		}));
 		const size = (isPortrait() ? canvas.height : canvas.width) / 15;
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
-		components.push(new ShipComponent(startX, startY, size, receive));
-		components.push(new HudComponent());
+		components.push(new Ship(startX, startY, size, receive));
+		components.push(new Hud());
 
 		return assets;
 	}
@@ -369,15 +369,16 @@ const Rogue = (() => {
 	function receive(message) {
 		switch (message) {
 			case 'PLAYER_BULLET':
-				const player = components.filter(c => c instanceof ShipComponent)[0];
+				const player = components.find(c => c instanceof Ship);
 				const box = player.getBoundingBox();
 				const x = box.getX() + (isPortrait() ? box.getWidth() / 2 : box.getWidth());
 				const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
 				const width = isPortrait() ? 5 : 20;
 				const height = isPortrait() ? 20 : 5;
-				components.push(new PlayerBulletComponent(x, y, width, height));
+				components.push(new PlayerBullet(x, y, width, height));
 				break;
 			default:
+				throw new Error('Unsupported Message: ' + message);
 		}
 	}
 
@@ -477,7 +478,7 @@ const Rogue = (() => {
 
 		for (let i = components.length - 1; i >= 0; i--) {
 			const c = components[i];
-			if (c instanceof PlayerBulletComponent) {
+			if (c instanceof PlayerBullet) {
 				const box = c.getBoundingBox();
 				const portraitRemoval = isPortrait() && box.getY() + box.getHeight() < 0;
 				const nonPortraitRemoval = !isPortrait() && box.getX() > canvas.width;
