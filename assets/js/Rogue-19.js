@@ -483,7 +483,12 @@ const Rogue = (() => {
 
 	function render(instant) {
 		clear();
-		components.filter(c => c instanceof Purge.RenderComponent).forEach(c => c.render(instant));
+		components.filter(c => c instanceof StarField).forEach(c => c.render(instant));
+		components.filter(c => c instanceof Ship).forEach(c => c.render(instant));
+		components.filter(c => c instanceof PlayerBullet).forEach(c => c.render(instant));
+		components.filter(c => c instanceof Enemy).forEach(c => c.render(instant));
+		components.filter(c => c instanceof Hud).forEach(c => c.render(instant));
+		//components.filter(c => c instanceof Purge.RenderComponent).forEach(c => c.render(instant));
 	}
 
 	return {
@@ -491,4 +496,6 @@ const Rogue = (() => {
 	};
 })();
 
+const all = Purge.Storage.getAll('com.manodestra.rogue');
+console.log(all);
 Rogue.start();

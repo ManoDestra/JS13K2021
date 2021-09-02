@@ -238,11 +238,7 @@ Nucleus.Storage = (() => {
 		}
 	}
 
-	function getStorage(persist) {
-		if (typeof persist == 'undefined') {
-			persist = true;
-		}
-
+	function getStorage(persist = true) {
 		const storage = persist ? localStorage : sessionStorage;
 		return storage ? storage : null;
 	}
