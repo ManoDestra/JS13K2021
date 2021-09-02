@@ -133,7 +133,7 @@ const Rogue = (() => {
 		}
 
 		update(instant) {
-			this.size = (isPortrait() ? canvas.height : canvas.width) / 15;
+			this.size = getSize();
 			const delta = this.getWidth() * 4 * instant.elapsed() / 1000;
 			if (Nucleus.KeyInputHandler.checkKey('w', true)) {
 				this.offsetY(-delta);
@@ -333,7 +333,7 @@ const Rogue = (() => {
 			image: assets.starField3,
 			scrollSeconds: 10
 		}));
-		const size = (isPortrait() ? canvas.height : canvas.width) / 15;
+		const size = getSize();
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
 		components.push(new Ship(startX, startY, size, receive));
@@ -360,7 +360,7 @@ const Rogue = (() => {
 				break;
 			case 'CELL':
 				{
-					const size = (isPortrait() ? canvas.height : canvas.width) / 15;
+					const size = getSize();
 					const x = isPortrait()
 						? parseInt(Math.random() * (canvas.width - size))
 						: canvas.width + (size / 2);
@@ -378,6 +378,10 @@ const Rogue = (() => {
 
 	function isPortrait() {
 		return canvas.width < canvas.height;
+	}
+
+	function getSize() {
+		return (isPortrait() ? canvas.height : canvas.width) / 25;
 	}
 
 	async function preRender() {
