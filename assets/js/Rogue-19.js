@@ -280,6 +280,7 @@ const Rogue = (() => {
 
 		update(instant) {
 			this.#totalElapsed += instant.elapsed();
+
 			// TODO: add enemy spawn logic here via this.#send
 		}
 
