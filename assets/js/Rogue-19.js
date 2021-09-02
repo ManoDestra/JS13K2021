@@ -231,6 +231,9 @@ const Rogue = (() => {
 			this.#totalElapsed += instant.elapsed();
 
 			// TODO: add enemy spawn logic here via this.#send
+			if (instant.frame % 180 == 120) {
+				this.#send('CELL');
+			}
 		}
 
 		getTotalElapsed() {
@@ -250,15 +253,35 @@ const Rogue = (() => {
 		}
 	}
 
-	class Enemy extends Pure.RenderComponent {
-		constructor() {
-			super();
+	class Enemy extends Pure.Sprite {
+		constructor(x, y, width, height) {
+			super(x, y, width, height);
+		}
+	}
+
+	class Cell extends Enemy {
+		constructor(x, y, size) {
+			super(x, y, size, size);
 		}
 
 		update(instant) {
+			const movement = this.getWidth() * instant.elapsed() * 2 / 1000;
+			if (isPortrait()) {
+				this.offsetY(movement);
+			} else {
+				this.offsetX(-movement);
+			}
 		}
 
 		render(instant) {
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = 'red';
+			ctx.fillStyle = 'darkred';
+			ctx.beginPath();
+			ctx.arc(this.getX(), this.getY(), this.getWidth() / 2, 0, Math.PI * 2);
+			ctx.stroke();
+			ctx.fill();
+			ctx.closePath();
 		}
 	}
 
@@ -325,13 +348,29 @@ const Rogue = (() => {
 	function receive(message) {
 		switch (message) {
 			case 'PLAYER_BULLET':
-				const player = components.find(c => c instanceof Ship);
-				const box = player.getBoundingBox();
-				const x = box.getX() + (isPortrait() ? box.getWidth() / 2 : box.getWidth());
-				const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
-				const width = isPortrait() ? 5 : 20;
-				const height = isPortrait() ? 20 : 5;
-				components.push(new PlayerBullet(x, y, width, height));
+				{
+					const player = components.find(c => c instanceof Ship);
+					const box = player.getBoundingBox();
+					const x = box.getX() + (isPortrait() ? box.getWidth() / 2 : box.getWidth());
+					const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
+					const width = isPortrait() ? 5 : 20;
+					const height = isPortrait() ? 20 : 5;
+					components.push(new PlayerBullet(x, y, width, height));
+				}
+
+				break;
+			case 'CELL':
+				{
+					const size = (isPortrait() ? canvas.height : canvas.width) / 15;
+					const x = isPortrait()
+						? parseInt(Math.random() * (canvas.width - size))
+						: canvas.width + (size / 2);
+					const y = isPortrait()
+						? (0 - (size / 2))
+						: parseInt(Math.random() * (canvas.height - size));
+					components.push(new Cell(x, y, size));
+				}
+
 				break;
 			default:
 				throw new Error('Unsupported Message: ' + message);
