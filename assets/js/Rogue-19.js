@@ -208,8 +208,8 @@ const Rogue = (() => {
 	class ShipComponent extends SpriteComponent {
 		#send = null;
 
-		constructor(send) {
-			super(0, 0, (isPortrait() ? canvas.height : canvas.width) / 15, (isPortrait() ? canvas.height : canvas.width) / 15);
+		constructor(x, y, size, send) {
+			super(x, y, size, size);
 			this.#send = send;
 		}
 
@@ -357,7 +357,8 @@ const Rogue = (() => {
 			image: assets.starField3,
 			scrollSeconds: 10
 		}));
-		components.push(new ShipComponent(receive));
+		const size = (isPortrait() ? canvas.height : canvas.width) / 15;
+		components.push(new ShipComponent(0, 0, size, receive));
 		components.push(new HudComponent());
 
 		return assets;
