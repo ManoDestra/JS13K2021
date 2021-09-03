@@ -507,5 +507,5 @@ if (!model) {
 
 const finalModel = Nucleus.Cryo.get('Save', namespace);
 console.log('Save:', finalModel);
-//Nucleus.Cryo.removeAll();
-//Rogue.start();
+Nucleus.Cryo.removeAll();
+Rogue.start();
