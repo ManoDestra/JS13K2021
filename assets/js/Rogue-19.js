@@ -495,34 +495,18 @@ const Rogue = (() => {
 	};
 })();
 
-Nucleus.Cryo.removeAll();
+const namespace = 'com.manodestra.rogue';
+//Nucleus.Cryo.removeAll();
+const model = Nucleus.Cryo.get('Save', namespace);
+console.log('Model:', model);
+if (!model) {
+	console.log('Setting Default Model...')
+	Nucleus.Cryo.set('Save', {
+		id: 1
+	}, namespace);
+}
 
-Nucleus.Cryo.set('Creds', {
-	id: 616,
-	username: 'ManoDestra1',
-	password: 'Neo001'
-}, 'com.manodestra.rogue');
-
-Nucleus.Cryo.set('Creds', {
-	id: 617,
-	username: 'ManoDestra2',
-	password: 'Neo002'
-}, 'com.manodestra.monomania');
-
-Nucleus.Cryo.set('Creds', {
-	id: 618,
-	username: 'ManoDestra3',
-	password: 'Neo003'
-}, 'com.manodestra.empire');
-
-const all = Nucleus.Cryo.getAll();
-console.log(all);
-
-Nucleus.Cryo.removeByNamespace();
-
-const all2 = Nucleus.Cryo.getAll();
-console.log(all2);
-
-Nucleus.Cryo.removeAll();
-
+const finalModel = Nucleus.Cryo.get('Save', namespace);
+console.log('Model:', finalModel);
+//Nucleus.Cryo.removeAll();
 //Rogue.start();
