@@ -208,9 +208,11 @@ Nucleus.Cryo = class {
 		const all = {};
 		for (let i = 0; i < storage.length; i++) {
 			const key = storage.key(i);
-			const value = storage.getItem(key);
-			const model = JSON.parse(value);
-			all[key] = model;
+			if (key.startsWith(prefix)) {
+				const value = storage.getItem(key);
+				const model = JSON.parse(value);
+				all[key] = model;
+			}
 		}
 
 		return all;
@@ -237,7 +239,14 @@ Nucleus.Cryo = class {
 	}
 
 	static removeByNamespace(namespace = '', persist = true) {
-		//TODO: code
+		const prefix = namespace ? namespace + '.' : '';
+		const storage = Nucleus.Cryo.#getStorage(persist);
+		for (let i = storage.length - 1; i >= 0; i--) {
+			const key = storage.key(i);
+			if (key.startsWith(prefix)) {
+				storage.removeItem(key);
+			}
+		}
 	}
 
 	static removeAll(persist = true) {
