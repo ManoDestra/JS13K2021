@@ -496,17 +496,16 @@ const Rogue = (() => {
 })();
 
 const namespace = 'com.manodestra.rogue';
-//Nucleus.Cryo.removeAll();
+Nucleus.Cryo.removeAll();
 const model = Nucleus.Cryo.get('Save', namespace);
-console.log('Model:', model);
 if (!model) {
-	console.log('Setting Default Model...')
-	Nucleus.Cryo.set('Save', {
-		id: 1
-	}, namespace);
+	console.log('Setting Default Model...');
+	const defaultSave = {
+	};
+	Nucleus.Cryo.set('Save', defaultSave, namespace);
 }
 
 const finalModel = Nucleus.Cryo.get('Save', namespace);
-console.log('Model:', finalModel);
+console.log('Save:', finalModel);
 //Nucleus.Cryo.removeAll();
 //Rogue.start();
