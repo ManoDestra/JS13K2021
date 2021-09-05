@@ -78,7 +78,8 @@ const Rogue = (() => {
 		INTRO: 1,
 		PLAYING: 2,
 		PAUSED: 3,
-		GAME_OVER: 4
+		DEATH: 4,
+		GAME_COMPLETION: 5
 	};
 
 	class StartUpdate extends Urge.Component {
