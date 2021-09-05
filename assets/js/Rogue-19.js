@@ -328,7 +328,8 @@ const Rogue = (() => {
 
 	async function init() {
 		const namespace = 'com.manodestra.rogue';
-		Nucleus.Cryo.removeAll();
+		console.log('Removing All Storage By Namespace...');
+		Nucleus.Cryo.removeByNamespace(namespace);
 		const model = Nucleus.Cryo.get('Save', namespace);
 		if (!model) {
 			console.log('Setting Default Model...');
