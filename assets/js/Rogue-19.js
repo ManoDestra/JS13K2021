@@ -247,8 +247,9 @@ const Rogue = (() => {
 	class Enemy extends Urge.Sprite {
 		#health;
 
-		constructor(x, y, width, height) {
+		constructor(x, y, width, height, health) {
 			super(x, y, width, height);
+			this.#health = health;
 		}
 
 		getHealth() {
@@ -266,8 +267,8 @@ const Rogue = (() => {
 	}
 
 	class Cell extends Enemy {
-		constructor(x, y, size) {
-			super(x, y, size, size);
+		constructor(x, y, size, health) {
+			super(x, y, size, size, health);
 		}
 
 		update(instant) {
@@ -376,7 +377,7 @@ const Rogue = (() => {
 					const y = isPortrait()
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
-					components.push(new Cell(x, y, size));
+					components.push(new Cell(x, y, size, 100));
 				}
 
 				break;
@@ -480,7 +481,6 @@ const Rogue = (() => {
 				const portraitRemoval = isPortrait() && box.getY() + box.getHeight() < 0;
 				const nonPortraitRemoval = !isPortrait() && box.getX() > canvas.width;
 				if (portraitRemoval || nonPortraitRemoval) {
-					//console.log('Player Bullet Removal:', c, box);
 					components.splice(i, 1);
 				}
 			}
@@ -490,13 +490,14 @@ const Rogue = (() => {
 				const portraitRemoval = isPortrait() && box.getY() - (box.getHeight() / 2) > canvas.height;
 				const nonPortraitRemoval = !isPortrait() && box.getX() + box.getWidth() < 0;
 				if (portraitRemoval || nonPortraitRemoval) {
-					//console.log('Enemy Removal:', c, box);
 					components.splice(i, 1);
 				} else {
 					const playerBullets = components.filter(c => c instanceof PlayerBullet);
 					playerBullets.forEach(b => {
 						if (b.getBoundingBox().intersects(c.getBoundingBox())) {
 							console.log('Bullet Intersecting Enemy:', b, c, performance.now());
+							components.splice(i, 1);
+							console.log('Index Of Bullet:', components.indexOf(b), performance.now());
 						}
 					});
 				}
