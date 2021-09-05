@@ -53,3 +53,15 @@ Proximity causes infection rate to rise.
 - Explosive
 - Shooters
 - Boss (Incubator Mothership)
+
+## Level Up Factors
+- Enemies killed (increase damage)
+- Distance Travelled (reduce infection vulerability)
+- Health Research (increase health)
+- Shield Research (increase shield)
+- Long shots (increase accuracy)
+- Last Minute Kills (increase ?)
+
+## Challenges/Achievements
+
+TBD

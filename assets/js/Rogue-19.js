@@ -327,6 +327,20 @@ const Rogue = (() => {
 	}
 
 	async function init() {
+		const namespace = 'com.manodestra.rogue';
+		Nucleus.Cryo.removeAll();
+		const model = Nucleus.Cryo.get('Save', namespace);
+		if (!model) {
+			console.log('Setting Default Model...');
+			const defaultSave = {
+			};
+			Nucleus.Cryo.set('Save', defaultSave, namespace);
+		}
+
+		const finalModel = Nucleus.Cryo.get('Save', namespace);
+		console.log('Save:', finalModel);
+		//Nucleus.Cryo.removeAll();
+
 		onResize();
 		window.onresize = onResize;
 		Nucleus.KeyInputHandler.start();
@@ -478,12 +492,6 @@ const Rogue = (() => {
 	}
 
 	function update(instant) {
-		// TODO: process bullet collisions with enemies
-		// TODO: remove any components that are no longer required
-		//		- bullets off screen
-		//		- bullets that have collided with enemies
-		//		- enemies that have been killed
-
 		store.update(instant);
 
 		store.forEach((c, id, map) => {
@@ -517,6 +525,15 @@ const Rogue = (() => {
 								}
 							}
 						}
+
+						if (b instanceof Ship) {
+							if (b.getBoundingBox().intersects(c.getBoundingBox())) {
+								// TODO: this would be a GAME OVER scenario
+								console.log('Ship Collided With Enemy:', b, c);
+							} else {
+								// TODO: deal with proximity infection
+							}
+						}
 					});
 				}
 			}
@@ -537,17 +554,4 @@ const Rogue = (() => {
 	};
 })();
 
-const namespace = 'com.manodestra.rogue';
-Nucleus.Cryo.removeAll();
-const model = Nucleus.Cryo.get('Save', namespace);
-if (!model) {
-	console.log('Setting Default Model...');
-	const defaultSave = {
-	};
-	Nucleus.Cryo.set('Save', defaultSave, namespace);
-}
-
-const finalModel = Nucleus.Cryo.get('Save', namespace);
-console.log('Save:', finalModel);
-//Nucleus.Cryo.removeAll();
 Rogue.start();
