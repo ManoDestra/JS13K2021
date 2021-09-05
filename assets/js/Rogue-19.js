@@ -73,6 +73,14 @@ const SpaceGame = (() => {
 */
 
 const Rogue = (() => {
+	const GameScreen = {
+		START: 0,
+		INTRO: 1,
+		PLAYING: 2,
+		PAUSED: 3,
+		GAME_OVER: 4
+	};
+
 	class StarField extends Urge.RenderComponent {
 		constructor(options) {
 			super();
@@ -327,24 +335,12 @@ const Rogue = (() => {
 	}
 
 	async function init() {
-		const namespace = 'com.manodestra.rogue';
-		console.log('Removing All Storage By Namespace...');
-		Nucleus.Cryo.removeByNamespace(namespace);
-		const model = Nucleus.Cryo.get('Save', namespace);
-		if (!model) {
-			console.log('Setting Default Model...');
-			const defaultSave = {
-			};
-			Nucleus.Cryo.set('Save', defaultSave, namespace);
-		}
-
-		const finalModel = Nucleus.Cryo.get('Save', namespace);
-		console.log('Save:', finalModel);
-		//Nucleus.Cryo.removeAll();
+		const save = getSaveOrDefault();
+		console.log('Save:', save);
 
 		onResize();
 		window.onresize = onResize;
-		Nucleus.KeyInputHandler.start();
+
 		const assets = await preRender();
 		const sf1 = new StarField({
 			image: assets.starField1,
@@ -372,7 +368,25 @@ const Rogue = (() => {
 		const hud = new Hud(timeLine);
 		store.put(hud);
 
+		Nucleus.KeyInputHandler.start();
+
 		return assets;
+	}
+
+	function getSaveOrDefault() {
+		const namespace = 'com.manodestra.rogue';
+		console.log('Removing All Storage By Namespace...');
+		Nucleus.Cryo.removeByNamespace(namespace);
+		const model = Nucleus.Cryo.get('Save', namespace);
+		if (!model) {
+			console.log('Setting Default Model...');
+			const defaultSave = {
+				health: 100
+			};
+			Nucleus.Cryo.set('Save', defaultSave, namespace);
+		}
+
+		return Nucleus.Cryo.get('Save', namespace);
 	}
 
 	function receive(message) {
