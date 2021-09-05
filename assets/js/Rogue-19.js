@@ -508,9 +508,13 @@ const Rogue = (() => {
 					store.forEach((b, bulletId, bulletMap) => {
 						if (b instanceof PlayerBullet) {
 							if (b.getBoundingBox().intersects(c.getBoundingBox())) {
-								console.log('Bullet Intersecting Enemy:', b, c, performance.now());
-								bulletMap.delete(bulletId);;
-								map.delete(id);
+								bulletMap.delete(bulletId);
+
+								c.reduceHealth(25);
+								if (!c.isAlive()) {
+									// TODO: enemy explosion/death effect?
+									map.delete(id);
+								}
 							}
 						}
 					});
