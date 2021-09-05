@@ -81,6 +81,24 @@ const Rogue = (() => {
 		GAME_OVER: 4
 	};
 
+	class StartUpdate extends Urge.Component {
+		constructor() {
+			super();
+		}
+	}
+
+	class IntroUpdate extends Urge.Component {
+		constructor() {
+			super();
+		}
+	}
+
+	class PlayingUpdate extends Urge.Component {
+		constructor() {
+			super();
+		}
+	}
+
 	class StarField extends Urge.RenderComponent {
 		constructor(options) {
 			super();
@@ -124,11 +142,28 @@ const Rogue = (() => {
 	}
 
 	class Ship extends Urge.Sprite {
+		#skills = null;
+		#health = 0;
 		#send = null;
 
-		constructor(x, y, size, send) {
+		constructor(x, y, size, skills, send) {
 			super(x, y, size, size);
+			this.#skills = skills;
+			this.#health = skills.health;
 			this.#send = send;
+		}
+
+		getHealth() {
+			return this.#health;
+		}
+
+		reduceHealth(damage) {
+			this.#health -= Math.abs(damage);
+			this.#health = Math.max(0, this.#health);
+		}
+
+		isAlive() {
+			return this.getHealth() > 0;
 		}
 
 		update(instant) {
@@ -159,7 +194,8 @@ const Rogue = (() => {
 				this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
 			}
 
-			//TODO: handle the fire rate
+			// TODO: handle the fire rate
+			// TODO: change to user controller firing, rather than hold to fire?
 			if (Nucleus.KeyInputHandler.checkKey(' ') && instant.frame % 30 == 0) {
 				this.#send('PLAYER_BULLET');
 			}
@@ -312,7 +348,7 @@ const Rogue = (() => {
 		render(instant) {
 			ctx.fillStyle = GREEN;
 			ctx.font = FONT;
-			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Total: ' + this.#tmp.getTotalMinutes() + ':' + this.#tmp.getSeconds() + ': ' + store.count(), 20, canvas.height - 20);
+			ctx.fillText('FPS: ' + parseInt(instant.fps()) + ', Total: ' + this.#tmp.getTotalMinutes() + ':' + this.#tmp.getSeconds() + ': ' + store.count(), 20, canvas.height - 20);
 		}
 	}
 
@@ -344,23 +380,24 @@ const Rogue = (() => {
 		const assets = await preRender();
 		const sf1 = new StarField({
 			image: assets.starField1,
-			scrollSeconds: 12
+			scrollSeconds: 21
 		});
 		const sf2 = new StarField({
 			image: assets.starField2,
-			scrollSeconds: 11
+			scrollSeconds: 18
 		});
 		const sf3 = new StarField({
 			image: assets.starField3,
-			scrollSeconds: 10
+			scrollSeconds: 15
 		});
 		store.put(sf1, sf2, sf3);
 
 		const size = getSize();
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
-        const ship = new Ship(startX, startY, size, receive);
+        const ship = new Ship(startX, startY, size, save, receive);
         store.put(ship);
+        console.log(ship);
 
 		const timeLine = new TimeLine(receive);
 		store.put(timeLine);
@@ -437,16 +474,16 @@ const Rogue = (() => {
 
 	async function preRender() {
 		const [starField1, starField2, starField3] = await Promise.all([
-			getStarField(250),
-			getStarField(200),
-			getStarField(150)
+			getStarField(250, 1, 2),
+			getStarField(200, 1, 3.5),
+			getStarField(150, 1, 5)
 		]);
 		return {
 			starField1, starField2, starField3
 		};
 	}
 
-	function getStarField(count = 250) {
+	function getStarField(count = 250, minSize = 1, maxDelta = 3) {
 		return generateImage({
 			width: canvas.width,
 			height: canvas.height,
@@ -460,7 +497,7 @@ const Rogue = (() => {
 					c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
 					const x = parseInt(Math.random() * canvas.width);
 					const y = parseInt(Math.random() * canvas.height);
-					const size = parseInt(Math.random() * 3) + 1;
+					const size = parseInt(Math.random() * maxDelta) + minSize;
 					c.fillRect(x, y, size, size);
 				}
 			}
@@ -528,10 +565,11 @@ const Rogue = (() => {
 					console.log('Enemy Removed', performance.now());
 					map.delete(id);
 				} else {
-					store.forEach((b, bulletId, bulletMap) => {
-						if (b instanceof PlayerBullet) {
-							if (b.getBoundingBox().intersects(c.getBoundingBox())) {
-								bulletMap.delete(bulletId);
+					store.forEach((sc, scId, scMap) => {
+						if (sc instanceof PlayerBullet) {
+							if (sc.getBoundingBox().intersects(c.getBoundingBox())) {
+								// TODO: bullet impact?
+								scMap.delete(scId);
 
 								c.reduceHealth(25);
 								if (!c.isAlive()) {
@@ -541,10 +579,17 @@ const Rogue = (() => {
 							}
 						}
 
-						if (b instanceof Ship) {
-							if (b.getBoundingBox().intersects(c.getBoundingBox())) {
-								// TODO: this would be a GAME OVER scenario
-								console.log('Ship Collided With Enemy:', b, c);
+						if (sc instanceof Ship) {
+							if (sc.getBoundingBox().intersects(c.getBoundingBox())) {
+								// TODO: enemy explosion?
+								map.delete(id);
+								sc.reduceHealth(25);
+								if (!sc.isAlive()) {
+									console.log('You be DEAD!');
+									scMap.delete(scId);
+								} else {
+									console.log('Ship Health: ' + sc.getHealth());
+								}
 							} else {
 								// TODO: deal with proximity infection
 							}

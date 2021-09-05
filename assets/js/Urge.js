@@ -265,6 +265,17 @@ const Urge = (() => {
 			return this.#map.entries();
 		}
 
+		entriesByType(type) {
+			const arr = [];
+			for (let e of this.entries()) {
+				if (e[1] instanceof type) {
+					arr.push(e);
+				}
+			}
+
+			return arr;
+		}
+
 		forEach(callback) {
 			this.#map.forEach(callback);
 		}
