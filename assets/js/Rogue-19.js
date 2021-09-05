@@ -304,7 +304,7 @@ const Rogue = (() => {
 		render(instant) {
 			ctx.fillStyle = GREEN;
 			ctx.font = FONT;
-			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Total: ' + this.#tmp.getTotalMinutes() + ':' + this.#tmp.getSeconds(), 20, canvas.height - 20);
+			ctx.fillText('FPS: ' + instant.fps().toFixed(3) + ', Total: ' + this.#tmp.getTotalMinutes() + ':' + this.#tmp.getSeconds() + ': ' + store.count(), 20, canvas.height - 20);
 		}
 	}
 
@@ -317,7 +317,7 @@ const Rogue = (() => {
 	const canvas = Nucleus.$('canvas');
 	//canvas.onclick = e => canvas.requestFullscreen();
 	const ctx = canvas.getContext('2d');
-	const components = [];
+	const store = new Urge.ComponentStore();
 
 	function start() {
 		init()
@@ -331,25 +331,31 @@ const Rogue = (() => {
 		window.onresize = onResize;
 		Nucleus.KeyInputHandler.start();
 		const assets = await preRender();
-		components.push(new StarField({
+		const sf1 = new StarField({
 			image: assets.starField1,
 			scrollSeconds: 12
-		}));
-		components.push(new StarField({
+		});
+		const sf2 = new StarField({
 			image: assets.starField2,
 			scrollSeconds: 11
-		}));
-		components.push(new StarField({
+		});
+		const sf3 = new StarField({
 			image: assets.starField3,
 			scrollSeconds: 10
-		}));
+		});
+		store.put(sf1, sf2, sf3);
+
 		const size = getSize();
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
-		components.push(new Ship(startX, startY, size, receive));
+        const ship = new Ship(startX, startY, size, receive);
+        store.put(ship);
+
 		const timeLine = new TimeLine(receive);
-		components.push(timeLine);
-		components.push(new Hud(timeLine));
+		store.put(timeLine);
+
+		const hud = new Hud(timeLine);
+		store.put(hud);
 
 		return assets;
 	}
@@ -358,13 +364,18 @@ const Rogue = (() => {
 		switch (message) {
 			case 'PLAYER_BULLET':
 				{
-					const player = components.find(c => c instanceof Ship);
-					const box = player.getBoundingBox();
-					const x = box.getX() + (isPortrait() ? box.getWidth() / 2 : box.getWidth());
-					const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
-					const width = isPortrait() ? 5 : 20;
-					const height = isPortrait() ? 20 : 5;
-					components.push(new PlayerBullet(x, y, width, height));
+					store.forEach(c => {
+						if (c instanceof Ship) {
+							const ship = c;
+							const box = ship.getBoundingBox();
+							const x = box.getX() + (isPortrait() ? box.getWidth() / 2 : box.getWidth());
+							const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
+							const width = isPortrait() ? 5 : 20;
+							const height = isPortrait() ? 20 : 5;
+							const bullet = new PlayerBullet(x, y, width, height);
+							store.put(bullet);
+						}
+					});
 				}
 
 				break;
@@ -377,7 +388,8 @@ const Rogue = (() => {
 					const y = isPortrait()
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
-					components.push(new Cell(x, y, size, 100));
+					const cell = new Cell(x, y, size, 100);
+					store.put(cell);
 				}
 
 				break;
@@ -472,16 +484,16 @@ const Rogue = (() => {
 		//		- bullets that have collided with enemies
 		//		- enemies that have been killed
 
-		components.filter(c => c instanceof Urge.Component).forEach(c => c.update(instant));
+		store.update(instant);
 
-		for (let i = components.length - 1; i >= 0; i--) {
-			const c = components[i];
+		store.forEach((c, id, map) => {
 			if (c instanceof PlayerBullet) {
 				const box = c.getBoundingBox();
 				const portraitRemoval = isPortrait() && box.getY() + box.getHeight() < 0;
 				const nonPortraitRemoval = !isPortrait() && box.getX() > canvas.width;
 				if (portraitRemoval || nonPortraitRemoval) {
-					components.splice(i, 1);
+					console.log('Bullet Removed', performance.now());
+					map.delete(id);
 				}
 			}
 
@@ -490,28 +502,30 @@ const Rogue = (() => {
 				const portraitRemoval = isPortrait() && box.getY() - (box.getHeight() / 2) > canvas.height;
 				const nonPortraitRemoval = !isPortrait() && box.getX() + box.getWidth() < 0;
 				if (portraitRemoval || nonPortraitRemoval) {
-					components.splice(i, 1);
+					console.log('Enemy Removed', performance.now());
+					map.delete(id);
 				} else {
-					const playerBullets = components.filter(c => c instanceof PlayerBullet);
-					playerBullets.forEach(b => {
-						if (b.getBoundingBox().intersects(c.getBoundingBox())) {
-							console.log('Bullet Intersecting Enemy:', b, c, performance.now());
-							components.splice(i, 1);
-							console.log('Index Of Bullet:', components.indexOf(b), performance.now());
+					store.forEach((b, bulletId, bulletMap) => {
+						if (b instanceof PlayerBullet) {
+							if (b.getBoundingBox().intersects(c.getBoundingBox())) {
+								console.log('Bullet Intersecting Enemy:', b, c, performance.now());
+								bulletMap.delete(bulletId);;
+								map.delete(id);
+							}
 						}
 					});
 				}
 			}
-		}
+		});
 	}
 
 	function render(instant) {
 		clear();
-		components.filter(c => c instanceof StarField).forEach(c => c.render(instant));
-		components.filter(c => c instanceof Ship).forEach(c => c.render(instant));
-		components.filter(c => c instanceof PlayerBullet).forEach(c => c.render(instant));
-		components.filter(c => c instanceof Enemy).forEach(c => c.render(instant));
-		components.filter(c => c instanceof Hud).forEach(c => c.render(instant));
+		store.renderByType(instant, StarField);
+		store.renderByType(instant, Ship);
+		store.renderByType(instant, PlayerBullet);
+		store.renderByType(instant, Enemy);
+		store.renderByType(instant, Hud);
 	}
 
 	return {
