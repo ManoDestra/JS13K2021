@@ -264,59 +264,6 @@ Nucleus.Cryo = class {
 	}
 };
 
-Nucleus.Storage = (() => {
-	function get(id, persist) {
-		let objOut;
-		const storage = getStorage(persist);
-		if (storage) {
-			const strOut = storage.getItem(id);
-			if (Nucleus.Model.isString(strOut)) {
-				objOut = JSON.parse(strOut);
-			}
-		}
-
-		if (!Nucleus.Model.isObject(objOut)) {
-			objOut = null;
-		}
-
-		return objOut;
-	}
-
-	function set(id, value, persist) {
-		const storage = getStorage(persist);
-		if (storage) {
-			const strValue = JSON.stringify(value);
-			storage.setItem(id, strValue);
-		}
-	}
-
-	function remove(id, persist) {
-		const storage = getStorage(persist);
-		if (storage) {
-			storage.removeItem(id);
-		}
-	}
-
-	function clear(persist) {
-		const storage = getStorage(persist);
-		if (storage) {
-			storage.clear();
-		}
-	}
-
-	function getStorage(persist = true) {
-		const storage = persist ? localStorage : sessionStorage;
-		return storage ? storage : null;
-	}
-
-	return {
-		get,
-		set,
-		remove,
-		clear
-	};
-})();
-
 Nucleus.MouseInputHandler = (() => {
 	// TODO: work on scroll offset.
 	// TODO: implement touch handler.
