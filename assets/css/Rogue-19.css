@@ -1,8 +1,10 @@
 html,body,canvas {
 	margin: 0;
 	padding: 0;
-	cursor: crosshair;
+	/* cursor: crosshair; */
+	cursor: none;
 	height: 100%;
+	overflow: hidden;
 }
 
 body {
