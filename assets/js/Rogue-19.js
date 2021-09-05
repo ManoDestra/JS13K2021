@@ -245,8 +245,23 @@ const Rogue = (() => {
 	}
 
 	class Enemy extends Urge.Sprite {
+		#health;
+
 		constructor(x, y, width, height) {
 			super(x, y, width, height);
+		}
+
+		getHealth() {
+			return this.#health;
+		}
+
+		reduceHealth(damage) {
+			this.#health -= Math.abs(damage);
+			this.#health = Math.max(0, this.#health);
+		}
+
+		isAlive() {
+			return this.getHealth() > 0;
 		}
 	}
 
@@ -265,11 +280,12 @@ const Rogue = (() => {
 		}
 
 		render(instant) {
+			const center = this.getBoundingBox().getCenter();
 			ctx.lineWidth = 3;
 			ctx.strokeStyle = 'red';
 			ctx.fillStyle = 'darkred';
 			ctx.beginPath();
-			ctx.arc(this.getX(), this.getY(), this.getWidth() / 2, 0, Math.PI * 2);
+			ctx.arc(center[0], center[1], this.getWidth() / 2, 0, Math.PI * 2);
 			ctx.stroke();
 			ctx.fill();
 			ctx.closePath();
@@ -295,7 +311,7 @@ const Rogue = (() => {
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
-	const FONT = '4em Segoe UI';
+	const FONT = '2em Segoe UI';
 
 	const canvas = Nucleus.$('canvas');
 	//canvas.onclick = e => canvas.requestFullscreen();
@@ -464,7 +480,7 @@ const Rogue = (() => {
 				const portraitRemoval = isPortrait() && box.getY() + box.getHeight() < 0;
 				const nonPortraitRemoval = !isPortrait() && box.getX() > canvas.width;
 				if (portraitRemoval || nonPortraitRemoval) {
-					console.log('Player Bullet Removal:', c, box);
+					//console.log('Player Bullet Removal:', c, box);
 					components.splice(i, 1);
 				}
 			}
@@ -474,8 +490,15 @@ const Rogue = (() => {
 				const portraitRemoval = isPortrait() && box.getY() - (box.getHeight() / 2) > canvas.height;
 				const nonPortraitRemoval = !isPortrait() && box.getX() + box.getWidth() < 0;
 				if (portraitRemoval || nonPortraitRemoval) {
-					console.log('Enemy Removal:', c, box);
+					//console.log('Enemy Removal:', c, box);
 					components.splice(i, 1);
+				} else {
+					const playerBullets = components.filter(c => c instanceof PlayerBullet);
+					playerBullets.forEach(b => {
+						if (b.getBoundingBox().intersects(c.getBoundingBox())) {
+							console.log('Bullet Intersecting Enemy:', b, c, performance.now());
+						}
+					});
 				}
 			}
 		}

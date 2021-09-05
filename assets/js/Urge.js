@@ -28,6 +28,81 @@ const Urge = (() => {
 		getHeight() {
 			return this.#height;
 		}
+
+		getLeft() {
+			return this.getX();
+		}
+
+		getRight() {
+			return this.getX() + this.getWidth();
+		}
+
+		getTop() {
+			return this.getY();
+		}
+
+		getBottom() {
+			return this.getY() + this.getHeight();
+		}
+
+		getCenter() {
+			return [this.getX() + (this.getWidth() / 2), this.getY() + (this.getHeight() / 2)];
+		}
+
+		getTopLeft() {
+			return [this.getLeft(), this.getTop()];
+		}
+
+		getTopRight() {
+			return [this.getRight(), this.getTop()];
+		}
+
+		getBottomLeft() {
+			return [this.getLeft(), this.getBottom()];
+		}
+
+		getBottomRight() {
+			return [this.getRight(), this.getBottom()];
+		}
+
+		getCorners() {
+			return [
+				this.getTopLeft(),
+				this.getTopRight(),
+				this.getBottomLeft(),
+				this.getBottomRight()
+			];
+		}
+
+		intersects(box) {
+			if (this.getRight() < box.getLeft()) {
+				return false;
+			}
+
+			if (this.getLeft() > box.getRight()) {
+				return false;
+			}
+
+			if (this.getBottom() < box.getTop()) {
+				return false;
+			}
+
+			if (this.getTop() > box.getBottom()) {
+				return false;
+			}
+
+			const corners = this.getCorners();
+			const valid = corners.some(c => {
+				const validLeft = c[0] >= box.getLeft();
+				const validRight = c[0] <= box.getRight();
+				const validTop = c[1] >= box.getTop();
+				const validBottom = c[1] <= box.getBottom();
+				//console.log(c, validLeft, validRight, validTop, validBottom);
+				return validLeft && validRight && validTop && validBottom;
+			});
+
+			return valid;
+		}
 	}
 
 	class Component {
