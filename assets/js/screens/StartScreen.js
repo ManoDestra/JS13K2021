@@ -14,22 +14,23 @@ class StartScreen extends Urge.Screen {
 
 		const sf1 = new StarField(ctx, {
 			image: state.assets.starFields[0],
-			scrollSeconds: 30
+			scrollSeconds: 150
 		});
 		const sf2 = new StarField(ctx, {
 			image: state.assets.starFields[1],
-			scrollSeconds: 24
+			scrollSeconds: 110
 		});
 		const sf3 = new StarField(ctx, {
 			image: state.assets.starFields[2],
-			scrollSeconds: 21
+			scrollSeconds: 75
 		});
 		const spaceButton = new SpaceButton(ctx);
 		store.put(sf1, sf2, sf3, spaceButton);
 	}
 
 	update(instant) {
-		const delta = 3;
+		const store = this.getStore();
+		store.update(instant);
 		if (Nucleus.KeyInputHandler.checkKey(' ', true)) {
 			console.log('Space Pressed', performance.now());
 		}
