@@ -1,44 +1,44 @@
 class StartScreen extends Urge.Screen {
-	#x = 100;
-	#y = 100;
-
 	constructor(state) {
 		super(state);
 	}
 
 	init() {
 		super.init();
-		console.log('Store:', this.getStore());
+		const state = this.getState();
+		const store = this.getStore();
+		const ctx = this.getContext();
+		console.log('State:', state);
+		console.log('Store:', store);
+		console.log('Context:', ctx);
+
+		const sf1 = new StarField(ctx, {
+			image: state.assets.starFields[0],
+			scrollSeconds: 30
+		});
+		const sf2 = new StarField(ctx, {
+			image: state.assets.starFields[1],
+			scrollSeconds: 24
+		});
+		const sf3 = new StarField(ctx, {
+			image: state.assets.starFields[2],
+			scrollSeconds: 21
+		});
+		store.put(sf1, sf2, sf3);
 	}
 
 	update(instant) {
 		const delta = 3;
-		if (Nucleus.KeyInputHandler.checkKey('w', true)) {
-			this.#y -= delta;
-		}
-
-		if (Nucleus.KeyInputHandler.checkKey('s', true)) {
-			this.#y += delta;
-		}
-
-		if (Nucleus.KeyInputHandler.checkKey('a', true)) {
-			this.#x -= delta;
-		}
-
-		if (Nucleus.KeyInputHandler.checkKey('d', true)) {
-			this.#x += delta;
+		if (Nucleus.KeyInputHandler.checkKey(' ', true)) {
+			console.log('Space Pressed', performance.now());
 		}
 	}
 
 	render(instant) {
-		super.render(instant);
-
-		// TODO: add types at the end of this call
-		this.getStore().renderByTypes(instant);
-
 		const ctx = this.getContext();
-		ctx.fillStyle = 'yellow';
-		ctx.fillRect(this.#x, this.#y, 100, 100);
+		const store = this.getStore();
+		super.render(instant);
+		store.renderByTypes(instant, StarField);
 	}
 
 	term() {
