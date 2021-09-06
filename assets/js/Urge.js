@@ -173,32 +173,6 @@ const Urge = (() => {
 		}
 	}
 
-	// TODO: work on screen management module also
-	class Screen extends RenderComponent {
-		#store;
-
-		constructor(context) {
-			super(context);
-			if (this.constructor == Screen) {
-				throw new Error(ABSTRACT_ERROR);
-			}
-
-			this.#store = new ComponentStore(context);
-		}
-
-		getStore() {
-			return this.#store;
-		}
-
-		init() {
-			console.log('Screen Initialization');
-		}
-
-		term() {
-			console.log('Screen Termination');
-		}
-	}
-
 	class Sprite extends RenderComponent {
 		#x = 0;
 		#y = 0;
@@ -359,6 +333,32 @@ const Urge = (() => {
 		}
 	}
 
+	// TODO: work on screen management module also
+	class Screen extends RenderComponent {
+		#store;
+
+		constructor(context) {
+			super(context);
+			if (this.constructor == Screen) {
+				throw new Error(ABSTRACT_ERROR);
+			}
+
+			this.#store = new ComponentStore(context);
+		}
+
+		getStore() {
+			return this.#store;
+		}
+
+		init() {
+			console.log('Screen Initialization');
+		}
+
+		term() {
+			console.log('Screen Termination');
+		}
+	}
+
 	// TODO: complete this, but allow for plugin style logic
 	class Manager extends RenderComponent {
 		#components = [];
@@ -390,8 +390,8 @@ const Urge = (() => {
 		BoundingBox,
 		Component,
 		RenderComponent,
-		Screen,
 		Sprite,
-		ComponentStore
+		ComponentStore,
+		Screen
 	};
 })();

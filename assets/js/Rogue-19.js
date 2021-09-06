@@ -15,10 +15,7 @@ class Rogue extends Urge.RenderComponent {
 
 		const ctx = c.getContext('2d');
 		this.setContext(ctx);
-
-		this.#save = null;
-		this.#assets = null;
-		this.#store = new Urge.ComponentStore(this.getContext());
+		this.#store = new Urge.ComponentStore(ctx);
 	}
 
 	start() {
