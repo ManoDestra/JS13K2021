@@ -342,10 +342,12 @@ const RogueEx = (() => {
 	};
 })();
 
-//RogueEx.start();
 
 (async () => {
 	const rogue = new Rogue();
 	await rogue.start();
 	console.log('Rogue:', rogue);
+	console.log('Screen State:', Urge.ScreenState);
 })();
+
+//RogueEx.start();

@@ -340,25 +340,37 @@ const Urge = (() => {
 		}
 	}
 
+	const ScreenState = {
+		INACTIVE: 0,
+		INITIALIZING: 1,
+		ACTIVE: 2,
+		TERMINATING: 3
+	};
+	Object.freeze(ScreenState);
+
 	// TODO: work on screen management module also
 	class Screen extends RenderComponent {
-		#state;
 		#store;
+		#state;
 
 		constructor(state) {
 			const canvas = document.createElement('canvas');
 			const context = canvas.getContext('2d');
 			super(context);
-			this.#state = state;
 			if (this.constructor == Screen) {
 				throw new Error(ABSTRACT_ERROR);
 			}
 
 			this.#store = new ComponentStore(context);
+			this.#state = state;
 		}
 
 		getStore() {
 			return this.#store;
+		}
+
+		getState() {
+			return this.#state;
 		}
 
 		init() {
@@ -436,6 +448,7 @@ const Urge = (() => {
 		RenderComponent,
 		Sprite,
 		ComponentStore,
+		ScreenState,
 		Screen,
 		Game
 	};
