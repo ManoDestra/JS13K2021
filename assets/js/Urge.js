@@ -178,11 +178,19 @@ const Urge = (() => {
 
 	// TODO: work on screen management module also
 	class Screen extends RenderComponent {
+		#store;
+
 		constructor(context) {
 			super(context);
 			if (this.constructor == Screen) {
 				throw new Error(ABSTRACT_ERROR);
 			}
+
+			this.#store = new ComponentStore(context);
+		}
+
+		getStore() {
+			return this.#store;
 		}
 
 		init() {
@@ -288,6 +296,10 @@ const Urge = (() => {
 
 		remove(id) {
 			this.#map.delete(id);
+		}
+
+		clear() {
+			this.#map.clear();
 		}
 
 		keys() {

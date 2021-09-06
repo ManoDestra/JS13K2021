@@ -1,5 +1,6 @@
 class StartScreen extends Urge.Screen {
 	init() {
+		console.log('Store:', this.getStore());
 	}
 
 	update(instant) {
@@ -9,5 +10,6 @@ class StartScreen extends Urge.Screen {
 	}
 
 	term() {
+		this.getStore().clear();
 	}
 }

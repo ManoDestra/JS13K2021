@@ -44,6 +44,7 @@ class Rogue extends Urge.RenderComponent {
 		// TODO: setup which screen we're on, then render that screen
 		const context = this.getContext();
 		const startScreen = new StartScreen(context);
+		const playingScreen = new PlayingScreen(context);
 
 		console.log('Initialized');
 	}
