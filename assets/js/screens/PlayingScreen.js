@@ -1,6 +1,6 @@
 class PlayingScreen extends Urge.Screen {
-	constructor(context) {
-		super(context);
+	constructor(state) {
+		super(state);
 	}
 
 	init() {

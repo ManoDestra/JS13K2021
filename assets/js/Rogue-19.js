@@ -1,3 +1,13 @@
+const GameScreen = {
+	START: 0,
+	INTRO: 1,
+	PLAYING: 2,
+	PAUSED: 3,
+	DEATH: 4,
+	GAME_COMPLETION: 5
+};
+Object.freeze(GameScreen);
+
 class Rogue extends Urge.Game {
 	#save;
 	#assets;
@@ -19,12 +29,14 @@ class Rogue extends Urge.Game {
 		];
 		Nucleus.KeyInputHandler.start();
 
-		// TODO: set up screens
-
-		return {
+		const state = {
 			assets: this.#assets,
 			save: this.#save
 		};
+
+		const startScreen = new StartScreen(state);
+
+		return state;
 	}
 
 	#getSaveOrDefault() {
@@ -72,34 +84,6 @@ class Rogue extends Urge.Game {
 }
 
 const RogueEx = (() => {
-	const GameScreen = {
-		START: 0,
-		INTRO: 1,
-		PLAYING: 2,
-		PAUSED: 3,
-		DEATH: 4,
-		GAME_COMPLETION: 5
-	};
-	Object.freeze(GameScreen);
-
-	class StartUpdate extends Urge.Component {
-		constructor(context) {
-			super(context);
-		}
-	}
-
-	class IntroUpdate extends Urge.Component {
-		constructor(context) {
-			super(context);
-		}
-	}
-
-	class PlayingUpdate extends Urge.Component {
-		constructor(context) {
-			super(context);
-		}
-	}
-
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';

@@ -342,10 +342,14 @@ const Urge = (() => {
 
 	// TODO: work on screen management module also
 	class Screen extends RenderComponent {
+		#state;
 		#store;
 
-		constructor(context) {
+		constructor(state) {
+			const canvas = document.createElement('canvas');
+			const context = canvas.getContext('2d');
 			super(context);
+			this.#state = state;
 			if (this.constructor == Screen) {
 				throw new Error(ABSTRACT_ERROR);
 			}
@@ -363,6 +367,7 @@ const Urge = (() => {
 
 		term() {
 			console.log('Screen Termination');
+			this.getStore().clear();
 		}
 	}
 

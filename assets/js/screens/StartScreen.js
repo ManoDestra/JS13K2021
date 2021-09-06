@@ -1,5 +1,10 @@
 class StartScreen extends Urge.Screen {
+	constructor(state) {
+		super(state);
+	}
+
 	init() {
+		super.init();
 		console.log('Store:', this.getStore());
 	}
 
@@ -7,9 +12,11 @@ class StartScreen extends Urge.Screen {
 	}
 
 	render(instant) {
+		// TODO: add types at the end of this call
+		this.getStore().renderByTypes(instant);
 	}
 
 	term() {
-		this.getStore().clear();
+		super.term();
 	}
 }
