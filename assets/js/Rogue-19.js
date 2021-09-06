@@ -12,8 +12,8 @@ class Rogue extends Urge.Game {
 	#save;
 	#assets;
 
-	constructor(selector = 'canvas') {
-		super(selector);
+	constructor() {
+		super([StartScreen, IntroScreen, PlayingScreen]);
 		this.#save = null;
 		this.#assets = {};
 	}

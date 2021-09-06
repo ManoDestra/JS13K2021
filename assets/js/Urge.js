@@ -352,6 +352,7 @@ const Urge = (() => {
 	class Screen extends RenderComponent {
 		#store;
 		#state;
+		#screenState;
 
 		constructor(state) {
 			const canvas = document.createElement('canvas');
@@ -363,6 +364,7 @@ const Urge = (() => {
 
 			this.#store = new ComponentStore(context);
 			this.#state = state;
+			this.#screenState = ScreenState.INACTIVE;
 		}
 
 		getStore() {
@@ -373,20 +375,36 @@ const Urge = (() => {
 			return this.#state;
 		}
 
+		getScreenState() {
+			return this.#screenState;
+		}
+
 		init() {
 			console.log('Screen Initialization');
+			this.#screenState = ScreenState.INITIALIZING;
+
+			// TODO: init
+
+			this.#screenState = ScreenState.ACTIVE;
 		}
 
 		term() {
 			console.log('Screen Termination');
+			this.#screenState = ScreenState.TERMINATING;
+
+			// TODO: term
+
 			this.getStore().clear();
+			this.#screenState = ScreenState.INACTIVE;
 		}
 	}
 
 	class Game extends RenderComponent {
 		#selector;
+		#screenTypes;
+		#screens = {};
 
-		constructor(selector = 'canvas') {
+		constructor(screenTypes, selector = 'canvas') {
 			const canvas = Nucleus.$(selector);
 			if (!canvas) {
 				throw new Error('Canvas Not Found: ' + selector);
@@ -398,6 +416,7 @@ const Urge = (() => {
 			}
 
 			this.#selector = selector;
+			this.#screenTypes = screenTypes;
 		}
 
 		getCanvas() {
@@ -410,7 +429,18 @@ const Urge = (() => {
 		async start() {
 			console.log('Starting...');
 			return this.init().then(s => {
-				console.log('Success', s);
+				console.log('Init State:', s);
+				for (let t of this.#screenTypes) {
+					if (t.prototype instanceof Screen) {
+						const screen = new t(s);
+						this.#screens[t.name] = screen;
+					} else {
+						console.warn('Invalid Screen: ' + t.name);
+					}
+				}
+
+				console.log('Game Screens:', this.#screens);
+
 				Nucleus.Clock.start(instant => this.updateAndRender(instant));
 				return s;
 			}).catch(f => {
@@ -419,6 +449,14 @@ const Urge = (() => {
 			}).finally(() => {
 				console.log('Started');
 			});
+		}
+
+		update(instant) {
+			super.update(instant);
+		}
+
+		render(instant) {
+			super.render(instant);
 		}
 
 		generateCanvas(f, w = 256, h = 256) {
@@ -443,6 +481,7 @@ const Urge = (() => {
 	}
 
 	return {
+		Dimension,
 		BoundingBox,
 		Component,
 		RenderComponent,
