@@ -426,7 +426,7 @@ const Urge = (() => {
 		async init() {
 		}
 
-		async start() {
+		async start(startScreenType = '') {
 			console.log('Starting...');
 			return this.init().then(s => {
 				console.log('Init State:', s);
@@ -440,6 +440,12 @@ const Urge = (() => {
 				}
 
 				console.log('Game Screens:', this.#screens);
+				const initialScreen = this.#screens?.[startScreenType];
+				if (initialScreen) {
+					initialScreen.init();
+				} else {
+					console.warn('No Initial Screen!');
+				}
 
 				Nucleus.Clock.start(instant => this.updateAndRender(instant));
 				return s;

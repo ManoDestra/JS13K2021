@@ -39,6 +39,10 @@ class Rogue extends Urge.Game {
 		return state;
 	}
 
+	async start() {
+		super.start(StartScreen.name);
+	}
+
 	#getSaveOrDefault() {
 		const namespace = 'com.manodestra.rogue';
 		const model = Nucleus.Cryo.get('Save', namespace);
