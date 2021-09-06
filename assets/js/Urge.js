@@ -149,6 +149,8 @@ const Urge = (() => {
 	}
 
 	class RenderComponent extends Component {
+		#clearColor = 'darkred';
+
 		constructor(context) {
 			super(context);
 			if (this.constructor == RenderComponent) {
@@ -156,7 +158,7 @@ const Urge = (() => {
 			}
 		}
 
-		clear(color = 'cornflowerblue', width = 0, height = 0) {
+		clear(color = this.#clearColor, width = 0, height = 0) {
 			const ctx = this.getContext();
 			const w = width > 0 ? width : ctx.canvas.width;
 			const h = height > 0 ? height : ctx.canvas.height;
