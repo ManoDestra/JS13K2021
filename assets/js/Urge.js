@@ -117,7 +117,10 @@ const Urge = (() => {
 		}
 
 		getCanvas() {
-			return this.#context.canvas;
+			const selector = this.#context.canvas?.id ? '#' + this.#context.canvas.id : 'canvas';
+			const canvasById = Nucleus.$(selector);
+			const canvas = Nucleus.$('canvas');
+			return (canvasById ?? canvas) ?? this.#context.canvas;
 		}
 
 		isPortrait() {
