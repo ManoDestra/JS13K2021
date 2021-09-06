@@ -106,7 +106,14 @@ const Urge = (() => {
 	}
 
 	class Component {
-		constructor() {
+		#context;
+
+		constructor(context) {
+			this.#context = context;
+		}
+
+		getContext() {
+			return this.#context;
 		}
 
 		update(instant) {
@@ -118,11 +125,15 @@ const Urge = (() => {
 				console.log(message);
 			}
 		}
+
+		isPortrait() {
+			return this.#context.height > this.#context.width;
+		}
 	}
 
 	class RenderComponent extends Component {
-		constructor() {
-			super();
+		constructor(context) {
+			super(context);
 		}
 
 		render(instant) {
@@ -141,8 +152,8 @@ const Urge = (() => {
 		#width = 0;
 		#height = 0;
 
-		constructor(x, y, width, height) {
-			super();
+		constructor(context, x, y, width, height) {
+			super(context);
 			this.#x = x;
 			this.#y = y;
 			this.#width = width;
@@ -199,8 +210,8 @@ const Urge = (() => {
 	class ComponentStore extends Component {
 		#map = null;
 
-		constructor() {
-			super();
+		constructor(context) {
+			super(context);
 			this.#map = new Map();
 		}
 
@@ -289,8 +300,8 @@ const Urge = (() => {
 	class Manager extends RenderComponent {
 		#components = [];
 
-		constructor() {
-			super();
+		constructor(context) {
+			super(context);
 		}
 
 		add(component) {

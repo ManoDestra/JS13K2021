@@ -83,26 +83,26 @@ const Rogue = (() => {
 	};
 
 	class StartUpdate extends Urge.Component {
-		constructor() {
-			super();
+		constructor(context) {
+			super(context);
 		}
 	}
 
 	class IntroUpdate extends Urge.Component {
-		constructor() {
-			super();
+		constructor(context) {
+			super(context);
 		}
 	}
 
 	class PlayingUpdate extends Urge.Component {
-		constructor() {
-			super();
+		constructor(context) {
+			super(context);
 		}
 	}
 
 	class StarField extends Urge.RenderComponent {
-		constructor(options) {
-			super();
+		constructor(context, options) {
+			super(context);
 			this.x = 0;
 			this.y = 0;
 			this.image = options.image;
@@ -145,8 +145,8 @@ const Rogue = (() => {
 		#health = 0;
 		#send = null;
 
-		constructor(x, y, size, skills, send) {
-			super(x, y, size, size);
+		constructor(context, x, y, size, skills, send) {
+			super(context, x, y, size, size);
 			this.#skills = skills;
 			this.#health = skills.health;
 			this.#send = send;
@@ -227,8 +227,8 @@ const Rogue = (() => {
 	}
 
 	class PlayerBullet extends Urge.Sprite {
-		constructor(x, y, width, height) {
-			super(x, y, width, height);
+		constructor(context, x, y, width, height) {
+			super(context, x, y, width, height);
 		}
 
 		update(instant) {
@@ -255,8 +255,8 @@ const Rogue = (() => {
 		#totalElapsed;
 		#send;
 
-		constructor(send) {
-			super();
+		constructor(context, send) {
+			super(context);
 			this.#totalElapsed = 0;
 			this.#send = send;
 		}
@@ -290,8 +290,8 @@ const Rogue = (() => {
 	class Enemy extends Urge.Sprite {
 		#health;
 
-		constructor(x, y, width, height, health) {
-			super(x, y, width, height);
+		constructor(context, x, y, width, height, health) {
+			super(context, x, y, width, height);
 			this.#health = health;
 		}
 
@@ -310,8 +310,8 @@ const Rogue = (() => {
 	}
 
 	class Cell extends Enemy {
-		constructor(x, y, size, health) {
-			super(x, y, size, size, health);
+		constructor(context, x, y, size, health) {
+			super(context, x, y, size, size, health);
 		}
 
 		update(instant) {
@@ -339,8 +339,8 @@ const Rogue = (() => {
 	class Hud extends Urge.RenderComponent {
 		#tmp;
 
-		constructor(tmp) {
-			super();
+		constructor(context, tmp) {
+			super(context);
 			this.#tmp = tmp;
 		}
 
@@ -360,7 +360,7 @@ const Rogue = (() => {
 	const canvas = Nucleus.$('canvas');
 	//canvas.onclick = e => canvas.requestFullscreen();
 	const ctx = canvas.getContext('2d');
-	const store = new Urge.ComponentStore();
+	const store = new Urge.ComponentStore(ctx);
 
 	function start() {
 		init()
@@ -377,15 +377,15 @@ const Rogue = (() => {
 		window.onresize = onResize;
 
 		const assets = await preRender();
-		const sf1 = new StarField({
+		const sf1 = new StarField(ctx, {
 			image: assets.starField1,
 			scrollSeconds: 21
 		});
-		const sf2 = new StarField({
+		const sf2 = new StarField(ctx, {
 			image: assets.starField2,
 			scrollSeconds: 18
 		});
-		const sf3 = new StarField({
+		const sf3 = new StarField(ctx, {
 			image: assets.starField3,
 			scrollSeconds: 15
 		});
@@ -394,14 +394,14 @@ const Rogue = (() => {
 		const size = getSize();
 		const startX = isPortrait() ? (canvas.width - size) / 2 : size;
         const startY = isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
-        const ship = new Ship(startX, startY, size, save, receive);
+        const ship = new Ship(ctx, startX, startY, size, save, receive);
         store.put(ship);
         console.log(ship);
 
-		const timeLine = new TimeLine(receive);
+		const timeLine = new TimeLine(ctx, receive);
 		store.put(timeLine);
 
-		const hud = new Hud(timeLine);
+		const hud = new Hud(ctx, timeLine);
 		store.put(hud);
 
 		Nucleus.KeyInputHandler.start();
@@ -437,7 +437,7 @@ const Rogue = (() => {
 							const y = box.getY() + (isPortrait() ? 0 : box.getHeight() / 2);
 							const width = isPortrait() ? 5 : 20;
 							const height = isPortrait() ? 20 : 5;
-							const bullet = new PlayerBullet(x, y, width, height);
+							const bullet = new PlayerBullet(this.getContext(), x, y, width, height);
 							store.put(bullet);
 						}
 					});
@@ -453,7 +453,7 @@ const Rogue = (() => {
 					const y = isPortrait()
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
-					const cell = new Cell(x, y, size, 100);
+					const cell = new Cell(this.getContext(), x, y, size, 100);
 					store.put(cell);
 				}
 
