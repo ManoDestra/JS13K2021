@@ -124,7 +124,8 @@ const Urge = (() => {
 		}
 
 		isPortrait() {
-			return this.#context.height > this.#context.width;
+			const canvas = this.getCanvas();
+			return canvas.height > canvas.width;
 		}
 
 		update(instant) {
