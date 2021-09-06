@@ -289,11 +289,13 @@ const Urge = (() => {
 			});
 		}
 
-		renderByType(instant, type) {
-			this.#map.forEach(c => {
-				if (c instanceof RenderComponent && c instanceof type) {
-					c.render(instant);
-				}
+		renderByTypes(instant, ...types) {
+			types.forEach(type => {
+				this.#map.forEach(c => {
+					if (c instanceof RenderComponent && c instanceof type) {
+						c.render(instant);
+					}
+				});
 			});
 		}
 

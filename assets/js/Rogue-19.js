@@ -1,77 +1,3 @@
-/*
-const Test = (() => {
-	function foobar(clazz) {
-		if (clazz.prototype instanceof Urge.Component) {
-			const instance = new clazz();
-			console.log('Instance:', instance);
-		} else {
-			console.log('Not A GameComponent:', clazz);
-		}
-	}
-
-	return {
-		foobar
-	};
-})();
-
-const SpaceGame = (() => {
-	let patternMoon = null;
-
-	const GameScreen = {
-		START: 0,
-		MENU: 1,
-		SKILLS: 2,
-		PLAYING: 3,
-		PAUSED: 4,
-		GAME_OVER: 5
-	};
-	Object.freeze(GameScreen);
-	const ScreenState = {
-		INACTIVE: 0,
-		INITIALIZING: 1,
-		ACTIVE: 2,
-		TERMINATING: 3
-	};
-	Object.freeze(ScreenState);
-
-	const SpaceState = {
-		state: Screen.START,
-		level: 1,
-		player: {
-			health: 100,
-			shield: 0,
-			xp: 0
-		},
-		skills: {
-			health: 100,
-			shield: 0,
-			xp: 0
-		}
-	};
-
-	function drawPlanets() {
-		for (let i = 0; i < 5; i++) {
-			const x = parseInt(Math.random() * canvas.width);
-			const y = parseInt(Math.random() * canvas.height);
-			const r = parseInt(Math.random() * 50) + 20;
-			const g = context.createLinearGradient(x + r, y, x + r, y + (r * 1));
-			g.addColorStop(0, '#333');
-			g.addColorStop(0.5, '#fff');
-			g.addColorStop(1, '#333');
-			context.strokeStyle = LIGHT;
-			//context.fillStyle = g;
-			context.fillStyle = this.patternMoon;
-			//context.fillStyle = 'url(assets/images/Moon01.jpg)';
-
-			context.beginPath();
-			context.arc(x, y, r, 0, Math.PI * 2);
-			context.fill();
-			context.closePath();
-		}
-	}
-})();
-*/
-
 const Rogue = (() => {
 	const GameScreen = {
 		START: 0,
@@ -81,6 +7,7 @@ const Rogue = (() => {
 		DEATH: 4,
 		GAME_COMPLETION: 5
 	};
+	Object.freeze(GameScreen);
 
 	class StartUpdate extends Urge.Component {
 		constructor(context) {
@@ -100,7 +27,6 @@ const Rogue = (() => {
 		}
 	}
 
-	// 13,312 Bytes Max Limit For Zipped File
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
@@ -128,15 +54,15 @@ const Rogue = (() => {
 		const assets = await preRender();
 		const sf1 = new StarField(ctx, {
 			image: assets.starField1,
-			scrollSeconds: 21
+			scrollSeconds: 30
 		});
 		const sf2 = new StarField(ctx, {
 			image: assets.starField2,
-			scrollSeconds: 18
+			scrollSeconds: 24
 		});
 		const sf3 = new StarField(ctx, {
 			image: assets.starField3,
-			scrollSeconds: 15
+			scrollSeconds: 21
 		});
 		store.put(sf1, sf2, sf3);
 
@@ -350,11 +276,7 @@ const Rogue = (() => {
 
 	function render(instant) {
 		clear();
-		store.renderByType(instant, StarField);
-		store.renderByType(instant, Ship);
-		store.renderByType(instant, PlayerBullet);
-		store.renderByType(instant, Enemy);
-		store.renderByType(instant, Hud);
+		store.renderByTypes(instant, StarField, Ship, PlayerBullet, Enemy, Hud);
 	}
 
 	return {
