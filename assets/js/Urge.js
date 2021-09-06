@@ -2,25 +2,13 @@
 const Urge = (() => {
 	const ABSTRACT_ERROR = 'Abstract Class Cannot Be Instantiated';
 
-	class BoundingBox {
-		#x;
-		#y;
+	class Dimension {
 		#width;
 		#height;
 
-		constructor(x, y, width, height) {
-			this.#x = x;
-			this.#y = y;
+		constructor(width, height) {
 			this.#width = width;
 			this.#height = height;
-		}
-
-		getX() {
-			return this.#x;
-		}
-
-		getY() {
-			return this.#y;
 		}
 
 		getWidth() {
@@ -29,6 +17,25 @@ const Urge = (() => {
 
 		getHeight() {
 			return this.#height;
+		}
+	}
+
+	class BoundingBox extends Dimension {
+		#x;
+		#y;
+
+		constructor(x, y, width, height) {
+			super(width, height);
+			this.#x = x;
+			this.#y = y;
+		}
+
+		getX() {
+			return this.#x;
+		}
+
+		getY() {
+			return this.#y;
 		}
 
 		getLeft() {
