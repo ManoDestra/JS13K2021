@@ -107,8 +107,6 @@ const Rogue = (() => {
 			this.y = 0;
 			this.image = options.image;
 			this.scrollSeconds = options?.scrollSeconds ?? 10;
-			this.offsetX = options?.offsetX ?? 0;
-			this.offsetY = options?.offsetY ?? 0;
 		}
 
 		update(instant) {
@@ -133,11 +131,11 @@ const Rogue = (() => {
 		}
 
 		render(instant) {
-			ctx.drawImage(this.image, this.x + this.offsetX, this.y + this.offsetY, canvas.width, canvas.height);
+			ctx.drawImage(this.image, this.x, this.y, canvas.width, canvas.height);
 			if (isPortrait()) {
-				ctx.drawImage(this.image, this.x + this.offsetX, this.y + this.offsetY - canvas.height, canvas.width, canvas.height);
+				ctx.drawImage(this.image, this.x, this.y - canvas.height, canvas.width, canvas.height);
 			} else {
-				ctx.drawImage(this.image, this.x + this.offsetX + canvas.width, this.y + this.offsetY, canvas.width, canvas.height);
+				ctx.drawImage(this.image, this.x + canvas.width, this.y, canvas.width, canvas.height);
 			}
 		}
 	}

@@ -196,32 +196,6 @@ const Urge = (() => {
 		}
 	}
 
-	class Storage {
-		constructor() {
-		}
-
-		static getAll(namespace) {
-			if (!window?.localStorage) {
-				throw new Error('Local Storage Is Not Supported!');
-			}
-
-			const o = {};
-			for (let i = 0; i< localStorage.length; i++) {
-				const key = localStorage.key(i);
-				console.log('Key:', key);
-				if (key.startsWith(namespace)) {
-					const value = localStorage.getItem(key);
-					console.log('Value:', value);
-					const m = JSON.parse(value);
-					console.log('Model:', m);
-					o[key] = m;
-				}
-			}
-
-			return o;
-		}
-	}
-
 	class ComponentStore extends Component {
 		#map = null;
 
@@ -343,7 +317,6 @@ const Urge = (() => {
 		Component,
 		RenderComponent,
 		Sprite,
-		Storage,
 		ComponentStore
 	};
 })();
