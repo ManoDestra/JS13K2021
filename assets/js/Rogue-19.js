@@ -3,6 +3,7 @@ class Rogue extends Urge.RenderComponent {
 	#save;
 	#assets;
 	#store;
+	#screens;
 
 	constructor(selector = 'canvas') {
 		super();
@@ -36,15 +37,18 @@ class Rogue extends Urge.RenderComponent {
 		console.log('Initializing...');
 
 		this.#save = this.#getSaveOrDefault();
-		this.#onResize();
-		window.onresize = this.#onResize;
+		window.addEventListener('resize', () => this.onResize(), false);
 		this.#assets = await this.#preRender();
 		Nucleus.KeyInputHandler.start();
 
 		// TODO: setup which screen we're on, then render that screen
 		const context = this.getContext();
 		const startScreen = new StartScreen(context);
+		const introScreen = new IntroScreen(context);
 		const playingScreen = new PlayingScreen(context);
+		console.log(startScreen);
+		console.log(introScreen);
+		console.log(playingScreen);
 
 		console.log('Initialized');
 	}
@@ -71,11 +75,14 @@ class Rogue extends Urge.RenderComponent {
 		return Nucleus.$(this.#selector);
 	}
 
-	#onResize() {
+	onResize() {
 		const c = this.#getCanvas();
+		console.log('Resize Canvas:', c);
 		const b = document.body;
+		console.log('Resize Body:', b);
 		c.width = b.clientWidth;
 		c.height = b.clientHeight;
+		console.log('Resize Done!');
 	}
 
 	async #preRender() {

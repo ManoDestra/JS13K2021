@@ -149,8 +149,6 @@ const Urge = (() => {
 	}
 
 	class RenderComponent extends Component {
-		#clearColor = 'darkred';
-
 		constructor(context) {
 			super(context);
 			if (this.constructor == RenderComponent) {
@@ -158,21 +156,20 @@ const Urge = (() => {
 			}
 		}
 
-		clear(color = this.#clearColor, width = 0, height = 0) {
-			const ctx = this.getContext();
-			const w = width > 0 ? width : ctx.canvas.width;
-			const h = height > 0 ? height : ctx.canvas.height;
-			ctx.fillStyle = color;
-			ctx.fillRect(0, 0, w, h);
-		}
-
 		render(instant) {
-			this.clear();
+			RenderComponent.clear(this.getContext());
 		}
 
 		updateAndRender(instant) {
 			this.update(instant);
 			this.render(instant);
+		}
+
+		static clear(ctx, color = '#400', width = 0, height = 0) {
+			const w = width > 0 ? width : ctx.canvas.width;
+			const h = height > 0 ? height : ctx.canvas.height;
+			ctx.fillStyle = color;
+			ctx.fillRect(0, 0, w, h);
 		}
 	}
 
