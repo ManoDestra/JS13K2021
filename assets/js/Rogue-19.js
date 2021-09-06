@@ -1,6 +1,5 @@
 class Rogue extends Urge.RenderComponent {
 	#selector;
-	#context;
 	#save;
 	#assets;
 	#store;
@@ -13,10 +12,12 @@ class Rogue extends Urge.RenderComponent {
 			throw new Error('Canvas Not Found: ' + selector);
 		}
 
-		this.#context = c.getContext('2d');
+		const ctx = c.getContext('2d');
+		this.setContext(ctx);
+
 		this.#save = null;
 		this.#assets = null;
-		this.#store = new Urge.ComponentStore(this.#getContext());
+		this.#store = new Urge.ComponentStore(this.getContext());
 	}
 
 	start() {
@@ -41,6 +42,8 @@ class Rogue extends Urge.RenderComponent {
 		Nucleus.KeyInputHandler.start();
 
 		// TODO: setup which screen we're on, then render that screen
+		const context = this.getContext();
+		const startScreen = new StartScreen(context);
 
 		console.log('Initialized');
 	}
@@ -65,10 +68,6 @@ class Rogue extends Urge.RenderComponent {
 
 	#getCanvas() {
 		return Nucleus.$(this.#selector);
-	}
-
-	#getContext() {
-		return this.#context;
 	}
 
 	#onResize() {

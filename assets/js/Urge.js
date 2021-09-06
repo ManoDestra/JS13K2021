@@ -121,6 +121,10 @@ const Urge = (() => {
 			return this.#context;
 		}
 
+		setContext(context) {
+			this.#context = context;
+		}
+
 		getCanvas() {
 			const selector = this.#context.canvas?.id ? '#' + this.#context.canvas.id : 'canvas';
 			const canvasById = Nucleus.$(selector);
@@ -152,8 +156,16 @@ const Urge = (() => {
 			}
 		}
 
+		clear(color = 'cornflowerblue', width = 0, height = 0) {
+			const ctx = this.getContext();
+			const w = width > 0 ? width : ctx.canvas.width;
+			const h = height > 0 ? height : ctx.canvas.height;
+			ctx.fillStyle = color;
+			ctx.fillRect(0, 0, w, h);
+		}
+
 		render(instant) {
-			// Empty Implementation
+			this.clear();
 		}
 
 		updateAndRender(instant) {
