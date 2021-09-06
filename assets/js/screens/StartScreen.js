@@ -24,7 +24,8 @@ class StartScreen extends Urge.Screen {
 			image: state.assets.starFields[2],
 			scrollSeconds: 21
 		});
-		store.put(sf1, sf2, sf3);
+		const spaceButton = new SpaceButton(ctx);
+		store.put(sf1, sf2, sf3, spaceButton);
 	}
 
 	update(instant) {
@@ -38,7 +39,7 @@ class StartScreen extends Urge.Screen {
 		const ctx = this.getContext();
 		const store = this.getStore();
 		super.render(instant);
-		store.renderByTypes(instant, StarField);
+		store.renderByTypes(instant, StarField, SpaceButton);
 	}
 
 	term() {
