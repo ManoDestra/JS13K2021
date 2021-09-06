@@ -359,30 +359,62 @@ const Urge = (() => {
 		}
 	}
 
-	// TODO: complete this, but allow for plugin style logic
-	class Manager extends RenderComponent {
-		#components = [];
+	class Game extends RenderComponent {
+		#selector;
 
-		constructor(context) {
-			super(context);
-		}
-
-		add(component) {
-			if (component instanceof Component) {
-				this.#components.push(component);
+		constructor(selector = 'canvas') {
+			const canvas = Nucleus.$(selector);
+			if (!canvas) {
+				throw new Error('Canvas Not Found: ' + selector);
 			}
+
+			super(canvas.getContext('2d'));
+			if (this.constructor == Game) {
+				throw new Error(ABSTRACT_ERROR);
+			}
+
+			this.#selector = selector;
 		}
 
-		update(instant) {
-			this.#components.filter(c => c instanceof Component).forEach(c => c.update(instant));
+		getCanvas() {
+			return Nucleus.$(this.#selector);
 		}
 
-		render(instant) {
-			this.#components.filter(c => c instanceof RenderComponent).forEach(c => c.render(instant));
+		async init() {
 		}
 
-		static instance() {
-			return new Manager();
+		async start() {
+			console.log('Starting...');
+			return this.init().then(s => {
+				console.log('Success', s);
+				Nucleus.Clock.start(instant => this.updateAndRender(instant));
+				return s;
+			}).catch(f => {
+				console.error(f);
+				return f;
+			}).finally(() => {
+				console.log('Started');
+			});
+		}
+
+		generateCanvas(f, w = 256, h = 256) {
+			const c = document.createElement('canvas');
+			c.width = w;
+			c.height = h;
+			const x = c.getContext('2d');
+			if (f) {
+				f(x);
+			}
+
+			return c;
+		}
+
+		async generateImage(func, type = 'image/png', quality = 0.92, width, height) {
+			const c = this.generateCanvas(func, width, height);
+			const i = new Image();
+			i.src = c.toDataURL(type, quality);
+			await i.decode();
+			return i;
 		}
 	}
 
@@ -392,6 +424,7 @@ const Urge = (() => {
 		RenderComponent,
 		Sprite,
 		ComponentStore,
-		Screen
+		Screen,
+		Game
 	};
 })();

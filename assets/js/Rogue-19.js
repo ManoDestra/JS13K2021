@@ -1,53 +1,30 @@
-class Rogue extends Urge.RenderComponent {
-	#selector;
+class Rogue extends Urge.Game {
 	#save;
 	#assets;
-	#store;
-	#screens;
 
 	constructor(selector = 'canvas') {
-		super();
-		this.#selector = selector;
-		const c = this.#getCanvas();
-		if (!c) {
-			throw new Error('Canvas Not Found: ' + selector);
-		}
-
-		const ctx = c.getContext('2d');
-		this.setContext(ctx);
-		this.#store = new Urge.ComponentStore(ctx);
+		super(selector);
+		this.#save = null;
+		this.#assets = {};
 	}
 
-	start() {
-		console.log('Starting...');
-		this.#init().then(() => {
-			console.log('Success', this.#save, this.#assets);
-			Nucleus.Clock.start(instant => this.updateAndRender(instant));
-		}).catch(f => {
-			console.error(f);
-		}).finally(() => {
-			console.log('Started');
-		});
-	}
-
-	async #init() {
-		console.log('Initializing...');
-
+	async init() {
 		this.#save = this.#getSaveOrDefault();
+		this.onResize();
 		window.addEventListener('resize', () => this.onResize(), false);
-		this.#assets = await this.#preRender();
+		this.#assets['starFields'] = [
+			this.#getStarField(250, 1, 2),
+			this.#getStarField(200, 1, 3.5),
+			this.#getStarField(150, 1, 5)
+		];
 		Nucleus.KeyInputHandler.start();
 
-		// TODO: setup which screen we're on, then render that screen
-		const context = this.getContext();
-		const startScreen = new StartScreen(context);
-		const introScreen = new IntroScreen(context);
-		const playingScreen = new PlayingScreen(context);
-		console.log(startScreen);
-		console.log(introScreen);
-		console.log(playingScreen);
+		// TODO: set up screens
 
-		console.log('Initialized');
+		return {
+			assets: this.#assets,
+			save: this.#save
+		};
 	}
 
 	#getSaveOrDefault() {
@@ -68,82 +45,29 @@ class Rogue extends Urge.RenderComponent {
 		};
 	}
 
-	#getCanvas() {
-		return Nucleus.$(this.#selector);
-	}
-
 	onResize() {
-		const c = this.#getCanvas();
-		console.log('Resize Canvas:', c);
+		const c = this.getCanvas();
 		const b = document.body;
-		console.log('Resize Body:', b);
 		c.width = b.clientWidth;
 		c.height = b.clientHeight;
-		console.log('Resize Done!');
-	}
-
-	async #preRender() {
-		const [starField1, starField2, starField3] = await Promise.all([
-			this.#getStarField(250, 1, 2),
-			this.#getStarField(200, 1, 3.5),
-			this.#getStarField(150, 1, 5)
-		]);
-		return {
-			starField1, starField2, starField3
-		};
 	}
 
 	#getStarField(count = 250, minSize = 1, maxDelta = 3) {
-		const canvas = this.#getCanvas();
-		return this.#generateImage({
-			width: canvas.width,
-			height: canvas.height,
-			consumer: c => {
-				c.strokeStyle = '#0a0';
-				c.fillStyle = 'cornflowerblue';
-				for (let i = 0; i < count; i++) {
-					const r = parseInt(Math.random() * 256);
-					const g = parseInt(Math.random() * 256);
-					const b = parseInt(Math.random() * 128) + 128;
-					c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
-					const x = parseInt(Math.random() * canvas.width);
-					const y = parseInt(Math.random() * canvas.height);
-					const size = parseInt(Math.random() * maxDelta) + minSize;
-					c.fillRect(x, y, size, size);
-				}
+		const canvas = this.getCanvas();
+		return this.generateCanvas(c => {
+			c.strokeStyle = '#0a0';
+			c.fillStyle = 'cornflowerblue';
+			for (let i = 0; i < count; i++) {
+				const r = parseInt(Math.random() * 256);
+				const g = parseInt(Math.random() * 256);
+				const b = parseInt(Math.random() * 128) + 128;
+				c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
+				const x = parseInt(Math.random() * canvas.width);
+				const y = parseInt(Math.random() * canvas.height);
+				const size = parseInt(Math.random() * maxDelta) + minSize;
+				c.fillRect(x, y, size, size);
 			}
-		});
-	}
-
-	async #generateImage(options) {
-		const {
-			consumer: f,
-			width : w = 256,
-			height : h = 256,
-			type : t = 'image/png',
-			quality : q = 1.0
-		} = options;
-
-		const i = new Image();
-		const c = document.createElement('canvas');
-		c.width = w;
-		c.height = h;
-		const x = c.getContext('2d');
-		if (f) {
-			f(x);
-		}
-
-		i.src = c.toDataURL();
-		await i.decode();
-		return i;
-	}
-
-	update(instant) {
-		super.update(instant);
-	}
-
-	render(instant) {
-		super.render(instant);
+		}, canvas.width, canvas.height);
 	}
 }
 
@@ -436,5 +360,8 @@ const RogueEx = (() => {
 
 //RogueEx.start();
 
-const rogue = new Rogue();
-rogue.start();
+(async () => {
+	const rogue = new Rogue();
+	await rogue.start();
+	console.log('Rogue:', rogue);
+})();
