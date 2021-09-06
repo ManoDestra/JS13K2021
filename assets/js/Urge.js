@@ -1,5 +1,7 @@
 // URGE (Update Render Game Engine)
 const Urge = (() => {
+	const ABSTRACT_ERROR = 'Abstract Class Cannot Be Instantiated';
+
 	class BoundingBox {
 		#x;
 		#y;
@@ -110,6 +112,9 @@ const Urge = (() => {
 
 		constructor(context) {
 			this.#context = context;
+			if (this.constructor == Component) {
+				throw new Error(ABSTRACT_ERROR);
+			}
 		}
 
 		getContext() {
@@ -142,6 +147,9 @@ const Urge = (() => {
 	class RenderComponent extends Component {
 		constructor(context) {
 			super(context);
+			if (this.constructor == RenderComponent) {
+				throw new Error(ABSTRACT_ERROR);
+			}
 		}
 
 		render(instant) {
@@ -154,6 +162,24 @@ const Urge = (() => {
 		}
 	}
 
+	// TODO: work on screen management module also
+	class Screen extends RenderComponent {
+		constructor(context) {
+			super(context);
+			if (this.constructor == Screen) {
+				throw new Error(ABSTRACT_ERROR);
+			}
+		}
+
+		init() {
+			console.log('Screen Initialization');
+		}
+
+		term() {
+			console.log('Screen Termination');
+		}
+	}
+
 	class Sprite extends RenderComponent {
 		#x = 0;
 		#y = 0;
@@ -162,6 +188,10 @@ const Urge = (() => {
 
 		constructor(context, x, y, width, height) {
 			super(context);
+			if (this.constructor == Sprite) {
+				throw new Error(ABSTRACT_ERROR);
+			}
+
 			this.#x = x;
 			this.#y = y;
 			this.#width = width;
@@ -337,6 +367,7 @@ const Urge = (() => {
 		BoundingBox,
 		Component,
 		RenderComponent,
+		Screen,
 		Sprite,
 		ComponentStore
 	};

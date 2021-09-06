@@ -1,4 +1,149 @@
-const Rogue = (() => {
+class Rogue extends Urge.RenderComponent {
+	#selector;
+	#context;
+	#save;
+	#assets;
+	#store;
+
+	constructor(selector = 'canvas') {
+		super();
+		this.#selector = selector;
+		const c = this.#getCanvas();
+		if (!c) {
+			throw new Error('Canvas Not Found: ' + selector);
+		}
+
+		this.#context = c.getContext('2d');
+		this.#save = null;
+		this.#assets = null;
+		this.#store = new Urge.ComponentStore(this.#getContext());
+	}
+
+	start() {
+		console.log('Starting...');
+		this.#init().then(() => {
+			console.log('Success', this.#save, this.#assets);
+			Nucleus.Clock.start(instant => this.updateAndRender(instant));
+		}).catch(f => {
+			console.error(f);
+		}).finally(() => {
+			console.log('Started');
+		});
+	}
+
+	async #init() {
+		console.log('Initializing...');
+
+		this.#save = this.#getSaveOrDefault();
+		this.#onResize();
+		window.onresize = this.#onResize;
+		this.#assets = await this.#preRender();
+		Nucleus.KeyInputHandler.start();
+
+		// TODO: setup which screen we're on, then render that screen
+
+		console.log('Initialized');
+	}
+
+	#getSaveOrDefault() {
+		const namespace = 'com.manodestra.rogue';
+		const model = Nucleus.Cryo.get('Save', namespace);
+		if (!model) {
+			console.log('Setting Default Model...');
+			Nucleus.Cryo.set('Save', this.#getDefaultSave(), namespace);
+		}
+
+		return Nucleus.Cryo.get('Save', namespace);
+	}
+
+	#getDefaultSave() {
+		return {
+			health: 100,
+			damage: 10
+		};
+	}
+
+	#getCanvas() {
+		return Nucleus.$(this.#selector);
+	}
+
+	#getContext() {
+		return this.#context;
+	}
+
+	#onResize() {
+		const c = this.#getCanvas();
+		const b = document.body;
+		c.width = b.clientWidth;
+		c.height = b.clientHeight;
+	}
+
+	async #preRender() {
+		const [starField1, starField2, starField3] = await Promise.all([
+			this.#getStarField(250, 1, 2),
+			this.#getStarField(200, 1, 3.5),
+			this.#getStarField(150, 1, 5)
+		]);
+		return {
+			starField1, starField2, starField3
+		};
+	}
+
+	#getStarField(count = 250, minSize = 1, maxDelta = 3) {
+		const canvas = this.#getCanvas();
+		return this.#generateImage({
+			width: canvas.width,
+			height: canvas.height,
+			consumer: c => {
+				c.strokeStyle = '#0a0';
+				c.fillStyle = 'cornflowerblue';
+				for (let i = 0; i < count; i++) {
+					const r = parseInt(Math.random() * 256);
+					const g = parseInt(Math.random() * 256);
+					const b = parseInt(Math.random() * 128) + 128;
+					c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
+					const x = parseInt(Math.random() * canvas.width);
+					const y = parseInt(Math.random() * canvas.height);
+					const size = parseInt(Math.random() * maxDelta) + minSize;
+					c.fillRect(x, y, size, size);
+				}
+			}
+		});
+	}
+
+	async #generateImage(options) {
+		const {
+			consumer: f,
+			width : w = 256,
+			height : h = 256,
+			type : t = 'image/png',
+			quality : q = 1.0
+		} = options;
+
+		const i = new Image();
+		const c = document.createElement('canvas');
+		c.width = w;
+		c.height = h;
+		const x = c.getContext('2d');
+		if (f) {
+			f(x);
+		}
+
+		i.src = c.toDataURL();
+		await i.decode();
+		return i;
+	}
+
+	update(instant) {
+		super.update(instant);
+	}
+
+	render(instant) {
+		super.render(instant);
+	}
+}
+
+const RogueEx = (() => {
 	const GameScreen = {
 		START: 0,
 		INTRO: 1,
@@ -52,6 +197,7 @@ const Rogue = (() => {
 		window.onresize = onResize;
 
 		const assets = await preRender();
+
 		const sf1 = new StarField(ctx, {
 			image: assets.starField1,
 			scrollSeconds: 30
@@ -284,4 +430,7 @@ const Rogue = (() => {
 	};
 })();
 
-Rogue.start();
+//RogueEx.start();
+
+const rogue = new Rogue();
+rogue.start();
