@@ -20,8 +20,8 @@ class Rogue extends Urge.Game {
 
 	async init() {
 		this.#save = this.#getSaveOrDefault();
-		this.onResize();
 		window.addEventListener('resize', () => this.onResize(), false);
+		this.onResize();
 		this.#assets['starFields'] = [
 			this.#getStarField(250, 1, 2),
 			this.#getStarField(200, 1, 3.5),
@@ -40,7 +40,8 @@ class Rogue extends Urge.Game {
 	}
 
 	async start() {
-		super.start(StartScreen.name);
+		await super.start(StartScreen);
+		this.onResize();
 	}
 
 	#getSaveOrDefault() {
@@ -66,6 +67,7 @@ class Rogue extends Urge.Game {
 		const b = document.body;
 		c.width = b.clientWidth;
 		c.height = b.clientHeight;
+		this.updateScreens(b.clientWidth, b.clientHeight);
 	}
 
 	#getStarField(count = 250, minSize = 1, maxDelta = 3) {

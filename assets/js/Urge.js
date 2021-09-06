@@ -353,11 +353,13 @@ const Urge = (() => {
 		#store;
 		#state;
 		#screenState;
+		#canvas;
 
 		constructor(state) {
 			const canvas = document.createElement('canvas');
 			const context = canvas.getContext('2d');
 			super(context);
+			this.#canvas = canvas;
 			if (this.constructor == Screen) {
 				throw new Error(ABSTRACT_ERROR);
 			}
@@ -365,6 +367,15 @@ const Urge = (() => {
 			this.#store = new ComponentStore(context);
 			this.#state = state;
 			this.#screenState = ScreenState.INACTIVE;
+		}
+
+		getCanvas() {
+			return this.#canvas;
+		}
+
+		updateCanvas(width, height) {
+			this.#canvas.width = width;
+			this.#canvas.height = height;
 		}
 
 		getStore() {
@@ -423,10 +434,14 @@ const Urge = (() => {
 			return Nucleus.$(this.#selector);
 		}
 
+		updateScreens(width, height) {
+			this.forEachScreen(screen => screen.updateCanvas(width, height));
+		}
+
 		async init() {
 		}
 
-		async start(startScreenType = '') {
+		async start(startScreenType = 'StartScreen') {
 			console.log('Starting...');
 			return this.init().then(s => {
 				console.log('Init State:', s);
@@ -440,7 +455,8 @@ const Urge = (() => {
 				}
 
 				console.log('Game Screens:', this.#screens);
-				const initialScreen = this.#screens?.[startScreenType];
+				const initialType = startScreenType?.name ?? startScreenType;
+				const initialScreen = this.#screens?.[initialType];
 				if (initialScreen) {
 					initialScreen.init();
 				} else {
@@ -457,12 +473,39 @@ const Urge = (() => {
 			});
 		}
 
+		// TODO: may need a message based system as individual screens will flag when to navigate
+		navigate(screenType) {
+			// TODO: code
+		}
+
+		forEachScreen(screenFunc) {
+			for (let screenType in this.#screens) {
+				const screen = this.#screens[screenType];
+				if (screenFunc) {
+					screenFunc(screen);
+				}
+			}
+		}
+
 		update(instant) {
 			super.update(instant);
+			this.forEachScreen(screen => {
+				if (screen.getScreenState() != ScreenState.INACTIVE) {
+					screen.update(instant);
+				}
+			});
 		}
 
 		render(instant) {
 			super.render(instant);
+			const canvas = this.getCanvas();
+			const ctx = this.getContext();
+			this.forEachScreen(screen => {
+				if (screen.getScreenState() != ScreenState.INACTIVE) {
+					screen.render(instant);
+					ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
+				}
+			});
 		}
 
 		generateCanvas(f, w = 256, h = 256) {
