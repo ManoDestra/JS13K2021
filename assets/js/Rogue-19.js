@@ -100,46 +100,6 @@ const Rogue = (() => {
 		}
 	}
 
-	class StarField extends Urge.RenderComponent {
-		constructor(context, options) {
-			super(context);
-			this.x = 0;
-			this.y = 0;
-			this.image = options.image;
-			this.scrollSeconds = options?.scrollSeconds ?? 10;
-		}
-
-		update(instant) {
-			const portrait = isPortrait();
-			const pixelCount = parseFloat((portrait ? canvas.height : canvas.width) / this.scrollSeconds);
-			const pixelsToMove = pixelCount * instant.elapsed() / 1000;
-			if (portrait) {
-				this.x = 0;
-				this.y += pixelsToMove;
-			} else {
-				this.y = 0;
-				this.x -= pixelsToMove;
-			}
-
-			while (this.x < -canvas.width) {
-				this.x += canvas.width;
-			}
-
-			while (this.y > canvas.height) {
-				this.y -= canvas.height;
-			}
-		}
-
-		render(instant) {
-			ctx.drawImage(this.image, this.x, this.y, canvas.width, canvas.height);
-			if (isPortrait()) {
-				ctx.drawImage(this.image, this.x, this.y - canvas.height, canvas.width, canvas.height);
-			} else {
-				ctx.drawImage(this.image, this.x + canvas.width, this.y, canvas.width, canvas.height);
-			}
-		}
-	}
-
 	class Ship extends Urge.Sprite {
 		#skills = null;
 		#health = 0;

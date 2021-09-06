@@ -116,6 +116,14 @@ const Urge = (() => {
 			return this.#context;
 		}
 
+		getCanvas() {
+			return this.#context.canvas;
+		}
+
+		isPortrait() {
+			return this.#context.height > this.#context.width;
+		}
+
 		update(instant) {
 			// Empty Implementation
 		}
@@ -124,10 +132,6 @@ const Urge = (() => {
 			if (instant.frame % 60 == 0) {
 				console.log(message);
 			}
-		}
-
-		isPortrait() {
-			return this.#context.height > this.#context.width;
 		}
 	}
 
