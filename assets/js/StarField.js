@@ -1,3 +1,4 @@
+// TODO: use underlying x/y from Sprite
 class StarField extends Urge.RenderComponent {
 	constructor(context, options) {
 		super(context);
