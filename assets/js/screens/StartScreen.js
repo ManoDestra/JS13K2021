@@ -1,4 +1,6 @@
 class StartScreen extends Urge.Screen {
+	#lastSpacePressed = false;
+
 	constructor(state) {
 		super(state);
 	}
@@ -31,9 +33,12 @@ class StartScreen extends Urge.Screen {
 	update(instant) {
 		const store = this.getStore();
 		store.update(instant);
-		if (Nucleus.KeyInputHandler.checkKey(' ', true)) {
+		const spacePressed = Nucleus.Keys.checkKey(' ');
+		if (spacePressed && !this.#lastSpacePressed) {
 			console.log('Space Pressed', performance.now());
 		}
+
+		this.#lastSpacePressed = spacePressed;
 	}
 
 	render(instant) {

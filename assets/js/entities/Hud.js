@@ -8,7 +8,7 @@ class Hud extends Urge.RenderComponent {
 
 	render(instant) {
 		const GREEN = '#0a0';
-		const FONT = '2em Segoe UI';
+		const FONT = '2em sans-serif';
 		const ctx = super.getContext();
 		const canvas = super.getCanvas();
 		ctx.fillStyle = GREEN;

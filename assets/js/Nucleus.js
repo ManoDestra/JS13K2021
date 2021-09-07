@@ -141,7 +141,7 @@ Nucleus.Clock = (() => {
 	};
 })();
 
-Nucleus.KeyInputHandler = (() => {
+Nucleus.Keys = (() => {
 	let keyBindings = null;
 
 	function handleKeyDown(e) {
@@ -168,11 +168,10 @@ Nucleus.KeyInputHandler = (() => {
 		return keyBindings[keyCode] != undefined;
 	}
 
-	function checkKey(key, ignoreCase) {
-		const ignoreCaseToUse = !!ignoreCase || ignoreCase;
-		return keyBindings.filter(element => {
-			return element != undefined && (ignoreCaseToUse ? element.key.toLowerCase() === key.toLowerCase() : element.key == key);
-		}).length > 0;
+	function checkKey(key) {
+		return !!keyBindings.find(el => {
+			return el && (el.key.toLowerCase() === key.toLowerCase());
+		});
 	}
 
 	function isShift() {

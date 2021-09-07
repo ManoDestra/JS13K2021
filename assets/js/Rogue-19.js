@@ -27,7 +27,7 @@ class Rogue extends Urge.Game {
 			this.#getStarField(200, 1, 3.5),
 			this.#getStarField(150, 1, 5)
 		];
-		Nucleus.KeyInputHandler.start();
+		Nucleus.Keys.start();
 
 		const state = {
 			assets: this.#assets,
@@ -93,7 +93,7 @@ const RogueEx = (() => {
 	const DARK = '#111';
 	const GREEN = '#0a0';
 	const LIGHT = '#eee';
-	const FONT = '2em Segoe UI';
+	const FONT = '2em sans-serif';
 
 	const canvas = Nucleus.$('canvas');
 	//canvas.onclick = e => canvas.requestFullscreen();
@@ -143,7 +143,7 @@ const RogueEx = (() => {
 		const hud = new Hud(ctx, timeLine);
 		store.put(hud);
 
-		Nucleus.KeyInputHandler.start();
+		Nucleus.Keys.start();
 
 		return assets;
 	}

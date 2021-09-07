@@ -30,19 +30,19 @@ class Ship extends Urge.Sprite {
 	update(instant) {
 		this.size = this.getSize();
 		const delta = this.getWidth() * 4 * instant.elapsed() / 1000;
-		if (Nucleus.KeyInputHandler.checkKey('w', true)) {
+		if (Nucleus.Keys.checkKey('w')) {
 			this.offsetY(-delta);
 		}
 
-		if (Nucleus.KeyInputHandler.checkKey('s', true)) {
+		if (Nucleus.Keys.checkKey('s')) {
 			this.offsetY(delta);
 		}
 
-		if (Nucleus.KeyInputHandler.checkKey('a', true)) {
+		if (Nucleus.Keys.checkKey('a')) {
 			this.offsetX(-delta);
 		}
 
-		if (Nucleus.KeyInputHandler.checkKey('d', true)) {
+		if (Nucleus.Keys.checkKey('d')) {
 			this.offsetX(delta);
 		}
 
@@ -58,7 +58,7 @@ class Ship extends Urge.Sprite {
 
 		// TODO: handle the fire rate
 		// TODO: change to user controller firing, rather than hold to fire?
-		if (Nucleus.KeyInputHandler.checkKey(' ') && instant.frame % 30 == 0) {
+		if (Nucleus.Keys.checkKey(' ') && instant.frame % 30 == 0) {
 			this.#send('PLAYER_BULLET');
 		}
 	}

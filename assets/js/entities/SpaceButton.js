@@ -20,7 +20,6 @@ class SpaceButton extends Urge.Sprite {
 			const height = portrait ? width / 3 : width / 3;
 			const x = (canvas.width - width) / 2;
 			const y = (canvas.height - height) / 2;
-			//const fontName = 'Segoe UI';
 			const fontName = 'sans-serif';
 			const fontSize = parseInt(height * 2 / 3);
 			const text = 'SPACE';
