@@ -26,24 +26,23 @@ class SpaceButton extends Urge.Sprite {
 
 			const ratio = Math.min(1, (this.#totalElapsed - this.#delay) / this.#duration);
 
-			const white = 'rgba(255, 255, 255, ' + ratio + ')';
-			const black = 'rgba(0, 0, 0, ' + ratio + ')';
-			const silver = 'rgba(192, 192, 192, ' + ratio + ')';
-
+			ctx.globalAlpha = ratio;
 			ctx.lineWidth = 10;
-			ctx.strokeStyle = white;
-			ctx.fillStyle = black;
+			ctx.strokeStyle = 'white';
+			ctx.fillStyle = 'black';
 			ctx.strokeRect(x, y, width, height);
 			ctx.fillRect(x, y, width, height);
 
+			// TODO: handle alignment better
 			ctx.lineWidth = 5;
-			ctx.strokeStyle = silver;
-			ctx.fillStyle = white;
+			ctx.strokeStyle = 'silver';
+			ctx.fillStyle = 'darkgray';
 			ctx.font = fontSize + 'px ' + fontName;
 			const textSize = ctx.measureText(text);
 			const offsetX = (width - textSize.width) / 2
 			const offsetY = fontSize + ((height - fontSize) / 2);
 			ctx.strokeText(text, x + offsetX, y + offsetY);
+			ctx.globalAlpha = 1;
 		}
 	}
 }
