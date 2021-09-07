@@ -32,13 +32,16 @@ class StartScreen extends Urge.Screen {
 		const store = this.getStore();
 		store.update(instant);
 		//store.updateByTypes(instant, SpaceButton);
-		const spacePressed = Nucleus.Keys.checkKey(' ');
-		if (spacePressed && !this.#lastSpacePressed) {
-			console.log('Space Pressed', performance.now());
-			this.navigate(IntroScreen);
-		}
 
-		this.#lastSpacePressed = spacePressed;
+		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
+			const spacePressed = Nucleus.Keys.checkKey(' ');
+			if (spacePressed && !this.#lastSpacePressed) {
+				console.log('Space Pressed', performance.now());
+				this.navigate(IntroScreen);
+			}
+
+			this.#lastSpacePressed = spacePressed;
+		}
 	}
 
 	render(instant) {

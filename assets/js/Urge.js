@@ -585,49 +585,23 @@ const Urge = (() => {
 
 					// TODO: perform ratio updates to screen canvases here
 					const canvas = screen.getCanvas();
-					const context = canvas.getContext('2d');
+					const context = screen.getContext();
 					const width = canvas.width;
 					const height = canvas.height;
 
 					if (this.#currentScreenType && screen instanceof this.#currentScreenType) {
-						if (navigating) {
-							Game.#updateAlpha(context, width, height, currentScreenRatio);
-						}
-
+						ctx.globalAlpha = currentScreenRatio;
 						ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
 					}
 
 					if (this.#incomingScreenType && screen instanceof this.#incomingScreenType) {
-						if (navigating) {
-							Game.#updateAlpha(context, width, height, incomingScreenRatio);
-						}
-
+						ctx.globalAlpha = incomingScreenRatio;
 						ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
 					}
 
-					/*
-					if (navigating && this.#currentScreenType && screen instanceof this.#currentScreenType) {
-						Game.#updateAlpha(context, width, height, currentScreenRatio);
-					}
-
-					if (navigating && this.#incomingScreenType && screen instanceof this.#incomingScreenType) {
-						Game.#updateAlpha(context, width, height, incomingScreenRatio);
-					}
-
-					ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
-					*/
+					ctx.globalAlpha = 1;
 				}
 			});
-		}
-
-		static #updateAlpha(context, width, height, ratio) {
-			const imageData = context.getImageData(0, 0, width, height);
-			const data = imageData.data;
-			for (let i = 0; i < data.length; i+= 4) {
-				data[i + 3] = ratio * 255;
-			}
-
-			context.putImageData(imageData, 0, 0);
 		}
 
 		generateCanvas(f, w = 256, h = 256) {
