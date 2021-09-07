@@ -1,5 +1,7 @@
 class StartScreen extends Urge.Screen {
+	#totalElapsed = 0;
 	#lastSpacePressed = false;
+	#lastScreenState = Urge.ScreenState.INACTIVE;
 
 	constructor(game, state) {
 		super(game, state);
@@ -22,14 +24,14 @@ class StartScreen extends Urge.Screen {
 			image: state.assets.starFields[2],
 			scrollSeconds: 75
 		});
-		const spaceButton = new SpaceButton(ctx);
-		store.put(sf1, sf2, sf3, spaceButton);
+		store.put(sf1, sf2, sf3);
 	}
 
 	update(instant) {
 		const store = this.getStore();
 		store.update(instant);
-		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
+		const screenState = this.getScreenState();
+		if (screenState == Urge.ScreenState.ACTIVE) {
 			const spacePressed = Nucleus.Keys.checkKey(' ');
 			if (spacePressed && !this.#lastSpacePressed) {
 				console.log('Space Pressed', performance.now());
@@ -38,6 +40,14 @@ class StartScreen extends Urge.Screen {
 
 			this.#lastSpacePressed = spacePressed;
 		}
+
+		if (screenState == Urge.ScreenState.ACTIVE && this.#lastScreenState == Urge.ScreenState.INITIALIZING) {
+			const spaceButton = new SpaceButton(this.getContext());
+			store.put(spaceButton);
+		}
+
+		this.#totalElapsed += instant.elapsed();
+		this.#lastScreenState = screenState;
 	}
 
 	render(instant) {

@@ -1,6 +1,6 @@
 class SpaceButton extends Urge.Sprite {
 	#totalElapsed = 0;
-	#delay = 3000;
+	#delay = 1000;
 	#duration = 5000;
 
 	constructor(context) {

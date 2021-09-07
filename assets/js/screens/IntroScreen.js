@@ -1,5 +1,6 @@
 class IntroScreen extends Urge.Screen {
 	#totalElapsed = 0;
+	#lastSpacePressed = false;
 	#lines = [
 		'Under Attack!',
 		'Chemical Warfare Attack!',
@@ -25,6 +26,7 @@ class IntroScreen extends Urge.Screen {
 	}
 
 	update(instant) {
+		const store = this.getStore();
 		this.#totalElapsed += instant.elapsed();
 	}
 

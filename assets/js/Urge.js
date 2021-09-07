@@ -358,11 +358,11 @@ const Urge = (() => {
 	};
 	Object.freeze(ScreenState);
 
-	// TODO: work on screen management module also
 	class Screen extends RenderComponent {
 		#store;
 		#game;
 		#state;
+		#previousScreenState;
 		#screenState;
 		#canvas;
 
@@ -378,6 +378,7 @@ const Urge = (() => {
 			this.#store = new ComponentStore(context);
 			this.#game = game;
 			this.#state = state;
+			this.#previousScreenState = ScreenState.INACTIVE;
 			this.#screenState = ScreenState.INACTIVE;
 		}
 
