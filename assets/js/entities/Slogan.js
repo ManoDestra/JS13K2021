@@ -1,6 +1,9 @@
 class Slogan extends Urge.Sprite {
-	constructor(context) {
+	#text;
+
+	constructor(context, text) {
 		super(context);
+		this.#text = text;
 	}
 
 	update(instant) {
