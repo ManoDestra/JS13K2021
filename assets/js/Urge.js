@@ -393,18 +393,20 @@ const Urge = (() => {
 		init() {
 			console.log('Screen Initialization');
 			this.#screenState = ScreenState.INITIALIZING;
+		}
 
-			// TODO: init
-
+		activate() {
+			console.log('Screen Activation');
 			this.#screenState = ScreenState.ACTIVE;
 		}
 
 		term() {
 			console.log('Screen Termination');
 			this.#screenState = ScreenState.TERMINATING;
+		}
 
-			// TODO: term
-
+		deactivate() {
+			console.log('Screen Deactivation');
 			this.getStore().clear();
 			this.#screenState = ScreenState.INACTIVE;
 		}
@@ -414,6 +416,9 @@ const Urge = (() => {
 		#selector;
 		#screenTypes;
 		#screens = {};
+		#currentScreenType = null;
+		#incomingScreenType = null;
+		#navigationElapsed = -1;
 
 		constructor(screenTypes, selector = 'canvas') {
 			const canvas = Nucleus.$(selector);
@@ -441,7 +446,7 @@ const Urge = (() => {
 		async init() {
 		}
 
-		async start(startScreenType = 'StartScreen') {
+		async start(startScreenType) {
 			console.log('Starting...');
 			return this.init().then(s => {
 				console.log('Init State:', s);
@@ -455,12 +460,11 @@ const Urge = (() => {
 				}
 
 				console.log('Game Screens:', this.#screens);
-				const initialType = startScreenType?.name ?? startScreenType;
-				const initialScreen = this.#screens?.[initialType];
+				const initialScreen = this.#screens[startScreenType.name];
 				if (initialScreen) {
+					this.navigate(startScreenType);
+					// TODO: call navigate instead?
 					initialScreen.init();
-				} else {
-					console.warn('No Initial Screen!');
 				}
 
 				Nucleus.Clock.start(instant => this.updateAndRender(instant));
@@ -475,7 +479,48 @@ const Urge = (() => {
 
 		// TODO: may need a message based system as individual screens will flag when to navigate
 		navigate(screenType) {
-			// TODO: code
+			if (this.#navigationElapsed < 0) {
+				this.#navigationElapsed = 0;
+				if (this.#currentScreenType) {
+					const currentName = this.#currentScreenType.name;
+					const current = this.#screens[currentName];
+					if (!current) {
+						throw new Error('Current Screen Not Found: ' + currentName);
+					}
+
+					current.term();
+
+					// TODO: this will be called when the transition completes
+					current.deactivate();
+				}
+
+				const name = screenType?.name ?? '';
+				const screen = this.#screens[name];
+				if (!screen) {
+					throw new Error('Screen Not Found: ' + name);
+				}
+
+				screen.init();
+
+				// TODO: this will be called when the transition completes
+				screen.activate();
+				this.#incomingScreenType = screenType;
+			} else {
+				console.warn('Currently Navigating... Please Wait...');
+			}
+		}
+
+		#endNavigation() {
+			if (this.#navigationElapsed >= 0) {
+				// TODO: code
+
+				// TODO: this will be called when the transition completes
+				this.#currentScreenType = this.#incomingScreenType;
+				this.#incomingScreenType = null;
+				this.#navigationElapsed = -1;
+			} else {
+				console.warn('Not Currently Navigating... Unable To End Navigation...');
+			}
 		}
 
 		forEachScreen(screenFunc) {
@@ -489,17 +534,30 @@ const Urge = (() => {
 
 		update(instant) {
 			super.update(instant);
+
+			// TODO: only update current and incoming screens?
 			this.forEachScreen(screen => {
 				if (screen.getScreenState() != ScreenState.INACTIVE) {
 					screen.update(instant);
 				}
 			});
+
+			// TODO: handle transition updates
+			if (this.#navigationElapsed >= 0) {
+				this.#navigationElapsed += instant.elapsed();
+				if (this.#navigationElapsed > 3000) {
+					this.#endNavigation();
+				}
+			}
 		}
 
+		// TODO: handle transition rendering
 		render(instant) {
 			super.render(instant);
 			const canvas = this.getCanvas();
 			const ctx = this.getContext();
+
+			// TODO: only update current and incoming screens?
 			this.forEachScreen(screen => {
 				if (screen.getScreenState() != ScreenState.INACTIVE) {
 					screen.render(instant);

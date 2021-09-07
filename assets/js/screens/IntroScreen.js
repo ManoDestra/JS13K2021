@@ -4,6 +4,7 @@ class IntroScreen extends Urge.Screen {
 	}
 
 	init() {
+		super.init();
 	}
 
 	update(instant) {
