@@ -34,8 +34,6 @@ class Rogue extends Urge.Game {
 			save: this.#save
 		};
 
-		const startScreen = new StartScreen(state);
-
 		return state;
 	}
 

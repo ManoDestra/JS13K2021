@@ -10,8 +10,6 @@ class StartScreen extends Urge.Screen {
 		const state = this.getState();
 		const store = this.getStore();
 		const ctx = this.getContext();
-		console.log('Start Screen State:', state);
-
 		const sf1 = new StarField(ctx, {
 			image: state.assets.starFields[0],
 			scrollSeconds: 150
@@ -31,8 +29,6 @@ class StartScreen extends Urge.Screen {
 	update(instant) {
 		const store = this.getStore();
 		store.update(instant);
-		//store.updateByTypes(instant, SpaceButton);
-
 		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
 			const spacePressed = Nucleus.Keys.checkKey(' ');
 			if (spacePressed && !this.#lastSpacePressed) {
