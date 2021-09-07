@@ -1,5 +1,20 @@
 class IntroScreen extends Urge.Screen {
 	#totalElapsed = 0;
+	#lines = [
+		'Under Attack!',
+		'Chemical Warfare Attack!',
+		'Scramble The Clone Pilots To Their Ships!',
+		'Protect The Planet At All Costs From These Space-Born Pathogens!',
+		'Infectious Agents Of Unknown Origin Incoming!',
+		'Be Strong, Clone Warriors!',
+		'We Will Overcome These Personal Space Invaders!',
+		'Avoid Infection! Practice Spatial Distancing!',
+		'Please Remember That Another Clone Will Replace You If You Die...',
+		'The Clone That Replaces You Will Benefit From Your Experience...',
+		'With Enhanced Abilities And Skills...',
+		'Use W|S|A|D To Move, Space To Fire',
+		'Now, Get Out There And Save Our Race From Infection!'
+	];
 
 	constructor(game, state) {
 		super(game, state);
@@ -11,7 +26,6 @@ class IntroScreen extends Urge.Screen {
 
 	update(instant) {
 		this.#totalElapsed += instant.elapsed();
-		this.debug(instant, this.#totalElapsed);
 	}
 
 	render(instant) {
