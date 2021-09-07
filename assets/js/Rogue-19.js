@@ -348,7 +348,6 @@ const RogueEx = (() => {
 	};
 })();
 
-
 (async () => {
 	const rogue = new Rogue();
 	await rogue.start();
