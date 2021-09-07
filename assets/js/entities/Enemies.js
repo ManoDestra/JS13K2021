@@ -27,7 +27,7 @@ class Cell extends Enemy {
 
 	update(instant) {
 		const limit = this.isPortrait() ? this.getHeight() : this.getWidth();
-		const movement = limit * instant.elapsed() * 2 / 1000;
+		const movement = limit * 2 * instant.elapsed() / 1000;
 		if (super.isPortrait()) {
 			this.offsetY(movement);
 		} else {
