@@ -148,9 +148,9 @@ const Urge = (() => {
 			// Empty Implementation
 		}
 
-		debug(instant, message) {
+		debug(instant, ...models) {
 			if (instant.frame % 60 == 0) {
-				console.log(message);
+				console.log('*** DEBUG ***', performance.now(), ...models);
 			}
 		}
 	}
@@ -315,6 +315,16 @@ const Urge = (() => {
 			this.#map.forEach(c => c.update(instant));
 		}
 
+		updateByTypes(instant, ...types) {
+			types.forEach(type => {
+				this.#map.forEach(c => {
+					if (c instanceof Component && c instanceof type) {
+						c.update(instant);
+					}
+				});
+			});
+		}
+
 		render(instant) {
 			this.#map.forEach(c => {
 				if (c instanceof RenderComponent) {
@@ -351,11 +361,12 @@ const Urge = (() => {
 	// TODO: work on screen management module also
 	class Screen extends RenderComponent {
 		#store;
+		#game;
 		#state;
 		#screenState;
 		#canvas;
 
-		constructor(state) {
+		constructor(game, state) {
 			const canvas = document.createElement('canvas');
 			const context = canvas.getContext('2d');
 			super(context);
@@ -365,6 +376,7 @@ const Urge = (() => {
 			}
 
 			this.#store = new ComponentStore(context);
+			this.#game = game;
 			this.#state = state;
 			this.#screenState = ScreenState.INACTIVE;
 		}
@@ -391,24 +403,28 @@ const Urge = (() => {
 		}
 
 		init() {
-			console.log('Screen Initialization');
+			console.log(performance.now(), 'Screen Initialization');
 			this.#screenState = ScreenState.INITIALIZING;
 		}
 
 		activate() {
-			console.log('Screen Activation');
+			console.log(performance.now(), 'Screen Activation');
 			this.#screenState = ScreenState.ACTIVE;
 		}
 
 		term() {
-			console.log('Screen Termination');
+			console.log(performance.now(), 'Screen Termination');
 			this.#screenState = ScreenState.TERMINATING;
 		}
 
 		deactivate() {
-			console.log('Screen Deactivation');
+			console.log(performance.now(), 'Screen Deactivation');
 			this.getStore().clear();
 			this.#screenState = ScreenState.INACTIVE;
+		}
+
+		navigate(screenType) {
+			this.#game.navigate(screenType);
 		}
 	}
 
@@ -419,6 +435,7 @@ const Urge = (() => {
 		#currentScreenType = null;
 		#incomingScreenType = null;
 		#navigationElapsed = -1;
+		#transitionDuration = 2000;
 
 		constructor(screenTypes, selector = 'canvas') {
 			const canvas = Nucleus.$(selector);
@@ -449,10 +466,9 @@ const Urge = (() => {
 		async start(startScreenType) {
 			console.log('Starting...');
 			return this.init().then(s => {
-				console.log('Init State:', s);
 				for (let t of this.#screenTypes) {
 					if (t.prototype instanceof Screen) {
-						const screen = new t(s);
+						const screen = new t(this, s);
 						this.#screens[t.name] = screen;
 					} else {
 						console.warn('Invalid Screen: ' + t.name);
@@ -463,8 +479,6 @@ const Urge = (() => {
 				const initialScreen = this.#screens[startScreenType.name];
 				if (initialScreen) {
 					this.navigate(startScreenType);
-					// TODO: call navigate instead?
-					initialScreen.init();
 				}
 
 				Nucleus.Clock.start(instant => this.updateAndRender(instant));
@@ -484,26 +498,17 @@ const Urge = (() => {
 				if (this.#currentScreenType) {
 					const currentName = this.#currentScreenType.name;
 					const current = this.#screens[currentName];
-					if (!current) {
-						throw new Error('Current Screen Not Found: ' + currentName);
+					if (current) {
+						current.term();
 					}
-
-					current.term();
-
-					// TODO: this will be called when the transition completes
-					current.deactivate();
 				}
 
 				const name = screenType?.name ?? '';
 				const screen = this.#screens[name];
-				if (!screen) {
-					throw new Error('Screen Not Found: ' + name);
+				if (screen) {
+					screen.init();
 				}
 
-				screen.init();
-
-				// TODO: this will be called when the transition completes
-				screen.activate();
 				this.#incomingScreenType = screenType;
 			} else {
 				console.warn('Currently Navigating... Please Wait...');
@@ -512,9 +517,20 @@ const Urge = (() => {
 
 		#endNavigation() {
 			if (this.#navigationElapsed >= 0) {
-				// TODO: code
+				if (this.#currentScreenType) {
+					const currentName = this.#currentScreenType.name;
+					const current = this.#screens[currentName];
+					if (current) {
+						current.deactivate();
+					}
+				}
 
-				// TODO: this will be called when the transition completes
+				const name = this.#incomingScreenType.name;
+				const screen = this.#screens[name];
+				if (screen) {
+					screen.activate();
+				}
+
 				this.#currentScreenType = this.#incomingScreenType;
 				this.#incomingScreenType = null;
 				this.#navigationElapsed = -1;
@@ -542,10 +558,9 @@ const Urge = (() => {
 				}
 			});
 
-			// TODO: handle transition updates
 			if (this.#navigationElapsed >= 0) {
 				this.#navigationElapsed += instant.elapsed();
-				if (this.#navigationElapsed > 3000) {
+				if (this.#navigationElapsed > this.#transitionDuration) {
 					this.#endNavigation();
 				}
 			}
@@ -557,13 +572,62 @@ const Urge = (() => {
 			const canvas = this.getCanvas();
 			const ctx = this.getContext();
 
+			const navigating = this.#navigationElapsed >= 0;
+			const incomingRatio = this.#navigationElapsed / this.#transitionDuration;
+			const currentScreenRatio = navigating ? (1 - incomingRatio) : 1;
+			const incomingScreenRatio = navigating ? incomingRatio : 0;
+			//this.debug(instant, 'FPS', instant.fps());
+
 			// TODO: only update current and incoming screens?
 			this.forEachScreen(screen => {
 				if (screen.getScreenState() != ScreenState.INACTIVE) {
 					screen.render(instant);
+
+					// TODO: perform ratio updates to screen canvases here
+					const canvas = screen.getCanvas();
+					const context = canvas.getContext('2d');
+					const width = canvas.width;
+					const height = canvas.height;
+
+					if (this.#currentScreenType && screen instanceof this.#currentScreenType) {
+						if (navigating) {
+							Game.#updateAlpha(context, width, height, currentScreenRatio);
+						}
+
+						ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
+					}
+
+					if (this.#incomingScreenType && screen instanceof this.#incomingScreenType) {
+						if (navigating) {
+							Game.#updateAlpha(context, width, height, incomingScreenRatio);
+						}
+
+						ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
+					}
+
+					/*
+					if (navigating && this.#currentScreenType && screen instanceof this.#currentScreenType) {
+						Game.#updateAlpha(context, width, height, currentScreenRatio);
+					}
+
+					if (navigating && this.#incomingScreenType && screen instanceof this.#incomingScreenType) {
+						Game.#updateAlpha(context, width, height, incomingScreenRatio);
+					}
+
 					ctx.drawImage(screen.getCanvas(), 0, 0, canvas.width, canvas.height);
+					*/
 				}
 			});
+		}
+
+		static #updateAlpha(context, width, height, ratio) {
+			const imageData = context.getImageData(0, 0, width, height);
+			const data = imageData.data;
+			for (let i = 0; i < data.length; i+= 4) {
+				data[i + 3] = ratio * 255;
+			}
+
+			context.putImageData(imageData, 0, 0);
 		}
 
 		generateCanvas(f, w = 256, h = 256) {

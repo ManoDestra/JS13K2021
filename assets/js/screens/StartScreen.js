@@ -1,8 +1,8 @@
 class StartScreen extends Urge.Screen {
 	#lastSpacePressed = false;
 
-	constructor(state) {
-		super(state);
+	constructor(game, state) {
+		super(game, state);
 	}
 
 	init() {
@@ -10,9 +10,7 @@ class StartScreen extends Urge.Screen {
 		const state = this.getState();
 		const store = this.getStore();
 		const ctx = this.getContext();
-		console.log('State:', state);
-		console.log('Store:', store);
-		console.log('Context:', ctx);
+		console.log('Start Screen State:', state);
 
 		const sf1 = new StarField(ctx, {
 			image: state.assets.starFields[0],
@@ -33,10 +31,11 @@ class StartScreen extends Urge.Screen {
 	update(instant) {
 		const store = this.getStore();
 		store.update(instant);
+		//store.updateByTypes(instant, SpaceButton);
 		const spacePressed = Nucleus.Keys.checkKey(' ');
 		if (spacePressed && !this.#lastSpacePressed) {
 			console.log('Space Pressed', performance.now());
-			// TODO: navigate to IntroScreen
+			this.navigate(IntroScreen);
 		}
 
 		this.#lastSpacePressed = spacePressed;
