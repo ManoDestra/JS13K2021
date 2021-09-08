@@ -61,7 +61,9 @@ class StartScreen extends Urge.Screen {
 				if (c instanceof Cell) {
 					store.forEach((b, bId, bMap) => {
 						if (b instanceof SpaceButton) {
-							// TODO: code
+							if (c.getBoundingBox().intersects(b.getBoundingBox())) {
+								console.log(performance.now(), 'Cell Intersects SpaceButton');
+							}
 						}
 					})
 				}
