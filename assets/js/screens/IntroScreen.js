@@ -16,12 +16,9 @@ class IntroScreen extends Urge.Screen {
 		'Use W|S|A|D To Move, Space To Fire',
 		'Now, Get Out There And Save Our Race From Infection!'
 	];
-	#spawned;
 
 	constructor(game, state) {
 		super(game, state);
-		this.#spawned = this.#lines.map(e => false);
-		console.log(this.#spawned);
 	}
 
 	init() {
@@ -40,8 +37,8 @@ class IntroScreen extends Urge.Screen {
 			store.put(slogan);
 		}
 
-		store.forEach(c => {
-			console.log('Component:', c);
+		store.forEach((c, id) => {
+			console.log('Component:', c, id);
 		});
 	}
 

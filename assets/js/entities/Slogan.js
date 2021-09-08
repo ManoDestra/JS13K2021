@@ -12,7 +12,7 @@ class Slogan extends Urge.Sprite {
 	update(instant) {
 		super.update(instant);
 		if (this.#totalElapsed > this.#delay) {
-			const velocity = -0.5;
+			const velocity = -0.3;
 			const delta = this.getHeight() * velocity * (instant.elapsed() / 1000);
 			this.offsetY(delta);
 		}
