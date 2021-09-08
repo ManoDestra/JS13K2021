@@ -56,8 +56,16 @@ class StartScreen extends Urge.Screen {
 				store.put(cell);
 			}
 
-			//this.debug(instant, 'Total Elapsed:', this.#totalElapsed);
 			this.#totalElapsed += instant.elapsed();
+			store.forEach((c, cId, cMap) => {
+				if (c instanceof Cell) {
+					store.forEach((b, bId, bMap) => {
+						if (b instanceof SpaceButton) {
+							// TODO: code
+						}
+					})
+				}
+			});
 		}
 
 		this.#lastScreenState = screenState;
