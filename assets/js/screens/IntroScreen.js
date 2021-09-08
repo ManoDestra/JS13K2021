@@ -10,11 +10,12 @@ class IntroScreen extends Urge.Screen {
 		'Be Strong, Clone Warriors!',
 		'We Will Overcome These Personal Space Invaders!',
 		'Avoid Infection! Practice Spatial Distancing!',
-		'Remember That Another Clone Will Replace You When You Die...',
-		'Each Clone Benefits From Your Experience Upon Your Death...',
+		'Remember That A New Clone Will Replace You When You Die...',
+		'Each New Clone Benefits From Your Experience...',
 		'With Enhanced Abilities And Skills...',
 		'Use W|S|A|D To Move, Space To Fire',
-		'Now, Get Out There And Save Our Race From Infection!'
+		'Now, Get Out There, Clone Warrior!',
+		'Save Our Planet From This Nefarious Viral Attack!'
 	];
 
 	constructor(game, state) {

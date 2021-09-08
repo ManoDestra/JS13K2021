@@ -55,6 +55,7 @@ class Rogue extends Urge.Game {
 
 	#getDefaultSave() {
 		return {
+			id: 1,
 			health: 100,
 			damage: 10
 		};

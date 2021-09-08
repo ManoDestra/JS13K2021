@@ -27,7 +27,8 @@ class Slogan extends Urge.Sprite {
 
 			ctx.strokeStyle = 'darkgray';
 			ctx.fillStyle = 'white';
-			ctx.font = (this.getHeight() / 4) + 'px sans-serif';
+			const fontSize = this.isPortrait() ? 32 : 48;
+			ctx.font = fontSize + 'px sans-serif';
 			ctx.textAlign = 'center';
 			ctx.fillText(this.#text, this.getX(), this.getY());
 		}
