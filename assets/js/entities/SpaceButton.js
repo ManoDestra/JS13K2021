@@ -35,8 +35,8 @@ class SpaceButton extends Urge.Sprite {
 
 			// TODO: handle alignment better
 			ctx.lineWidth = 5;
-			ctx.strokeStyle = 'silver';
-			ctx.fillStyle = 'darkgray';
+			ctx.strokeStyle = 'white';
+			//ctx.fillStyle = 'darkgray';
 			ctx.font = fontSize + 'px ' + fontName;
 			const textSize = ctx.measureText(text);
 			const offsetX = (width - textSize.width) / 2

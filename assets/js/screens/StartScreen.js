@@ -56,7 +56,7 @@ class StartScreen extends Urge.Screen {
 				store.put(cell);
 			}
 
-			this.debug(instant, 'Total Elapsed:', this.#totalElapsed);
+			//this.debug(instant, 'Total Elapsed:', this.#totalElapsed);
 			this.#totalElapsed += instant.elapsed();
 		}
 
