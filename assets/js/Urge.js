@@ -312,7 +312,11 @@ const Urge = (() => {
 		}
 
 		update(instant) {
-			this.#map.forEach(c => c.update(instant));
+			this.#map.forEach(c => {
+				if (c instanceof Component) {
+					c.update(instant);
+				}
+			});
 		}
 
 		updateByTypes(instant, ...types) {

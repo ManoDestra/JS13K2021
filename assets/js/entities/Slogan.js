@@ -21,10 +21,7 @@ class Slogan extends Urge.Sprite {
 	}
 
 	render(instant) {
-		super.render(instant);
 		if (this.#totalElapsed > this.#delay) {
-			//this.debug(instant, this.#text, this.#delay, this.#totalElapsed);
-
 			const ctx = this.getContext();
 			const canvas = this.getCanvas();
 

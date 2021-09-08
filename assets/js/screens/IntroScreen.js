@@ -2,16 +2,16 @@ class IntroScreen extends Urge.Screen {
 	#totalElapsed = 0;
 	#lastSpacePressed = false;
 	#lines = [
-		'Under Attack!',
-		'Chemical Warfare Attack!',
+		'We Are Under Attack!',
+		'Chemical Warfare!!',
 		'Scramble The Clone Pilots To Their Ships!',
-		'Protect The Planet At All Costs From These Space-Born Pathogens!',
+		'Protect The Planet At All Costs From Space-Born Pathogens!',
 		'Infectious Agents Of Unknown Origin Incoming!',
 		'Be Strong, Clone Warriors!',
 		'We Will Overcome These Personal Space Invaders!',
 		'Avoid Infection! Practice Spatial Distancing!',
-		'Please Remember That Another Clone Will Replace You If You Die...',
-		'The Clone That Replaces You Will Benefit From Your Experience...',
+		'Remember That Another Clone Will Replace You When You Die...',
+		'Each Clone Benefits From Your Experience Upon Your Death...',
 		'With Enhanced Abilities And Skills...',
 		'Use W|S|A|D To Move, Space To Fire',
 		'Now, Get Out There And Save Our Race From Infection!'
@@ -32,14 +32,10 @@ class IntroScreen extends Urge.Screen {
 		const height = canvas.height / 5;
 		for (let i = 0; i < this.#lines.length; i++) {
 			const text = this.#lines[i];
-			const delay = i * 1000;
+			const delay = (i * 3 + 1) * 1000;
 			const slogan = new Slogan(ctx, x, y, width, height, text, delay);
 			store.put(slogan);
 		}
-
-		store.forEach((c, id) => {
-			console.log('Component:', c, id);
-		});
 	}
 
 	update(instant) {
@@ -49,18 +45,10 @@ class IntroScreen extends Urge.Screen {
 	}
 
 	render(instant) {
+		super.render(instant);
 		const ctx = this.getContext();
 		const store = this.getStore();
 		store.render(instant);
-		//store.renderByTypes(instant, Slogan);
-
-		/*
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'darkred';
-		ctx.strokeRect(100, 100, 100, 100);
-		ctx.fillRect(100, 100, 100, 100);
-		*/
 	}
 
 	term() {
