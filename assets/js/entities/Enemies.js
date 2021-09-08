@@ -1,13 +1,19 @@
 class Enemy extends Urge.Sprite {
 	#health;
+	#velocity;
 
-	constructor(context, x, y, width, height, health) {
+	constructor(context, x, y, width, height, health, velocity) {
 		super(context, x, y, width, height);
 		this.#health = health;
+		this.#velocity = velocity;
 	}
 
 	getHealth() {
 		return this.#health;
+	}
+
+	getVelocity() {
+		return this.#velocity;
 	}
 
 	reduceHealth(damage) {
@@ -21,13 +27,12 @@ class Enemy extends Urge.Sprite {
 }
 
 class Cell extends Enemy {
-	constructor(context, x, y, size, health) {
-		super(context, x, y, size, size, health);
+	constructor(context, x, y, size, health, velocity) {
+		super(context, x, y, size, size, health, velocity);
 	}
 
 	update(instant) {
-		const limit = this.isPortrait() ? this.getHeight() : this.getWidth();
-		const movement = limit * 2 * instant.elapsed() / 1000;
+		const movement = this.getWidth() * this.getVelocity() * (instant.elapsed() / 1000);
 		if (super.isPortrait()) {
 			this.offsetY(movement);
 		} else {

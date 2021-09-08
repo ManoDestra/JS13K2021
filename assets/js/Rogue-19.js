@@ -190,7 +190,7 @@ const RogueEx = (() => {
 					const y = isPortrait()
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
-					const cell = new Cell(this.getContext(), x, y, size, 100);
+					const cell = new Cell(this.getContext(), x, y, size, 100, 2);
 					store.put(cell);
 				}
 
