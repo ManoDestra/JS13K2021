@@ -14,7 +14,7 @@ class IntroScreen extends Urge.Screen {
 		'Never Fear! A New Clone Will Replace You When You Die',
 		'Each New Clone Benefits From Your Experience',
 		'With Enhanced Abilities And Skills',
-		'Use W, S, A, D To Move',
+		'Use W/S/A/D To Move',
 		'Press SPACE To Shoot',
 		'Now, Get Out There, Clone Warrior!',
 		'Save Our Planet From This Nefarious Viral Attack!'

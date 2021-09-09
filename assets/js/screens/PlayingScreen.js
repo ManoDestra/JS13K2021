@@ -5,6 +5,7 @@ const PlayState = {
 	DEATH: 3
 };
 Object.freeze(PlayState);
+
 const MessageType = {
 	PLAYER_BULLET: 0,
 	CELL: 1
