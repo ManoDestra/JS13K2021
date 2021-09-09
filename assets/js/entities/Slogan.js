@@ -24,13 +24,17 @@ class Slogan extends Urge.Sprite {
 		if (this.#totalElapsed > this.#delay) {
 			const ctx = this.getContext();
 			const canvas = this.getCanvas();
+			const halfHeight = (canvas.height / 2);
+			const ratio = Math.min(0, 1 - (this.getY() / halfHeight));
 
+			ctx.globalAlpha = ratio;
 			ctx.strokeStyle = 'darkgray';
 			ctx.fillStyle = 'white';
 			const fontSize = this.isPortrait() ? 32 : 48;
 			ctx.font = fontSize + 'px sans-serif';
 			ctx.textAlign = 'center';
 			ctx.fillText(this.#text, this.getX(), this.getY());
+			ctx.globalAlpha = 1;
 		}
 	}
 }

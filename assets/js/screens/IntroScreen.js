@@ -60,11 +60,11 @@ class IntroScreen extends Urge.Screen {
 		const ctx = this.getContext();
 		const store = this.getStore();
 		store.render(instant);
+		const text = 'Press SPACE To Begin';
 
 		ctx.fillStyle = '';
 		ctx.font = '24px sans-serif';
 		ctx.textAlign = 'center';
-		const text = 'Press SPACE To Begin';
 		const measured = ctx.measureText(text);
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'white';
