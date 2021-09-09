@@ -2,13 +2,14 @@ class Ship extends Urge.Sprite {
 	#active = false;
 	#skills = null;
 	#health = 0;
-	#send = null;
+	#screen = null;
+	#lastSpacePressed = false;
 
-	constructor(context, x, y, size, skills, send) {
+	constructor(context, x, y, size, skills, screen) {
 		super(context, x, y, size, size);
 		this.#skills = skills;
 		this.#health = skills.health;
-		this.#send = send;
+		this.#screen = screen;
 	}
 
 	isActive() {
@@ -59,10 +60,12 @@ class Ship extends Urge.Sprite {
 			}
 
 			// TODO: handle the fire rate
-			// TODO: change to user controller firing, rather than hold to fire?
-			if (Nucleus.Keys.checkKey(' ') && instant.frame % 30 == 0) {
-				this.#send('PLAYER_BULLET');
+			const spacePressed = Nucleus.Keys.checkKey(' ');
+			if (spacePressed && !this.#lastSpacePressed) {
+				this.#screen.post(MessageType.PLAYER_BULLET);
 			}
+
+			this.#lastSpacePressed = spacePressed;
 		} else {
 			// TODO: update flying forward movement
 			// TODO: update #active to true, when ship reaches expected playing start point

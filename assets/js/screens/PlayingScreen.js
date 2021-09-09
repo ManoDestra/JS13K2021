@@ -3,6 +3,10 @@ const PlayState = {
 	PLAYING: 1
 };
 Object.freeze(PlayState);
+const MessageType = {
+	PLAYER_BULLET: 0
+};
+Object.freeze(MessageType);
 
 class PlayingScreen extends Urge.Screen {
 	#playState = PlayState.STARTING;
@@ -36,10 +40,7 @@ class PlayingScreen extends Urge.Screen {
 		const startX = this.isPortrait() ? (canvas.width - size) / 2 : -size;
 		const startY = this.isPortrait() ? canvas.height + (size * 2) : (canvas.height - size) / 2;
 		const save = state.save;
-		const receive = msg => {
-			console.log('Message Received:', msg);
-		};
-		const ship = new Ship(ctx, startX, startY, size, save, receive);
+		const ship = new Ship(ctx, startX, startY, size, save, this);
 		store.put(ship);
 		this.#ship = ship;
 		console.log(this.#ship);
@@ -58,8 +59,6 @@ class PlayingScreen extends Urge.Screen {
 			case PlayState.PLAYING:
 				break;
 		}
-
-		this.debug(instant, 'Play State:', this.#playState);
 	}
 
 	render(instant) {
@@ -69,6 +68,26 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	term() {
+	}
+
+	post(msgType) {
+		console.log('Message Received:', msgType, performance.now());
+		const store = this.getStore();
+		const portrait = this.isPortrait();
+		switch (msgType) {
+			case MessageType.PLAYER_BULLET:
+				const box = this.#ship.getBoundingBox();
+				const x = box.getX() + (portrait ? box.getWidth() / 2 : box.getWidth());
+				const y = box.getY() + (portrait ? 0 : box.getHeight() / 2);
+				const width = portrait ? 5 : 20;
+				const height = portrait ? 20 : 5;
+				const bullet = new PlayerBullet(this.getContext(), x, y, width, height);
+				store.put(bullet);
+
+				break;
+			default:
+				console.error('Unsupported Message Type:', msgType);
+		}
 	}
 
 	#getSize() {
