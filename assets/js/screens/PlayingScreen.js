@@ -51,14 +51,22 @@ class PlayingScreen extends Urge.Screen {
 		store.update(instant);
 		switch (this.#playState) {
 			case PlayState.STARTING:
-				if (this.#ship.isActive()) {
-					this.#playState = PlayState.PLAYING;
-				}
-
+				this.#updateStarting(instant);
 				break;
 			case PlayState.PLAYING:
+				this.#updatePlaying(instant);
 				break;
 		}
+	}
+
+	#updateStarting(instant) {
+		if (this.#ship.isActive()) {
+			this.#playState = PlayState.PLAYING;
+		}
+	}
+
+	#updatePlaying(instant) {
+		// TODO: code
 	}
 
 	render(instant) {
