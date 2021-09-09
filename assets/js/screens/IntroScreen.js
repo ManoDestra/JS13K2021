@@ -27,12 +27,22 @@ class IntroScreen extends Urge.Screen {
 	init() {
 		super.init();
 		const store = this.getStore();
+		const state = this.getState();
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
 		const x = canvas.width / 2;
 		const y = canvas.height * 1.1;
 		const width = canvas.width / 3;
 		const height = canvas.height / 5;
+		const sf1 = new StarField(ctx, {
+			image: state.assets.starFields[0],
+			scrollSeconds: 300
+		});
+		const sf2 = new StarField(ctx, {
+			image: state.assets.starFields[1],
+			scrollSeconds: 180
+		});
+		store.put(sf1, sf2);
 		for (let i = 0; i < this.#lines.length; i++) {
 			const text = this.#lines[i];
 			const delay = (i * 2 + 1) * 1000;
