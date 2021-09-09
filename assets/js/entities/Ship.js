@@ -59,7 +59,7 @@ class Ship extends Urge.Sprite {
 				this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
 			}
 
-			// TODO: handle the fire rate
+			// TODO: cap the fire rate
 			const spacePressed = Nucleus.Keys.checkKey(' ');
 			if (spacePressed && !this.#lastSpacePressed) {
 				this.#screen.post(MessageType.PLAYER_BULLET);
@@ -67,8 +67,6 @@ class Ship extends Urge.Sprite {
 
 			this.#lastSpacePressed = spacePressed;
 		} else {
-			// TODO: update flying forward movement
-			// TODO: update #active to true, when ship reaches expected playing start point
 			const size = this.getWidth();
 			const slow = delta / 5;
 			if (this.isPortrait()) {
