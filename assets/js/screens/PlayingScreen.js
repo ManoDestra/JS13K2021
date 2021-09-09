@@ -15,8 +15,7 @@ class PlayingScreen extends Urge.Screen {
 	#playState = PlayState.STARTING;
 	#ship = null;
 	#mileage = 0;
-	//#targetMileage = 10000;
-	#targetMileage = 150;
+	#targetMileage = 12000;
 
 	constructor(game, state) {
 		super(game, state);
