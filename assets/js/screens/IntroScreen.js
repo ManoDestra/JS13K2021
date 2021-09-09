@@ -14,7 +14,8 @@ class IntroScreen extends Urge.Screen {
 		'Remember That A New Clone Will Replace You When You Die...',
 		'Each New Clone Benefits From Your Experience...',
 		'With Enhanced Abilities And Skills...',
-		'Use W|S|A|D To Move, Space To Fire',
+		'Use W, S, A, D To Move',
+		'Press Space To Shoot',
 		'Now, Get Out There, Clone Warrior!',
 		'Save Our Planet From This Nefarious Viral Attack!'
 	];
@@ -34,7 +35,7 @@ class IntroScreen extends Urge.Screen {
 		const height = canvas.height / 5;
 		for (let i = 0; i < this.#lines.length; i++) {
 			const text = this.#lines[i];
-			const delay = (i * 3 + 1) * 1000;
+			const delay = (i * 2 + 1) * 1000;
 			const slogan = new Slogan(ctx, x, y, width, height, text, delay);
 			store.put(slogan);
 		}
@@ -58,6 +59,18 @@ class IntroScreen extends Urge.Screen {
 		const ctx = this.getContext();
 		const store = this.getStore();
 		store.render(instant);
+
+		ctx.fillStyle = '';
+		ctx.font = '24px sans-serif';
+		ctx.textAlign = 'left';
+		const text = 'Press SPACE To Begin';
+		const measured = ctx.measureText(text);
+		ctx.lineWidth = 3;
+		ctx.strokeStyle = 'white';
+		ctx.fillStyle = 'darkred';
+		ctx.fillRect(0, 0, measured.width, 30);
+		ctx.fillStyle = 'white';
+		ctx.fillText(text, 0, 24);
 	}
 
 	term() {
