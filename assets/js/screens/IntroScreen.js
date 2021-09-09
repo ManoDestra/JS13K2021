@@ -77,7 +77,7 @@ class IntroScreen extends Urge.Screen {
 		const measured = ctx.measureText(text);
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'darkred';
+		ctx.fillStyle = 'darkgreen';
 		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 50, measured.width + 20, 58);
 		ctx.fillStyle = 'white';
 		ctx.fillText(text, canvas.width / 2, 98);
