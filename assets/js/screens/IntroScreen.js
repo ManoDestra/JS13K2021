@@ -56,21 +56,22 @@ class IntroScreen extends Urge.Screen {
 
 	render(instant) {
 		super.render(instant);
+		const canvas = this.getCanvas();
 		const ctx = this.getContext();
 		const store = this.getStore();
 		store.render(instant);
 
 		ctx.fillStyle = '';
 		ctx.font = '24px sans-serif';
-		ctx.textAlign = 'left';
+		ctx.textAlign = 'center';
 		const text = 'Press SPACE To Begin';
 		const measured = ctx.measureText(text);
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'white';
 		ctx.fillStyle = 'darkred';
-		ctx.fillRect(0, 0, measured.width, 30);
+		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 0, measured.width + 20, 30);
 		ctx.fillStyle = 'white';
-		ctx.fillText(text, 0, 24);
+		ctx.fillText(text, canvas.width / 2, 24);
 	}
 
 	term() {
