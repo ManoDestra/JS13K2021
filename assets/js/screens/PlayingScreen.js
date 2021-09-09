@@ -15,7 +15,8 @@ class PlayingScreen extends Urge.Screen {
 	#playState = PlayState.STARTING;
 	#ship = null;
 	#mileage = 0;
-	#targetMileage = 10000;
+	//#targetMileage = 10000;
+	#targetMileage = 150;
 
 	constructor(game, state) {
 		super(game, state);
@@ -23,6 +24,9 @@ class PlayingScreen extends Urge.Screen {
 
 	init() {
 		super.init();
+		this.#playState = PlayState.STARTING;
+		this.#mileage = 0;
+
 		const state = this.getState();
 		const store = this.getStore();
 		const canvas = this.getCanvas();
@@ -81,17 +85,35 @@ class PlayingScreen extends Urge.Screen {
 		this.#mileage += v * instant.elapsed() / 1000;
 		const remaining = Math.max(0, this.#targetMileage - this.#mileage);
 		this.debug(instant, 'Miles Remaining:', remaining.toFixed(2));
+		if (!this.#ship.isAlive()) {
+			this.#playState = PlayState.DEATH;
+		}
+
 		if (remaining <= 0) {
 			this.#playState = PlayState.COMPLETION;
 		}
 	}
 
 	#updateCompletion(instant) {
+		this.debug(instant, 'Completion');
+
+		// TODO: remove, just testing here...
+		//this.navigate(PlayingScreen);
+		const ctx = this.getContext();
+		ctx.fillStyle = 'white';
+		ctx.font = '32px sans-serif';
+		ctx.fillText('Completion', 50, 50);
 	}
 
 	#updateDeath(instant) {
+		this.debug(instant, 'Death');
+
 		// TODO: display death first and give a few seconds before restarting...
-		this.navigate(PlayingScreen);
+		//this.navigate(PlayingScreen);
+		const ctx = this.getContext();
+		ctx.fillStyle = 'white';
+		ctx.font = '32px sans-serif';
+		ctx.fillText('Death', 50, 50);
 	}
 
 	render(instant) {
@@ -101,6 +123,7 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	term() {
+		super.term();
 	}
 
 	post(msgType) {
