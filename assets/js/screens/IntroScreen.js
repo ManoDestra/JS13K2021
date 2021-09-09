@@ -82,7 +82,4 @@ class IntroScreen extends Urge.Screen {
 		ctx.fillStyle = 'white';
 		ctx.fillText(text, canvas.width / 2, 98);
 	}
-
-	term() {
-	}
 }
