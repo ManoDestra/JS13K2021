@@ -79,8 +79,11 @@ class PlayingScreen extends Urge.Screen {
 	#updatePlaying(instant) {
 		const v = 10;
 		this.#mileage += v * instant.elapsed() / 1000;
-		const remaining = this.#targetMileage - this.#mileage;
+		const remaining = Math.max(0, this.#targetMileage - this.#mileage);
 		this.debug(instant, 'Miles Remaining:', remaining.toFixed(2));
+		if (remaining <= 0) {
+			this.#playState = PlayState.COMPLETION;
+		}
 	}
 
 	#updateCompletion(instant) {
