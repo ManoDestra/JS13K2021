@@ -2,8 +2,9 @@ class IntroScreen extends Urge.Screen {
 	#totalElapsed = 0;
 	#lastSpacePressed = false;
 	#lines = [
+		'Citizens Of Planet Tran!',
 		'We Are Under Attack!',
-		'Chemical Warfare!!',
+		'Chemical Warfare From Some Distant Galaxy!!',
 		'Scramble The Clone Pilots To Their Ships!',
 		'Protect The Planet At All Costs From Space-Born Pathogens!',
 		'Infectious Agents Of Unknown Origin Incoming!',
@@ -28,7 +29,7 @@ class IntroScreen extends Urge.Screen {
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
 		const x = canvas.width / 2;
-		const y = canvas.height * 0.9;
+		const y = canvas.height * 1.1;
 		const width = canvas.width / 3;
 		const height = canvas.height / 5;
 		for (let i = 0; i < this.#lines.length; i++) {
