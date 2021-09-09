@@ -1,16 +1,21 @@
 const PlayState = {
 	STARTING: 0,
-	PLAYING: 1
+	PLAYING: 1,
+	COMPLETION: 2,
+	DEATH: 3
 };
 Object.freeze(PlayState);
 const MessageType = {
-	PLAYER_BULLET: 0
+	PLAYER_BULLET: 0,
+	CELL: 1
 };
 Object.freeze(MessageType);
 
 class PlayingScreen extends Urge.Screen {
 	#playState = PlayState.STARTING;
 	#ship = null;
+	#mileage = 0;
+	#targetMileage = 10000;
 
 	constructor(game, state) {
 		super(game, state);
@@ -56,6 +61,12 @@ class PlayingScreen extends Urge.Screen {
 			case PlayState.PLAYING:
 				this.#updatePlaying(instant);
 				break;
+			case PlayState.COMPLETION:
+				this.#updateCompletion(instant);
+				break;
+			case PlayState.DEATH:
+				this.#updateDeath(instant);
+				break;
 		}
 	}
 
@@ -66,7 +77,18 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	#updatePlaying(instant) {
-		// TODO: code
+		const v = 10;
+		this.#mileage += v * instant.elapsed() / 1000;
+		const remaining = this.#targetMileage - this.#mileage;
+		this.debug(instant, 'Miles Remaining:', remaining.toFixed(2));
+	}
+
+	#updateCompletion(instant) {
+	}
+
+	#updateDeath(instant) {
+		// TODO: display death first and give a few seconds before restarting...
+		this.navigate(PlayingScreen);
 	}
 
 	render(instant) {
@@ -92,6 +114,9 @@ class PlayingScreen extends Urge.Screen {
 				const bullet = new PlayerBullet(this.getContext(), x, y, width, height);
 				store.put(bullet);
 
+				break;
+			case MessageType.CELL:
+				console.log('Cell Will Be Spawned Here', performance.now());
 				break;
 			default:
 				console.error('Unsupported Message Type:', msgType);
