@@ -11,7 +11,7 @@ class IntroScreen extends Urge.Screen {
 		'Be Strong, Clone Warriors!',
 		'We Will Overcome These Personal Space Invaders!',
 		'Avoid Infection! Practice Spatial Distancing!',
-		'Remember That A New Clone Will Replace You When You Die',
+		'Never Fear! A New Clone Will Replace You When You Die',
 		'Each New Clone Benefits From Your Experience',
 		'With Enhanced Abilities And Skills',
 		'Use W, S, A, D To Move',
@@ -63,15 +63,15 @@ class IntroScreen extends Urge.Screen {
 		const text = 'Press SPACE To Begin';
 
 		ctx.fillStyle = '';
-		ctx.font = '24px sans-serif';
+		ctx.font = '48px sans-serif';
 		ctx.textAlign = 'center';
 		const measured = ctx.measureText(text);
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'white';
 		ctx.fillStyle = 'darkred';
-		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 0, measured.width + 20, 30);
+		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 50, measured.width + 20, 58);
 		ctx.fillStyle = 'white';
-		ctx.fillText(text, canvas.width / 2, 24);
+		ctx.fillText(text, canvas.width / 2, 98);
 	}
 
 	term() {
