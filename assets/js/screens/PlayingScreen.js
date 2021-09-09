@@ -85,8 +85,8 @@ class PlayingScreen extends Urge.Screen {
 		switch (msgType) {
 			case MessageType.PLAYER_BULLET:
 				const box = this.#ship.getBoundingBox();
-				const x = box.getX() + (portrait ? box.getWidth() / 2 : box.getWidth());
-				const y = box.getY() + (portrait ? 0 : box.getHeight() / 2);
+				const x = box.getX() + (portrait ? box.getWidth() / 2 : box.getWidth() * 4 / 5);
+				const y = box.getY() + (portrait ? box.getHeight() / 5 : box.getHeight() / 2);
 				const width = portrait ? 5 : 20;
 				const height = portrait ? 20 : 5;
 				const bullet = new PlayerBullet(this.getContext(), x, y, width, height);

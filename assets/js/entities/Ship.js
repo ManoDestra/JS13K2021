@@ -73,7 +73,7 @@ class Ship extends Urge.Sprite {
 			const slow = delta / 5;
 			if (this.isPortrait()) {
 				this.offsetY(-slow);
-				const startY = this.isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
+				const startY = this.isPortrait() ? canvas.height - (size * 3) : (canvas.height - size) / 2;
 				if (this.getY() <= startY) {
 					this.setY(startY);
 					this.#active = true;

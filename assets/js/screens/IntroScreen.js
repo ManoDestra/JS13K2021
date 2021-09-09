@@ -56,7 +56,6 @@ class IntroScreen extends Urge.Screen {
 		store.update(instant);
 		const spacePressed = Nucleus.Keys.checkKey(' ');
 		if (this.getScreenState() == Urge.ScreenState.ACTIVE && spacePressed && !this.#lastSpacePressed) {
-			console.log(performance.now(), 'SPACE!!!');
 			this.navigate(PlayingScreen);
 		}
 
