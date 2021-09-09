@@ -81,5 +81,22 @@ class IntroScreen extends Urge.Screen {
 		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 50, measured.width + 20, 58);
 		ctx.fillStyle = 'white';
 		ctx.fillText(text, canvas.width / 2, 98);
+
+		// TODO: generate points for cell and animate
+		const points = [
+			[100, 100], [125, 150], [175, 150], [200, 100], [175, 50], [125, 50]
+		];
+		ctx.moveTo(points[0][0], points[0][1]);
+		for (let i = 0; i < points.length; i++) {
+			const nextIndex = (i + 1) % points.length;
+			const x_mid = (points[i][0] + points[nextIndex][0]) / 2;
+			const y_mid = (points[i][1] + points[nextIndex][1]) / 2;
+			const cp_x1 = (x_mid + points[i][0]) / 2;
+			const cp_x2 = (x_mid + points[nextIndex][0]) / 2;
+			ctx.quadraticCurveTo(cp_x1, points[i][1], x_mid, y_mid);
+			ctx.quadraticCurveTo(cp_x2, points[nextIndex][1], points[nextIndex][0], points[nextIndex][1]);
+		}
+
+		ctx.stroke();
 	}
 }
