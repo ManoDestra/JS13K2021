@@ -1,4 +1,5 @@
 class Ship extends Urge.Sprite {
+	#active = false;
 	#skills = null;
 	#health = 0;
 	#send = null;
@@ -8,6 +9,10 @@ class Ship extends Urge.Sprite {
 		this.#skills = skills;
 		this.#health = skills.health;
 		this.#send = send;
+	}
+
+	isActive() {
+		return this.#active;
 	}
 
 	getHealth() {
@@ -23,43 +28,61 @@ class Ship extends Urge.Sprite {
 		return this.getHealth() > 0;
 	}
 
-	getSize() {
-		return (super.isPortrait() ? super.getCanvas().height : super.getCanvas().width) / 25;
-	}
-
 	update(instant) {
-		this.size = this.getSize();
 		const delta = this.getWidth() * 4 * instant.elapsed() / 1000;
-		if (Nucleus.Keys.checkKey('w')) {
-			this.offsetY(-delta);
-		}
+		const canvas = this.getCanvas();
+		if (this.#active) {
+			if (Nucleus.Keys.checkKey('w')) {
+				this.offsetY(-delta);
+			}
 
-		if (Nucleus.Keys.checkKey('s')) {
-			this.offsetY(delta);
-		}
+			if (Nucleus.Keys.checkKey('s')) {
+				this.offsetY(delta);
+			}
 
-		if (Nucleus.Keys.checkKey('a')) {
-			this.offsetX(-delta);
-		}
+			if (Nucleus.Keys.checkKey('a')) {
+				this.offsetX(-delta);
+			}
 
-		if (Nucleus.Keys.checkKey('d')) {
-			this.offsetX(delta);
-		}
+			if (Nucleus.Keys.checkKey('d')) {
+				this.offsetX(delta);
+			}
 
-		const sideLimit = 10;
-		const canvas = super.getCanvas();
-		if (super.isPortrait()) {
-			this.setX(Math.min((canvas.width) - this.getWidth() - sideLimit, Math.max(sideLimit, this.getX())));
-			this.setY(Math.max((canvas.height * 0.6), Math.min(canvas.height - this.getWidth() - sideLimit, this.getY())));
+			const sideLimit = 10;
+			const canvas = this.getCanvas();
+			if (super.isPortrait()) {
+				this.setX(Math.min((canvas.width) - this.getWidth() - sideLimit, Math.max(sideLimit, this.getX())));
+				this.setY(Math.max((canvas.height * 0.6), Math.min(canvas.height - this.getWidth() - sideLimit, this.getY())));
+			} else {
+				this.setX(Math.min((canvas.width * 0.4) - this.getWidth(), Math.max(sideLimit, this.getX())));
+				this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
+			}
+
+			// TODO: handle the fire rate
+			// TODO: change to user controller firing, rather than hold to fire?
+			if (Nucleus.Keys.checkKey(' ') && instant.frame % 30 == 0) {
+				this.#send('PLAYER_BULLET');
+			}
 		} else {
-			this.setX(Math.min((canvas.width * 0.4) - this.getWidth(), Math.max(sideLimit, this.getX())));
-			this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
-		}
-
-		// TODO: handle the fire rate
-		// TODO: change to user controller firing, rather than hold to fire?
-		if (Nucleus.Keys.checkKey(' ') && instant.frame % 30 == 0) {
-			this.#send('PLAYER_BULLET');
+			// TODO: update flying forward movement
+			// TODO: update #active to true, when ship reaches expected playing start point
+			const size = this.getWidth();
+			const slow = delta / 5;
+			if (this.isPortrait()) {
+				this.offsetY(-slow);
+				const startY = this.isPortrait() ? canvas.height - (size * 2) : (canvas.height - size) / 2;
+				if (this.getY() <= startY) {
+					this.setY(startY);
+					this.#active = true;
+				}
+			} else {
+				this.offsetX(slow);
+				const startX = this.isPortrait() ? (canvas.width - size) / 2 : size * 2;
+				if (this.getX() >= startX) {
+					this.setX(startX);
+					this.#active = true;
+				}
+			}
 		}
 	}
 

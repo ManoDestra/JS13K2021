@@ -471,6 +471,7 @@ const Urge = (() => {
 		async start(startScreenType) {
 			console.log('Starting...');
 			return this.init().then(s => {
+				console.log('Game State:', s);
 				for (let t of this.#screenTypes) {
 					if (t.prototype instanceof Screen) {
 						const screen = new t(this, s);
