@@ -53,6 +53,10 @@ class PlayingScreen extends Urge.Screen {
 		store.put(ship);
 		this.#ship = ship;
 		console.log(this.#ship);
+
+		// TODO: code TimeLine
+
+		// TODO: code Hud
 	}
 
 	update(instant) {
