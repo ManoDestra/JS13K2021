@@ -57,6 +57,7 @@ class PlayingScreen extends Urge.Screen {
 
 	update(instant) {
 		const store = this.getStore();
+		const canvas = this.getCanvas();
 		store.update(instant);
 		switch (this.#playState) {
 			case PlayState.STARTING:
@@ -72,6 +73,60 @@ class PlayingScreen extends Urge.Screen {
 				this.#updateDeath(instant);
 				break;
 		}
+
+		// TODO: out of bound entity removals
+		store.forEach((c, id, map) => {
+			if (c instanceof PlayerBullet) {
+				const box = c.getBoundingBox();
+				const portraitRemoval = this.isPortrait() && box.getY() + box.getHeight() < 0;
+				const nonPortraitRemoval = !this.isPortrait() && box.getX() > canvas.width;
+				if (portraitRemoval || nonPortraitRemoval) {
+					console.log('Bullet Removed', performance.now());
+					map.delete(id);
+				}
+			}
+
+			if (c instanceof Enemy) {
+				const box = c.getBoundingBox();
+				const portraitRemoval = this.isPortrait() && box.getY() - (box.getHeight() / 2) > canvas.height;
+				const nonPortraitRemoval = !this.isPortrait() && box.getX() + box.getWidth() < 0;
+				if (portraitRemoval || nonPortraitRemoval) {
+					console.log('Enemy Removed', performance.now());
+					map.delete(id);
+				} else {
+					store.forEach((sc, scId, scMap) => {
+						if (sc instanceof PlayerBullet) {
+							if (sc.getBoundingBox().intersects(c.getBoundingBox())) {
+								// TODO: bullet impact?
+								scMap.delete(scId);
+
+								c.reduceHealth(25);
+								if (!c.isAlive()) {
+									// TODO: enemy explosion/death effect?
+									map.delete(id);
+								}
+							}
+						}
+
+						if (sc instanceof Ship) {
+							if (sc.getBoundingBox().intersects(c.getBoundingBox())) {
+								// TODO: enemy explosion?
+								map.delete(id);
+								sc.reduceHealth(25);
+								if (!sc.isAlive()) {
+									console.log('You be DEAD!');
+									scMap.delete(scId);
+								} else {
+									console.log('Ship Health: ' + sc.getHealth());
+								}
+							} else {
+								// TODO: deal with proximity infection
+							}
+						}
+					});
+				}
+			}
+		});
 	}
 
 	#updateStarting(instant) {
