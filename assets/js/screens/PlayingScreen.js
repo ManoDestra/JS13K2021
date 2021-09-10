@@ -19,6 +19,7 @@ class PlayingScreen extends Urge.Screen {
 	#hud = null;
 	#miles = 0;
 	#targetMiles = 12000;
+	//#targetMiles = 150;
 
 	constructor(game, state) {
 		super(game, state);
@@ -163,8 +164,11 @@ class PlayingScreen extends Urge.Screen {
 	#updateCompletion(instant) {
 		this.debug(instant, 'Completion');
 
-		// TODO: remove, just testing here...
-		//this.navigate(PlayingScreen);
+		// TODO: remove
+		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
+			this.navigate(CompletionScreen);
+		}
+
 		const ctx = this.getContext();
 		ctx.fillStyle = 'white';
 		ctx.font = '32px sans-serif';
@@ -174,8 +178,11 @@ class PlayingScreen extends Urge.Screen {
 	#updateDeath(instant) {
 		this.debug(instant, 'Death');
 
-		// TODO: display death first and give a few seconds before restarting...
-		//this.navigate(PlayingScreen);
+		// TODO: remove
+		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
+			this.navigate(GameOverScreen);
+		}
+
 		const ctx = this.getContext();
 		ctx.fillStyle = 'white';
 		ctx.font = '32px sans-serif';
