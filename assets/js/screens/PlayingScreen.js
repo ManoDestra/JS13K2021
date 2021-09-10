@@ -54,10 +54,11 @@ class PlayingScreen extends Urge.Screen {
 		this.#ship = ship;
 		console.log(this.#ship);
 
-		const timeLine = new TimeLine(ctx, this);;
+		const timeLine = new TimeLine(ctx, this);
 		store.put(timeLine);
 
-		// TODO: code Hud
+		const hud = new Hud(ctx, timeLine);
+		store.put(hud);
 	}
 
 	update(instant) {
@@ -189,7 +190,7 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	post(msgType) {
-		console.log('Message Received:', msgType, performance.now());
+		//console.log('Message Received:', msgType, performance.now());
 		const store = this.getStore();
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();

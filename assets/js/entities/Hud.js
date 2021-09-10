@@ -1,9 +1,9 @@
 class Hud extends Urge.RenderComponent {
-	#tmp;
+	#t;
 
-	constructor(context, tmp) {
+	constructor(context, t) {
 		super(context);
-		this.#tmp = tmp;
+		this.#t = t;
 	}
 
 	render(instant) {
@@ -13,6 +13,10 @@ class Hud extends Urge.RenderComponent {
 		const canvas = super.getCanvas();
 		ctx.fillStyle = GREEN;
 		ctx.font = FONT;
-		ctx.fillText('FPS: ' + parseInt(instant.fps()) + ', Total: ' + this.#tmp.getTotalMinutes() + ':' + this.#tmp.getSeconds(), 20, canvas.height - 20);
+		const fps = parseInt(instant.fps());
+		const m = this.#t.getTotalMinutes();
+		const s = this.#t.getSeconds();
+		const display = `FPS: ${fps}, Total: ${m}:${s}`;
+		ctx.fillText(display, 20, canvas.height - 20);
 	}
 }
