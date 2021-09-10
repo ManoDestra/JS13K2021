@@ -13,7 +13,7 @@ class Rogue extends Urge.Game {
 	#assets;
 
 	constructor() {
-		super([StartScreen, IntroScreen, PlayingScreen]);
+		super([StartScreen, IntroScreen, PlayingScreen, CompletionScreen, GameOverScreen]);
 		this.#save = null;
 		this.#assets = {};
 	}
