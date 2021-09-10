@@ -54,7 +54,8 @@ class PlayingScreen extends Urge.Screen {
 		this.#ship = ship;
 		console.log(this.#ship);
 
-		// TODO: code TimeLine
+		const timeLine = new TimeLine(ctx, this);;
+		store.put(timeLine);
 
 		// TODO: code Hud
 	}
@@ -178,6 +179,8 @@ class PlayingScreen extends Urge.Screen {
 	render(instant) {
 		super.render(instant);
 		const store = this.getStore();
+
+		// TODO: render by types
 		store.render(instant);
 	}
 
@@ -188,6 +191,8 @@ class PlayingScreen extends Urge.Screen {
 	post(msgType) {
 		console.log('Message Received:', msgType, performance.now());
 		const store = this.getStore();
+		const canvas = this.getCanvas();
+		const ctx = this.getContext();
 		const portrait = this.isPortrait();
 		switch (msgType) {
 			case MessageType.PLAYER_BULLET:
@@ -197,7 +202,7 @@ class PlayingScreen extends Urge.Screen {
 					const y = box.getY() + (portrait ? box.getHeight() / 5 : box.getHeight() / 2);
 					const width = portrait ? 5 : 20;
 					const height = portrait ? 20 : 5;
-					const bullet = new PlayerBullet(this.getContext(), x, y, width, height);
+					const bullet = new PlayerBullet(ctx, x, y, width, height);
 					store.put(bullet);
 				}
 
@@ -206,13 +211,13 @@ class PlayingScreen extends Urge.Screen {
 				{
 					console.log('Cell Will Be Spawned Here', performance.now());
 					const size = this.#getSize();
-					const x = this.isPortrait()
+					const x = portrait
 						? parseInt(Math.random() * (canvas.width - size))
 						: canvas.width + (size / 2);
-					const y = this.isPortrait()
+					const y = portrait
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
-					const cell = new Cell(this.getContext(), x, y, size, 100, 2);
+					const cell = new Cell(ctx, x, y, size, 100, 2);
 					store.put(cell);
 				}
 

@@ -51,7 +51,7 @@ class StartScreen extends Urge.Screen {
 
 			if (!this.#spawned && this.#totalElapsed > 5000) {
 				this.#spawned = true;
-				console.log('Spawning Cells Now...');
+				//console.log('Spawning Cells Now...');
 				//const cell = new Cell(ctx, canvas.width, canvas.height / 2, 100, 100, 0.3);
 				//store.put(cell);
 			}
