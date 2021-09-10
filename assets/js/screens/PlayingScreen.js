@@ -187,17 +187,31 @@ class PlayingScreen extends Urge.Screen {
 		const portrait = this.isPortrait();
 		switch (msgType) {
 			case MessageType.PLAYER_BULLET:
-				const box = this.#ship.getBoundingBox();
-				const x = box.getX() + (portrait ? box.getWidth() / 2 : box.getWidth() * 4 / 5);
-				const y = box.getY() + (portrait ? box.getHeight() / 5 : box.getHeight() / 2);
-				const width = portrait ? 5 : 20;
-				const height = portrait ? 20 : 5;
-				const bullet = new PlayerBullet(this.getContext(), x, y, width, height);
-				store.put(bullet);
+				{
+					const box = this.#ship.getBoundingBox();
+					const x = box.getX() + (portrait ? box.getWidth() / 2 : box.getWidth() * 4 / 5);
+					const y = box.getY() + (portrait ? box.getHeight() / 5 : box.getHeight() / 2);
+					const width = portrait ? 5 : 20;
+					const height = portrait ? 20 : 5;
+					const bullet = new PlayerBullet(this.getContext(), x, y, width, height);
+					store.put(bullet);
+				}
 
 				break;
 			case MessageType.CELL:
-				console.log('Cell Will Be Spawned Here', performance.now());
+				{
+					console.log('Cell Will Be Spawned Here', performance.now());
+					const size = this.#getSize();
+					const x = this.isPortrait()
+						? parseInt(Math.random() * (canvas.width - size))
+						: canvas.width + (size / 2);
+					const y = this.isPortrait()
+						? (0 - (size / 2))
+						: parseInt(Math.random() * (canvas.height - size));
+					const cell = new Cell(this.getContext(), x, y, size, 100, 2);
+					store.put(cell);
+				}
+
 				break;
 			default:
 				console.error('Unsupported Message Type:', msgType);
