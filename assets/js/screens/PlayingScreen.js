@@ -87,7 +87,6 @@ class PlayingScreen extends Urge.Screen {
 				const portraitRemoval = this.isPortrait() && box.getY() + box.getHeight() < 0;
 				const nonPortraitRemoval = !this.isPortrait() && box.getX() > canvas.width;
 				if (portraitRemoval || nonPortraitRemoval) {
-					console.log('Bullet Removed', performance.now());
 					map.delete(id);
 				}
 			}
@@ -97,7 +96,6 @@ class PlayingScreen extends Urge.Screen {
 				const portraitRemoval = this.isPortrait() && box.getY() - (box.getHeight() / 2) > canvas.height;
 				const nonPortraitRemoval = !this.isPortrait() && box.getX() + box.getWidth() < 0;
 				if (portraitRemoval || nonPortraitRemoval) {
-					console.log('Enemy Removed', performance.now());
 					map.delete(id);
 				} else {
 					store.forEach((sc, scId, scMap) => {
