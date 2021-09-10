@@ -1,9 +1,22 @@
 class Hud extends Urge.RenderComponent {
-	#t;
+	#health = 0;
+	#score = 0;
+	#remainingMiles = 0;
 
-	constructor(context, t) {
+	constructor(context) {
 		super(context);
-		this.#t = t;
+	}
+
+	setHealth(health) {
+		this.#health = health;
+	}
+
+	setScore(score) {
+		this.#score = score;
+	}
+
+	setRemainingMiles(remainingMiles) {
+		this.#remainingMiles = remainingMiles;
 	}
 
 	render(instant) {
@@ -14,9 +27,10 @@ class Hud extends Urge.RenderComponent {
 		ctx.fillStyle = GREEN;
 		ctx.font = FONT;
 		const fps = parseInt(instant.fps());
-		const m = this.#t.getTotalMinutes();
-		const s = this.#t.getSeconds();
-		const display = `FPS: ${fps}, Total: ${m}:${s}`;
+		const h = this.#health;
+		const sc = this.#score;
+		const m = parseInt(this.#remainingMiles);
+		const display = `FPS: ${fps}, Health: ${h}, Score: ${sc}, Remaining Miles: ${m}`;
 		ctx.fillText(display, 20, canvas.height - 20);
 	}
 }

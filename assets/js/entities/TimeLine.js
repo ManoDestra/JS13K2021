@@ -9,14 +9,14 @@ class TimeLine extends Urge.Component {
 	}
 
 	update(instant) {
-		this.#totalElapsed += instant.elapsed();
-
 		if (this.#totalElapsed > 5000) {
 			if (instant.frame % 180 == 120) {
 				this.debug(instant, 'SPAWN:', this.#totalElapsed);
 				this.#screen.post(MessageType.CELL);
 			}
 		}
+
+		this.#totalElapsed += instant.elapsed();
 	}
 
 	getTotalElapsed() {

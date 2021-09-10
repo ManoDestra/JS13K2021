@@ -2,6 +2,7 @@ class Ship extends Urge.Sprite {
 	#active = false;
 	#skills = null;
 	#health = 0;
+	#score = 0;
 	#screen = null;
 	#lastSpacePressed = false;
 
@@ -23,6 +24,14 @@ class Ship extends Urge.Sprite {
 	reduceHealth(damage) {
 		this.#health -= Math.abs(damage);
 		this.#health = Math.max(0, this.#health);
+	}
+
+	getScore() {
+		return this.#score;
+	}
+
+	increaseScore(score) {
+		this.#score += score;
 	}
 
 	isAlive() {

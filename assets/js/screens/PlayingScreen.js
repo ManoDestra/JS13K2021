@@ -15,8 +15,10 @@ Object.freeze(MessageType);
 class PlayingScreen extends Urge.Screen {
 	#playState = PlayState.STARTING;
 	#ship = null;
-	#mileage = 0;
-	#targetMileage = 12000;
+	#timeLine = null;
+	#hud = null;
+	#miles = 0;
+	#targetMiles = 12000;
 
 	constructor(game, state) {
 		super(game, state);
@@ -25,7 +27,7 @@ class PlayingScreen extends Urge.Screen {
 	init() {
 		super.init();
 		this.#playState = PlayState.STARTING;
-		this.#mileage = 0;
+		this.#miles = 0;
 
 		const state = this.getState();
 		const store = this.getStore();
@@ -54,17 +56,25 @@ class PlayingScreen extends Urge.Screen {
 		this.#ship = ship;
 		console.log(this.#ship);
 
-		const timeLine = new TimeLine(ctx, this);
-		store.put(timeLine);
+		this.#timeLine = new TimeLine(ctx, this);
+		store.put(this.#timeLine);
 
-		const hud = new Hud(ctx, timeLine);
-		store.put(hud);
+		this.#hud = new Hud(ctx);
+		store.put(this.#hud);
+	}
+
+	getRemainingMiles() {
+		return Math.max(0, this.#targetMiles - this.#miles);
 	}
 
 	update(instant) {
 		const store = this.getStore();
 		const canvas = this.getCanvas();
 		store.update(instant);
+		this.#hud.setHealth(this.#ship.getHealth());
+		this.#hud.setScore(this.#ship.getScore());
+		this.#hud.setRemainingMiles(this.getRemainingMiles());
+
 		switch (this.#playState) {
 			case PlayState.STARTING:
 				this.#updateStarting(instant);
@@ -107,6 +117,7 @@ class PlayingScreen extends Urge.Screen {
 								c.reduceHealth(25);
 								if (!c.isAlive()) {
 									// TODO: enemy explosion/death effect?
+									this.#ship.increaseScore(10);
 									map.delete(id);
 								}
 							}
@@ -118,10 +129,7 @@ class PlayingScreen extends Urge.Screen {
 								map.delete(id);
 								sc.reduceHealth(25);
 								if (!sc.isAlive()) {
-									console.log('You be DEAD!');
 									scMap.delete(scId);
-								} else {
-									console.log('Ship Health: ' + sc.getHealth());
 								}
 							} else {
 								// TODO: deal with proximity infection
@@ -141,9 +149,8 @@ class PlayingScreen extends Urge.Screen {
 
 	#updatePlaying(instant) {
 		const v = 10;
-		this.#mileage += v * instant.elapsed() / 1000;
-		const remaining = Math.max(0, this.#targetMileage - this.#mileage);
-		this.debug(instant, 'Miles Remaining:', remaining.toFixed(2));
+		this.#miles += v * instant.elapsed() / 1000;
+		const remaining = this.getRemainingMiles();
 		if (!this.#ship.isAlive()) {
 			this.#playState = PlayState.DEATH;
 		}
