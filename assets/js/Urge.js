@@ -366,7 +366,6 @@ const Urge = (() => {
 		#store;
 		#game;
 		#state;
-		#previousScreenState;
 		#screenState;
 		#canvas;
 
@@ -382,7 +381,6 @@ const Urge = (() => {
 			this.#store = new ComponentStore(context);
 			this.#game = game;
 			this.#state = state;
-			this.#previousScreenState = ScreenState.INACTIVE;
 			this.#screenState = ScreenState.INACTIVE;
 		}
 
@@ -631,6 +629,29 @@ const Urge = (() => {
 		}
 	}
 
+	class WatchValue {
+		#value;
+		#previousValue;
+
+		constructor(value) {
+			this.#value = value;
+			this.#previousValue = value;
+		}
+
+		get() {
+			return this.#value;
+		}
+
+		set(value) {
+			this.#previousValue = this.#value;
+			this.#value = value;
+		}
+
+		hasChanged() {
+			return this.#value != this.#previousValue;
+		}
+	}
+
 	return {
 		Dimension,
 		BoundingBox,
@@ -640,6 +661,7 @@ const Urge = (() => {
 		ComponentStore,
 		ScreenState,
 		Screen,
-		Game
+		Game,
+		WatchValue
 	};
 })();

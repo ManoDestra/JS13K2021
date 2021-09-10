@@ -209,7 +209,7 @@ class PlayingScreen extends Urge.Screen {
 				break;
 			case MessageType.CELL:
 				{
-					console.log('Cell Will Be Spawned Here', performance.now());
+					console.log('Cell Spawned', performance.now());
 					const size = this.#getSize();
 					const x = portrait
 						? parseInt(Math.random() * (canvas.width - size))
