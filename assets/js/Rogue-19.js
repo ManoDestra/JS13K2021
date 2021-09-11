@@ -9,17 +9,14 @@ const GameScreen = {
 Object.freeze(GameScreen);
 
 class Rogue extends Urge.Game {
-	#save;
 	#assets;
 
 	constructor() {
 		super([StartScreen, IntroScreen, PlayingScreen, CompletionScreen, GameOverScreen]);
-		this.#save = null;
 		this.#assets = {};
 	}
 
 	async init() {
-		this.#save = this.#getSaveOrDefault();
 		window.addEventListener('resize', () => this.onResize(), false);
 		this.onResize();
 		this.#assets['starFields'] = [
@@ -30,8 +27,7 @@ class Rogue extends Urge.Game {
 		Nucleus.Keys.start();
 
 		const state = {
-			assets: this.#assets,
-			save: this.#save
+			assets: this.#assets
 		};
 
 		return state;

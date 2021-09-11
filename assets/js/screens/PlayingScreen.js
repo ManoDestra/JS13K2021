@@ -19,7 +19,7 @@ class PlayingScreen extends Urge.Screen {
 	#hud = null;
 	#miles = 0;
 	#targetMiles = 12000;
-	//#targetMiles = 150;
+	#save = null;
 
 	constructor(game, state) {
 		super(game, state);
@@ -51,8 +51,10 @@ class PlayingScreen extends Urge.Screen {
 		const size = this.#getSize();
 		const startX = this.isPortrait() ? (canvas.width - size) / 2 : -size;
 		const startY = this.isPortrait() ? canvas.height + (size * 2) : (canvas.height - size) / 2;
-		const save = state.save;
-		const ship = new Ship(ctx, startX, startY, size, save, this);
+
+		// TODO: we need to pull this from storage live, as we don't want the one in state.
+		this.#save = this.#getSaveOrDefault();
+		const ship = new Ship(ctx, startX, startY, size, this.#save, this);
 		store.put(ship);
 		this.#ship = ship;
 		console.log(this.#ship);
@@ -118,7 +120,8 @@ class PlayingScreen extends Urge.Screen {
 								c.reduceHealth(25);
 								if (!c.isAlive()) {
 									// TODO: enemy explosion/death effect?
-									this.#ship.increaseScore(10);
+									// TODO: change this hard coded value to be based on the enemy killed
+									this.#ship.increaseScore(1);
 									map.delete(id);
 								}
 							}
@@ -243,5 +246,28 @@ class PlayingScreen extends Urge.Screen {
 	#getSize() {
 		const canvas = this.getCanvas();
 		return (this.isPortrait() ? canvas.height : canvas.width) / 25;
+	}
+
+	#getSaveOrDefault() {
+		const namespace = 'com.manodestra.rogue';
+		const model = Nucleus.Cryo.get('Save', namespace);
+		if (!model) {
+			console.log('Setting Default Model...');
+			Nucleus.Cryo.set('Save', this.#getDefaultSave(), namespace);
+		}
+
+		return Nucleus.Cryo.get('Save', namespace);
+	}
+
+	#getDefaultSave() {
+		return {
+			id: 1,
+			health: 100,
+			damage: 10
+		};
+	}
+
+	#save() {
+		//TODO: code
 	}
 }
