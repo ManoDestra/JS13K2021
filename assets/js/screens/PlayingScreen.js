@@ -60,8 +60,8 @@ class PlayingScreen extends Urge.Screen {
 		this.#ship = ship;
 		console.log(this.#ship);
 
-		this.#timeLine = new TimeLine(ctx, this);
-		store.put(this.#timeLine);
+		//this.#timeLine = new TimeLine(ctx, this);
+		//store.put(this.#timeLine);
 
 		this.#hud = new Hud(ctx);
 		store.put(this.#hud);
@@ -163,6 +163,13 @@ class PlayingScreen extends Urge.Screen {
 		if (remaining <= 0) {
 			this.#playState = PlayState.COMPLETION;
 		}
+
+		// TODO: spawn enemies here, rather than using Timeline
+		const rate = 180 - Math.floor((this.#miles / this.#targetMiles) * 160)
+		//const rate = 180;
+		if (instant.frame % rate == 0) {
+			this.post(MessageType.CELL);
+		}
 	}
 
 	#updateCompletion(instant) {
@@ -188,7 +195,6 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	post(msgType) {
-		//console.log('Message Received:', msgType, performance.now());
 		const store = this.getStore();
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
@@ -217,8 +223,10 @@ class PlayingScreen extends Urge.Screen {
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
 
-					// TODO: remove hard coded health
-					const cell = new Cell(ctx, x, y, size, 30, 2);
+					// TODO: remove hard coded health/velocity
+					const health = 30;
+					const velocity = (this.#miles / 1000) + 2;
+					const cell = new Cell(ctx, x, y, size, health, velocity);
 					store.put(cell);
 				}
 

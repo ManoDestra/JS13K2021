@@ -10,7 +10,8 @@ class TimeLine extends Urge.Component {
 
 	update(instant) {
 		if (this.#totalElapsed > 5000) {
-			if (instant.frame % 180 == 120) {
+			const rate = 180;
+			if (instant.frame % rate == 0) {
 				this.debug(instant, 'SPAWN:', this.#totalElapsed);
 				this.#screen.post(MessageType.CELL);
 			}
