@@ -216,7 +216,7 @@ class PlayingScreen extends Urge.Screen {
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
 
-					const health = 30 + Math.floor(this.#miles / 100);
+					const health = 1 + Math.floor(this.#miles / 3);
 					const velocity = (this.#miles / 1000) + 2;
 					const cell = new Cell(ctx, x, y, size, health, velocity);
 					console.log('Cell Spawned', performance.now(), cell);
@@ -236,8 +236,10 @@ class PlayingScreen extends Urge.Screen {
 
 	#saveAndNavigate(screenType) {
 		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
-			const healthBoost = Math.floor(this.#miles / 100);
-			const damageBoost = Math.floor(this.#ship.getScore() / 5);
+			const healthRate = 100;
+			const damageRate = 3;
+			const healthBoost = Math.floor(this.#miles / healthRate);
+			const damageBoost = Math.floor(this.#ship.getScore() / damageRate);
 
 			this.#save.id++;
 			this.#save.health += healthBoost;
