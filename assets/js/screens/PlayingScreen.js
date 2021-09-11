@@ -13,6 +13,7 @@ const MessageType = {
 Object.freeze(MessageType);
 
 class PlayingScreen extends Urge.Screen {
+	#namespace = 'com.manodestra.rogue';
 	#playState = PlayState.STARTING;
 	#ship = null;
 	#timeLine = null;
@@ -117,7 +118,7 @@ class PlayingScreen extends Urge.Screen {
 								// TODO: bullet impact?
 								scMap.delete(scId);
 
-								c.reduceHealth(25);
+								c.reduceHealth(this.#save.damage);
 								if (!c.isAlive()) {
 									// TODO: enemy explosion/death effect?
 									// TODO: change this hard coded value to be based on the enemy killed
@@ -171,25 +172,16 @@ class PlayingScreen extends Urge.Screen {
 		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
 			this.navigate(CompletionScreen);
 		}
-
-		const ctx = this.getContext();
-		ctx.fillStyle = 'white';
-		ctx.font = '32px sans-serif';
-		ctx.fillText('Completion', 50, 50);
 	}
 
 	#updateDeath(instant) {
 		this.debug(instant, 'Death');
 
-		// TODO: remove
 		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
+			this.#save.damage += this.#ship.getScore();
+			this.#saveGame();
 			this.navigate(GameOverScreen);
 		}
-
-		const ctx = this.getContext();
-		ctx.fillStyle = 'white';
-		ctx.font = '32px sans-serif';
-		ctx.fillText('Death', 50, 50);
 	}
 
 	render(instant) {
@@ -249,14 +241,13 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	#getSaveOrDefault() {
-		const namespace = 'com.manodestra.rogue';
-		const model = Nucleus.Cryo.get('Save', namespace);
+		const model = Nucleus.Cryo.get('Save', this.#namespace);
 		if (!model) {
 			console.log('Setting Default Model...');
-			Nucleus.Cryo.set('Save', this.#getDefaultSave(), namespace);
+			Nucleus.Cryo.set('Save', this.#getDefaultSave(), this.#namespace);
 		}
 
-		return Nucleus.Cryo.get('Save', namespace);
+		return Nucleus.Cryo.get('Save', this.#namespace);
 	}
 
 	#getDefaultSave() {
@@ -267,7 +258,7 @@ class PlayingScreen extends Urge.Screen {
 		};
 	}
 
-	#save() {
-		//TODO: code
+	#saveGame() {
+		Nucleus.Cryo.set('Save', this.#save, this.#namespace);
 	}
 }
