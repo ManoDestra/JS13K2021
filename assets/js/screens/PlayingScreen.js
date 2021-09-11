@@ -216,6 +216,7 @@ class PlayingScreen extends Urge.Screen {
 					const y = portrait
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
+
 					// TODO: remove hard coded health
 					const cell = new Cell(ctx, x, y, size, 30, 2);
 					store.put(cell);
@@ -234,12 +235,12 @@ class PlayingScreen extends Urge.Screen {
 
 	#saveAndNavigate(screenType) {
 		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
-			const healthBoost = Math.floor(this.#miles / 250);
+			const healthBoost = Math.floor(this.#miles / 100);
 			const damageBoost = Math.floor(this.#ship.getScore() / 5);
 
-			this.save.id++;
-			this.save.health += healthBoost;
-			this.#save.damage += boost;
+			this.#save.id++;
+			this.#save.health += healthBoost;
+			this.#save.damage += damageBoost;
 			this.#saveGame();
 			this.navigate(screenType);
 		}
