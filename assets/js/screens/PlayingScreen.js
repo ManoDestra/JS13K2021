@@ -16,7 +16,6 @@ class PlayingScreen extends Urge.Screen {
 	#namespace = 'com.manodestra.rogue';
 	#playState = PlayState.STARTING;
 	#ship = null;
-	#timeLine = null;
 	#hud = null;
 	#miles = 0;
 	#targetMiles = 12000;
@@ -59,9 +58,6 @@ class PlayingScreen extends Urge.Screen {
 		store.put(ship);
 		this.#ship = ship;
 		console.log(this.#ship);
-
-		//this.#timeLine = new TimeLine(ctx, this);
-		//store.put(this.#timeLine);
 
 		this.#hud = new Hud(ctx);
 		store.put(this.#hud);
@@ -164,9 +160,7 @@ class PlayingScreen extends Urge.Screen {
 			this.#playState = PlayState.COMPLETION;
 		}
 
-		// TODO: spawn enemies here, rather than using Timeline
 		const rate = 180 - Math.floor((this.#miles / this.#targetMiles) * 160)
-		//const rate = 180;
 		if (instant.frame % rate == 0) {
 			this.post(MessageType.CELL);
 		}
