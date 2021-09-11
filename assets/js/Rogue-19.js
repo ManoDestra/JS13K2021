@@ -38,25 +38,6 @@ class Rogue extends Urge.Game {
 		this.onResize();
 	}
 
-	#getSaveOrDefault() {
-		const namespace = 'com.manodestra.rogue';
-		const model = Nucleus.Cryo.get('Save', namespace);
-		if (!model) {
-			console.log('Setting Default Model...');
-			Nucleus.Cryo.set('Save', this.#getDefaultSave(), namespace);
-		}
-
-		return Nucleus.Cryo.get('Save', namespace);
-	}
-
-	#getDefaultSave() {
-		return {
-			id: 1,
-			health: 100,
-			damage: 10
-		};
-	}
-
 	onResize() {
 		const c = this.getCanvas();
 		const b = document.body;

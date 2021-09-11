@@ -167,21 +167,12 @@ class PlayingScreen extends Urge.Screen {
 
 	#updateCompletion(instant) {
 		this.debug(instant, 'Completion');
-
-		// TODO: remove
-		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
-			this.navigate(CompletionScreen);
-		}
+		this.#saveAndNavigate(CompletionScreen);
 	}
 
 	#updateDeath(instant) {
 		this.debug(instant, 'Death');
-
-		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
-			this.#save.damage += this.#ship.getScore();
-			this.#saveGame();
-			this.navigate(GameOverScreen);
-		}
+		this.#saveAndNavigate(GameOverScreen);
 	}
 
 	render(instant) {
@@ -225,7 +216,8 @@ class PlayingScreen extends Urge.Screen {
 					const y = portrait
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
-					const cell = new Cell(ctx, x, y, size, 100, 2);
+					// TODO: remove hard coded health
+					const cell = new Cell(ctx, x, y, size, 30, 2);
 					store.put(cell);
 				}
 
@@ -238,6 +230,19 @@ class PlayingScreen extends Urge.Screen {
 	#getSize() {
 		const canvas = this.getCanvas();
 		return (this.isPortrait() ? canvas.height : canvas.width) / 25;
+	}
+
+	#saveAndNavigate(screenType) {
+		if (this.getScreenState() == Urge.ScreenState.ACTIVE) {
+			const healthBoost = Math.floor(this.#miles / 250);
+			const damageBoost = Math.floor(this.#ship.getScore() / 5);
+
+			this.save.id++;
+			this.save.health += healthBoost;
+			this.#save.damage += boost;
+			this.#saveGame();
+			this.navigate(screenType);
+		}
 	}
 
 	#getSaveOrDefault() {
@@ -254,7 +259,7 @@ class PlayingScreen extends Urge.Screen {
 		return {
 			id: 1,
 			health: 100,
-			damage: 10
+			damage: 1
 		};
 	}
 
