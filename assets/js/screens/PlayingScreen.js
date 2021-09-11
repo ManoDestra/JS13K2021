@@ -160,7 +160,7 @@ class PlayingScreen extends Urge.Screen {
 			this.#playState = PlayState.COMPLETION;
 		}
 
-		const rate = 180 - Math.floor((this.#miles / this.#targetMiles) * 160)
+		const rate = 120 - Math.floor((this.#miles / this.#targetMiles) * 170)
 		if (instant.frame % rate == 0) {
 			this.post(MessageType.CELL);
 		}
@@ -208,7 +208,6 @@ class PlayingScreen extends Urge.Screen {
 				break;
 			case MessageType.CELL:
 				{
-					console.log('Cell Spawned', performance.now());
 					const size = this.#getSize();
 					const x = portrait
 						? parseInt(Math.random() * (canvas.width - size))
@@ -217,10 +216,10 @@ class PlayingScreen extends Urge.Screen {
 						? (0 - (size / 2))
 						: parseInt(Math.random() * (canvas.height - size));
 
-					// TODO: remove hard coded health/velocity
-					const health = 30;
+					const health = 30 + Math.floor(this.#miles / 100);
 					const velocity = (this.#miles / 1000) + 2;
 					const cell = new Cell(ctx, x, y, size, health, velocity);
+					console.log('Cell Spawned', performance.now(), cell);
 					store.put(cell);
 				}
 
