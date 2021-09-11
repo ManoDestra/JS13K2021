@@ -19,6 +19,7 @@ class IntroScreen extends Urge.Screen {
 		'Now, Get Out There, Clone Warrior!',
 		'Save Our Planet From This Nefarious Viral Attack!'
 	];
+	#points = [];
 
 	constructor(game, state) {
 		super(game, state);
@@ -48,6 +49,17 @@ class IntroScreen extends Urge.Screen {
 			const delay = (i * 2 + 1) * 1000;
 			const slogan = new Slogan(ctx, x, y, width, height, text, delay);
 			store.put(slogan);
+		}
+
+		const minRadius = 40;
+		const maxRadius = 70;
+		const count = 18;
+		for (let i = 0; i < count; i++) {
+			const angle = Math.PI * 2 * i / count;
+			const length = minRadius + (Math.random() * (maxRadius - minRadius));
+			const x = 200 + Math.cos(angle) * length;
+			const y = 200 + Math.sin(angle) * length;
+			this.#points.push([x, y]);
 		}
 	}
 
@@ -82,19 +94,15 @@ class IntroScreen extends Urge.Screen {
 		ctx.fillStyle = 'white';
 		ctx.fillText(text, canvas.width / 2, 98);
 
-		// TODO: generate points for cell and animate
-		const points = [
-			[100, 100], [125, 150], [175, 150], [200, 100], [175, 50], [125, 50]
-		];
-		ctx.moveTo(points[0][0], points[0][1]);
-		for (let i = 0; i < points.length; i++) {
-			const nextIndex = (i + 1) % points.length;
-			const x_mid = (points[i][0] + points[nextIndex][0]) / 2;
-			const y_mid = (points[i][1] + points[nextIndex][1]) / 2;
-			const cp_x1 = (x_mid + points[i][0]) / 2;
-			const cp_x2 = (x_mid + points[nextIndex][0]) / 2;
-			ctx.quadraticCurveTo(cp_x1, points[i][1], x_mid, y_mid);
-			ctx.quadraticCurveTo(cp_x2, points[nextIndex][1], points[nextIndex][0], points[nextIndex][1]);
+		ctx.moveTo(this.#points[0][0], this.#points[0][1]);
+		for (let i = 0; i < this.#points.length; i++) {
+			const nextIndex = (i + 1) % this.#points.length;
+			const x_mid = (this.#points[i][0] + this.#points[nextIndex][0]) / 2;
+			const y_mid = (this.#points[i][1] + this.#points[nextIndex][1]) / 2;
+			const cp_x1 = (x_mid + this.#points[i][0]) / 2;
+			const cp_x2 = (x_mid + this.#points[nextIndex][0]) / 2;
+			ctx.quadraticCurveTo(cp_x1, this.#points[i][1], x_mid, y_mid);
+			ctx.quadraticCurveTo(cp_x2, this.#points[nextIndex][1], this.#points[nextIndex][0], this.#points[nextIndex][1]);
 		}
 
 		ctx.stroke();
