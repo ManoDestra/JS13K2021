@@ -1,14 +1,4 @@
-const Nucleus = (() => {
-	function $(selector, root) {
-		const rootElement = typeof(root) === 'string' ? $(root) : root;
-		const rootToUse = rootElement ?? document;
-		return rootToUse.querySelector(selector) ?? document.getElementById(selector);
-	}
-
-	return {
-		$
-	};
-})();
+const Nucleus = {};
 
 Nucleus.Model = (() => {
 	function isFunction(obj) {

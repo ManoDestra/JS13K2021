@@ -2,6 +2,10 @@
 const Urge = (() => {
 	const ABSTRACT_ERROR = 'Abstract Class Cannot Be Instantiated';
 
+	function $(s) {
+		return document.querySelector(s);
+	}
+
 	class Dimension {
 		#width;
 		#height;
@@ -134,8 +138,8 @@ const Urge = (() => {
 
 		getCanvas() {
 			const selector = this.#context.canvas?.id ? '#' + this.#context.canvas.id : 'canvas';
-			const canvasById = Nucleus.$(selector);
-			const canvas = Nucleus.$('canvas');
+			const canvasById = $(selector);
+			const canvas = $('canvas');
 			return (canvasById ?? canvas) ?? this.#context.canvas;
 		}
 
@@ -441,7 +445,7 @@ const Urge = (() => {
 		#transitionDuration = 2000;
 
 		constructor(screenTypes, selector = 'canvas') {
-			const canvas = Nucleus.$(selector);
+			const canvas = $(selector);
 			if (!canvas) {
 				throw new Error('Canvas Not Found: ' + selector);
 			}
@@ -456,7 +460,7 @@ const Urge = (() => {
 		}
 
 		getCanvas() {
-			return Nucleus.$(this.#selector);
+			return $(this.#selector);
 		}
 
 		updateScreens(width, height) {
