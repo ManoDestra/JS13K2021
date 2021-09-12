@@ -16,7 +16,6 @@ class StartScreen extends Urge.Screen {
 	#totalElapsed = 0;
 	#lastSpacePressed = false;
 	#lastScreenState = Urge.ScreenState.INACTIVE;
-	#spawned = false;
 
 	constructor(game, state) {
 		super(game, state);
@@ -52,7 +51,6 @@ class StartScreen extends Urge.Screen {
 		if (screenState == Urge.ScreenState.ACTIVE) {
 			const spacePressed = Nucleus.Keys.checkKey(' ');
 			if (spacePressed && !this.#lastSpacePressed) {
-				console.log('Space Pressed', performance.now());
 				this.navigate(IntroScreen);
 			}
 
@@ -63,25 +61,7 @@ class StartScreen extends Urge.Screen {
 				store.put(spaceButton);
 			}
 
-			if (!this.#spawned && this.#totalElapsed > 5000) {
-				this.#spawned = true;
-				//console.log('Spawning Cells Now...');
-				//const cell = new Cell(ctx, canvas.width, canvas.height / 2, 100, 100, 0.3);
-				//store.put(cell);
-			}
-
 			this.#totalElapsed += instant.elapsed();
-			store.forEach((c, cId, cMap) => {
-				if (c instanceof Cell) {
-					store.forEach((b, bId, bMap) => {
-						if (b instanceof SpaceButton) {
-							if (c.getBoundingBox().intersects(b.getBoundingBox())) {
-								console.log(performance.now(), 'Cell Intersects SpaceButton');
-							}
-						}
-					})
-				}
-			});
 		}
 
 		this.#lastScreenState = screenState;
@@ -116,7 +96,6 @@ class IntroScreen extends Urge.Screen {
 		'Now, Get Out There, Clone Warrior!',
 		'Save Our Planet From This Nefarious Viral Attack!'
 	];
-	#points = [];
 
 	constructor(game, state) {
 		super(game, state);
@@ -146,17 +125,6 @@ class IntroScreen extends Urge.Screen {
 			const delay = (i * 2 + 1) * 1000;
 			const slogan = new Slogan(ctx, x, y, width, height, text, delay);
 			store.put(slogan);
-		}
-
-		const minRadius = 40;
-		const maxRadius = 70;
-		const count = 18;
-		for (let i = 0; i < count; i++) {
-			const angle = Math.PI * 2 * i / count;
-			const length = minRadius + (Math.random() * (maxRadius - minRadius));
-			const x = 200 + Math.cos(angle) * length;
-			const y = 200 + Math.sin(angle) * length;
-			this.#points.push([x, y]);
 		}
 	}
 
@@ -190,19 +158,6 @@ class IntroScreen extends Urge.Screen {
 		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 50, measured.width + 20, 58);
 		ctx.fillStyle = 'white';
 		ctx.fillText(text, canvas.width / 2, 98);
-
-		ctx.moveTo(this.#points[0][0], this.#points[0][1]);
-		for (let i = 0; i < this.#points.length; i++) {
-			const nextIndex = (i + 1) % this.#points.length;
-			const x_mid = (this.#points[i][0] + this.#points[nextIndex][0]) / 2;
-			const y_mid = (this.#points[i][1] + this.#points[nextIndex][1]) / 2;
-			const cp_x1 = (x_mid + this.#points[i][0]) / 2;
-			const cp_x2 = (x_mid + this.#points[nextIndex][0]) / 2;
-			ctx.quadraticCurveTo(cp_x1, this.#points[i][1], x_mid, y_mid);
-			ctx.quadraticCurveTo(cp_x2, this.#points[nextIndex][1], this.#points[nextIndex][0], this.#points[nextIndex][1]);
-		}
-
-		ctx.stroke();
 	}
 }
 
@@ -413,7 +368,6 @@ class PlayingScreen extends Urge.Screen {
 					const health = 1 + Math.floor(this.#miles / 3);
 					const velocity = (this.#miles / 1000) + 2;
 					const cell = new Cell(ctx, x, y, size, health, velocity);
-					console.log('Cell Spawned', performance.now(), cell);
 					store.put(cell);
 				}
 

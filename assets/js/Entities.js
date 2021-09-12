@@ -22,7 +22,7 @@ class SpaceButton extends Urge.Sprite {
 			const y = (canvas.height - height) / 2;
 			const fontName = 'sans-serif';
 			const fontSize = parseInt(height * 2 / 3);
-			const text = 'SPACE';
+			const text = 'Rogue-19';
 
 			const ratio = Math.min(1, (this.#totalElapsed - this.#delay) / this.#duration);
 
@@ -36,7 +36,6 @@ class SpaceButton extends Urge.Sprite {
 			// TODO: handle alignment better
 			ctx.lineWidth = 5;
 			ctx.strokeStyle = 'white';
-			//ctx.fillStyle = 'darkgray';
 			ctx.font = fontSize + 'px ' + fontName;
 			const textSize = ctx.measureText(text);
 			const offsetX = (width - textSize.width) / 2
@@ -393,28 +392,5 @@ class Cell extends Enemy {
 		ctx.stroke();
 		ctx.fill();
 		ctx.closePath();
-
-		/*
-		ctx.beginPath();
-		ctx.strokeStyle = 'white';
-		ctx.moveTo(this.getX() + (this.getWidth() / 2) + this.#points[0][0], this.getY() + (this.getHeight() / 2) + this.#points[0][1]);
-		for (let i = 0; i < this.#points.length; i++) {
-			const nextIndex = (i + 1) % this.#points.length;
-			const x = this.getX() + (this.getWidth() / 2) + this.#points[i][0];
-			const y = this.getY() + (this.getHeight() / 2) + this.#points[i][1];
-			const nextX = this.getX() + (this.getWidth() / 2) + this.#points[nextIndex][0];
-			const nextY = this.getY() + (this.getHeight() / 2) + this.#points[nextIndex][1];
-
-			const xMid = (x + nextX) / 2;
-			const yMid = (y + nextY) / 2;
-			const cpx1 = (xMid + x) / 2;
-			const cpx2 = (xMid + nextX) / 2;
-			ctx.quadraticCurveTo(cpx1, y, xMid, yMid);
-			ctx.quadraticCurveTo(cpx2, nextY, nextX, nextY);
-		}
-
-		ctx.closePath();
-		ctx.stroke();
-		*/
 	}
 }

@@ -149,7 +149,6 @@ const Urge = (() => {
 		}
 
 		update(instant) {
-			// Empty Implementation
 		}
 
 		debug(instant, ...models) {
