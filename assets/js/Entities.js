@@ -332,13 +332,12 @@ class Hud extends Urge.RenderComponent {
 		ctx.fillStyle = GREEN;
 		ctx.font = FONT;
 		ctx.textAlign = 'center';
-		const fps = parseInt(instant.fps());
 		const id = this.#id;
 		const h = this.#health;
 		const d = this.#damage;
 		const sc = this.#score;
 		const m = parseInt(this.#remainingMiles);
-		const display = `FPS: ${fps}, ID: ${id}, Health: ${h}, Damage: ${d}, Score: ${sc}, Remaining Miles: ${m}`;
+		const display = `ID: ${id}, Health: ${h}, Damage: ${d}, Score: ${sc}, Remaining Miles: ${m}`;
 		ctx.fillText(display, canvas.width / 2, canvas.height - 20);
 	}
 }
