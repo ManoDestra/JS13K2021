@@ -313,7 +313,8 @@ class PlayingScreen extends Urge.Screen {
 			this.#playState = PlayState.COMPLETION;
 		}
 
-		const rate = 120 - Math.floor((this.#miles / this.#targetMiles) * 110)
+		const initial = 90;
+		const rate = initial - Math.floor((this.#miles / this.#targetMiles) * initial - 10);
 		if (instant.frame % rate == 0) {
 			this.post(MessageType.CELL);
 		}
