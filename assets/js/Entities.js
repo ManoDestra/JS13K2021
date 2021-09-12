@@ -337,7 +337,7 @@ class Hud extends Urge.RenderComponent {
 		const d = this.#damage;
 		const sc = this.#score;
 		const m = parseInt(this.#remainingMiles);
-		const display = `ID: ${id}, Health: ${h}, Damage: ${d}, Score: ${sc}, Remaining Miles: ${m}`;
+		const display = `Clone #: ${id}, Health: ${h}, Damage: ${d}, Score: ${sc}, Remaining Miles: ${m}`;
 		ctx.fillText(display, canvas.width / 2, canvas.height - 20);
 	}
 }
