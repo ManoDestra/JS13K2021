@@ -1,8 +1,9 @@
 const PlayState = {
 	STARTING: 0,
 	PLAYING: 1,
-	COMPLETION: 2,
-	DEATH: 3
+	BOSS_BATTLE: 2,
+	COMPLETION: 3,
+	DEATH: 4
 };
 Object.freeze(PlayState);
 
@@ -247,6 +248,9 @@ class PlayingScreen extends Urge.Screen {
 			case PlayState.PLAYING:
 				this.#updatePlaying(instant);
 				break;
+			case PlayState.BOSS_BATTLE:
+				this.#updateBossBattle(instant);
+				break;
 			case PlayState.COMPLETION:
 				this.#updateCompletion(instant);
 				break;
@@ -322,7 +326,7 @@ class PlayingScreen extends Urge.Screen {
 		}
 
 		if (remaining <= 0) {
-			this.#playState = PlayState.COMPLETION;
+			this.#playState = PlayState.BOSS_BATTLE;
 		}
 
 		const initial = 90;
@@ -330,6 +334,11 @@ class PlayingScreen extends Urge.Screen {
 		if (instant.frame % rate == 0) {
 			this.post(MessageType.CELL);
 		}
+	}
+
+	#updateBossBattle(instant) {
+		this.debug(instant, 'Boss Battle');
+		this.#playState = PlayState.COMPLETION;
 	}
 
 	#updateCompletion(instant) {
