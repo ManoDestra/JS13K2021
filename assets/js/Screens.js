@@ -68,10 +68,22 @@ class StartScreen extends Urge.Screen {
 	}
 
 	render(instant) {
-		const ctx = this.getContext();
 		const store = this.getStore();
 		super.render(instant);
 		store.renderByTypes(instant, StarField, SpaceButton, Cell);
+
+		if (this.#totalElapsed > 7000) {
+			const ctx = this.getContext();
+			ctx.save();
+			const canvas = this.getCanvas();
+			ctx.textAlign = 'center';
+			ctx.font = '40px sans-serif';
+			ctx.strokeStyle = 'white';
+			ctx.fillStyle = 'transparent';
+			ctx.lineWidth = 2;
+			ctx.strokeText('Press SPACE', canvas.width / 2, canvas.height * 3 / 4);
+			ctx.restore();
+		}
 	}
 }
 
@@ -151,12 +163,12 @@ class IntroScreen extends Urge.Screen {
 		const text = 'Press SPACE To Begin';
 
 		ctx.fillStyle = '';
-		ctx.font = '48px sans-serif';
+		ctx.font = '44px sans-serif';
 		ctx.textAlign = 'center';
 		const measured = ctx.measureText(text);
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'darkgreen';
+		ctx.fillStyle = 'rgba(64, 64, 64, 64)';
 		ctx.fillRect(((canvas.width - measured.width) / 2) - 10, 50, measured.width + 20, 58);
 		ctx.fillStyle = 'white';
 		ctx.fillText(text, canvas.width / 2, 98);
