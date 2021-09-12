@@ -347,20 +347,8 @@ class Enemy extends Urge.Sprite {
 }
 
 class Cell extends Enemy {
-	#points = [];
-
 	constructor(context, x, y, size, health, velocity) {
 		super(context, x, y, size, size, health, velocity);
-		const minRadius = this.size / 3;
-		const maxRadius = this.size / 2;
-		const count = 18;
-		for (let i = 0; i < count; i++) {
-			const angle = Math.PI * 2 * i / count;
-			const length = minRadius + (Math.random() * (maxRadius - minRadius));
-			const x = Math.cos(angle) * length;
-			const y = Math.sin(angle) * length;
-			this.#points.push([x, y]);
-		}
 	}
 
 	update(instant) {
