@@ -406,3 +406,9 @@ class Cell extends Enemy {
 		ctx.closePath();
 	}
 }
+
+class Incubator extends Enemy {
+	constructor(context, x, y, width, height) {
+		super(context, x, y, width, height, 250000, 1);
+	}
+}

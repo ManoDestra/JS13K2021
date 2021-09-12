@@ -184,6 +184,7 @@ class PlayingScreen extends Urge.Screen {
 	#miles = 0;
 	#targetMiles = 12000;
 	#save = null;
+	#boss = null;
 
 	constructor(game, state) {
 		super(game, state);
@@ -191,6 +192,7 @@ class PlayingScreen extends Urge.Screen {
 
 	init() {
 		super.init();
+		this.#boss = null;
 		this.#playState = PlayState.STARTING;
 		this.#miles = 0;
 
@@ -327,6 +329,9 @@ class PlayingScreen extends Urge.Screen {
 
 		if (remaining <= 0) {
 			this.#playState = PlayState.BOSS_BATTLE;
+			if (!this.#boss) {
+				this.#boss = new Incubator(this.getContext(), 0, 0, 10, 10);
+			}
 		}
 
 		const initial = 90;
