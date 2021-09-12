@@ -133,7 +133,9 @@ class Slogan extends Urge.Sprite {
 class Ship extends Urge.Sprite {
 	#active = false;
 	#skills = null;
+	#id = 1;
 	#health = 0;
+	#damage = 0;
 	#score = 0;
 	#screen = null;
 	#lastSpacePressed = false;
@@ -141,7 +143,9 @@ class Ship extends Urge.Sprite {
 	constructor(context, x, y, size, skills, screen) {
 		super(context, x, y, size, size);
 		this.#skills = skills;
+		this.#id = skills.id;
 		this.#health = skills.health;
+		this.#damage = skills.damage;
 		this.#screen = screen;
 	}
 
@@ -149,8 +153,16 @@ class Ship extends Urge.Sprite {
 		return this.#active;
 	}
 
+	getId() {
+		return this.#id;
+	}
+
 	getHealth() {
 		return this.#health;
+	}
+
+	getDamage() {
+		return this.#damage;
 	}
 
 	reduceHealth(damage) {
@@ -282,7 +294,9 @@ class PlayerBullet extends Urge.Sprite {
 }
 
 class Hud extends Urge.RenderComponent {
+	#id = 1;
 	#health = 0;
+	#damage = 0;
 	#score = 0;
 	#remainingMiles = 0;
 
@@ -290,8 +304,16 @@ class Hud extends Urge.RenderComponent {
 		super(context);
 	}
 
+	setId(id) {
+		this.#id = id;
+	}
+
 	setHealth(health) {
 		this.#health = health;
+	}
+
+	setDamage(damage) {
+		this.#damage = damage;
 	}
 
 	setScore(score) {
@@ -309,12 +331,15 @@ class Hud extends Urge.RenderComponent {
 		const canvas = super.getCanvas();
 		ctx.fillStyle = GREEN;
 		ctx.font = FONT;
+		ctx.textAlign = 'center';
 		const fps = parseInt(instant.fps());
+		const id = this.#id;
 		const h = this.#health;
+		const d = this.#damage;
 		const sc = this.#score;
 		const m = parseInt(this.#remainingMiles);
-		const display = `FPS: ${fps}, Health: ${h}, Score: ${sc}, Remaining Miles: ${m}`;
-		ctx.fillText(display, 20, canvas.height - 20);
+		const display = `FPS: ${fps}, ID: ${id}, Health: ${h}, Damage: ${d}, Score: ${sc}, Remaining Miles: ${m}`;
+		ctx.fillText(display, canvas.width / 2, canvas.height - 20);
 	}
 }
 

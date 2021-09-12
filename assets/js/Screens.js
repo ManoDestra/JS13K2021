@@ -91,6 +91,8 @@ class IntroScreen extends Urge.Screen {
 		'Never Fear! A New Clone Will Replace You When You Die',
 		'Each New Clone Benefits From Your Experience',
 		'With Enhanced Abilities And Skills',
+		'Kills Improve Your Damage Rating',
+		'Distance Improves Your Health',
 		'Use W/S/A/D To Move',
 		'Press SPACE To Shoot',
 		'Now, Get Out There, Clone Warrior!',
@@ -220,7 +222,9 @@ class PlayingScreen extends Urge.Screen {
 		const store = this.getStore();
 		const canvas = this.getCanvas();
 		store.update(instant);
+		this.#hud.setId(this.#ship.getId());
 		this.#hud.setHealth(this.#ship.getHealth());
+		this.#hud.setDamage(this.#ship.getDamage());
 		this.#hud.setScore(this.#ship.getScore());
 		this.#hud.setRemainingMiles(this.getRemainingMiles());
 
