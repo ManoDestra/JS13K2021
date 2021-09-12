@@ -24,6 +24,10 @@ class CompletionScreen extends Urge.Screen {
 		ctx.font = '32px sans-serif';
 		ctx.strokeStyle = 'white';
 		ctx.textAlign = 'center';
-		ctx.strokeText('Congratulations!', canvas.width / 2, canvas.height / 2);
+		ctx.strokeText(
+			'Congratulations! You Have Reached The Planet Of Our Enemies: EARTH!',
+			canvas.width / 2,
+			canvas.height / 2
+		);
 	}
 }

@@ -24,6 +24,6 @@ class GameOverScreen extends Urge.Screen {
 		ctx.font = '32px sans-serif';
 		ctx.strokeStyle = 'white';
 		ctx.textAlign = 'center';
-		ctx.strokeText('You Be Dead!', canvas.width / 2, canvas.height / 2);
+		ctx.strokeText('You Have Died! Spawning Another Clone!', canvas.width / 2, canvas.height / 2);
 	}
 }
