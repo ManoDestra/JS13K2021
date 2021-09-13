@@ -412,7 +412,7 @@ class Incubator extends Enemy {
 	#reached = false;
 
 	constructor(context, x, y, width, height, screen) {
-		super(context, x, y, width, height, 5000, 1);
+		super(context, x, y, width, height, 1000000, 1);
 		this.#screen = screen;
 		this.#finalPosition = this.isPortrait()
 			? 20
