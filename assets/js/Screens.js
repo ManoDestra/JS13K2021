@@ -9,7 +9,8 @@ Object.freeze(PlayState);
 
 const MessageType = {
 	PLAYER_BULLET: 0,
-	CELL: 1
+	CELL: 1,
+	INCUBATOR_CELL: 2
 };
 Object.freeze(MessageType);
 
@@ -24,6 +25,9 @@ class StartScreen extends Urge.Screen {
 
 	init() {
 		super.init();
+		this.#totalElapsed = 0;
+		this.#lastSpacePressed = false;
+		this.#lastScreenState = Urge.ScreenState.INACTIVE;
 		const state = this.getState();
 		const store = this.getStore();
 		const ctx = this.getContext();
@@ -82,7 +86,7 @@ class StartScreen extends Urge.Screen {
 			ctx.strokeStyle = 'white';
 			ctx.fillStyle = 'transparent';
 			ctx.lineWidth = 2;
-			ctx.strokeText('Press SPACE', canvas.width / 2, canvas.height * 3 / 4);
+			ctx.strokeText('Press SPACE', canvas.width / 2, canvas.height * 4 / 5);
 			ctx.restore();
 		}
 	}
@@ -218,7 +222,6 @@ class PlayingScreen extends Urge.Screen {
 		const startX = this.isPortrait() ? (canvas.width - size) / 2 : -size;
 		const startY = this.isPortrait() ? canvas.height + (size * 2) : (canvas.height - size) / 2;
 
-		// TODO: we need to pull this from storage live, as we don't want the one in state.
 		this.#save = this.#getSaveOrDefault();
 		const ship = new Ship(ctx, startX, startY, size, this.#save, this);
 		store.put(ship);
@@ -261,7 +264,6 @@ class PlayingScreen extends Urge.Screen {
 				break;
 		}
 
-		// TODO: out of bound entity removals
 		store.forEach((c, id, map) => {
 			if (c instanceof PlayerBullet) {
 				const box = c.getBoundingBox();
@@ -288,7 +290,7 @@ class PlayingScreen extends Urge.Screen {
 								c.reduceHealth(this.#save.damage);
 								if (!c.isAlive()) {
 									// TODO: enemy explosion/death effect?
-									// TODO: change this hard coded value to be based on the enemy killed
+									// TODO: change this hard coded value to be enemy based
 									this.#ship.increaseScore(1);
 									map.delete(id);
 								}
@@ -330,7 +332,17 @@ class PlayingScreen extends Urge.Screen {
 		if (remaining <= 0) {
 			this.#playState = PlayState.BOSS_BATTLE;
 			if (!this.#boss) {
-				this.#boss = new Incubator(this.getContext(), 0, 0, 10, 10);
+				const canvas = this.getCanvas();
+				const ctx = this.getContext();
+				const large = this.isPortrait() ? canvas.height : canvas.width;
+				const small = this.isPortrait() ? canvas.width : canvas.height;
+				const width = this.isPortrait() ? small * 4 / 5 : large / 3;
+				const height = this.isPortrait() ? large / 3 : small * 4 / 5;
+				const x = this.isPortrait() ? small / 10 : large + 20;
+				const y = this.isPortrait() ? -20 - height : small / 10;
+				this.#boss = new Incubator(ctx, x, y, width, height, this);
+				console.log(instant, this.#boss);
+				this.getStore().put(this.#boss);
 			}
 		}
 
@@ -342,17 +354,19 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	#updateBossBattle(instant) {
-		this.debug(instant, 'Boss Battle');
-		this.#playState = PlayState.COMPLETION;
+		const store = this.getStore();
+		if (!this.#boss.isAlive()) {
+			this.#playState = PlayState.COMPLETION;
+			this.#boss = null;
+			this.#ship.increaseScore(1500);
+		}
 	}
 
 	#updateCompletion(instant) {
-		this.debug(instant, 'Completion');
 		this.#saveAndNavigate(CompletionScreen);
 	}
 
 	#updateDeath(instant) {
-		this.debug(instant, 'Death');
 		this.#saveAndNavigate(GameOverScreen);
 	}
 
@@ -400,6 +414,24 @@ class PlayingScreen extends Urge.Screen {
 					const velocity = (this.#miles / 1000) + 2;
 					const cell = new Cell(ctx, x, y, size, health, velocity);
 					store.put(cell);
+				}
+
+				break;
+			case MessageType.INCUBATOR_CELL:
+				{
+					const size = this.#getSize();
+					if (this.#boss) {
+						const x = portrait
+							? ((this.#boss.getWidth() - size) * Math.random()) + this.#boss.getX()
+							: this.#boss.getX();
+						const y = portrait
+							? this.#boss.getY() + this.#boss.getHeight()
+							: ((this.#boss.getHeight() - size) * Math.random()) + this.#boss.getY();
+						const health = 3000;
+						const velocity = 15;
+						const cell = new Cell(ctx, x, y, size, health, velocity);
+						store.put(cell);
+					}
 				}
 
 				break;
@@ -471,14 +503,13 @@ class CompletionScreen extends Urge.Screen {
 
 	render(instant) {
 		super.render(instant);
-
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
 		ctx.font = '32px sans-serif';
 		ctx.strokeStyle = 'white';
 		ctx.textAlign = 'center';
 		ctx.strokeText(
-			'Congratulations! You Have Reached The Planet Of Our Enemies: EARTH!',
+			'Congratulations! You Have Reached The Enemy Planet... EARTH! DESTROY THEM!',
 			canvas.width / 2,
 			canvas.height / 2
 		);

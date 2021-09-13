@@ -212,7 +212,6 @@ class Ship extends Urge.Sprite {
 				this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
 			}
 
-			// TODO: cap the fire rate
 			const spacePressed = Nucleus.Keys.checkKey(' ');
 			if (spacePressed && !this.#lastSpacePressed) {
 				this.#screen.post(MessageType.PLAYER_BULLET);
@@ -408,7 +407,52 @@ class Cell extends Enemy {
 }
 
 class Incubator extends Enemy {
-	constructor(context, x, y, width, height) {
-		super(context, x, y, width, height, 250000, 1);
+	#screen;
+	#finalPosition;
+	#reached = false;
+
+	constructor(context, x, y, width, height, screen) {
+		super(context, x, y, width, height, 5000, 1);
+		this.#screen = screen;
+		this.#finalPosition = this.isPortrait()
+			? 20
+			: this.getCanvas().width - this.getWidth() - 20;
+	}
+
+	update(instant) {
+		super.update(instant);
+		if (this.#reached) {
+			if (instant.frame % 20 == 0) {
+				this.#screen.post(MessageType.INCUBATOR_CELL);
+			}
+		} else {
+			if (this.isPortrait()) {
+				if (this.getY() < this.#finalPosition) {
+					const delta = this.getHeight() / 6;
+					this.offsetY(delta * instant.elapsed() / 1000);
+				} else {
+					this.setY(this.#finalPosition);
+					this.#reached = true;
+				}
+			} else {
+				if (this.getX() > this.#finalPosition) {
+					const delta = -this.getWidth() / 6;
+					this.offsetX(delta * instant.elapsed() / 1000);
+				} else {
+					this.setX(this.#finalPosition);
+					this.#reached = true;
+				}
+			}
+		}
+	}
+
+	render(instant) {
+		const canvas = this.getCanvas();
+		const ctx = this.getContext();
+		ctx.strokeStyle = 'darkgray';
+		ctx.fillStyle = 'darkred';
+		ctx.lineWidth = 3;
+		ctx.strokeRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		ctx.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 }
