@@ -300,8 +300,8 @@ class PlayingScreen extends Urge.Screen {
 						if (sc instanceof Ship) {
 							if (sc.getBoundingBox().intersects(c.getBoundingBox())) {
 								// TODO: enemy explosion?
+								sc.reduceHealth(c.getHealth());
 								map.delete(id);
-								sc.reduceHealth(25);
 								if (!sc.isAlive()) {
 									scMap.delete(scId);
 								}
@@ -355,6 +355,10 @@ class PlayingScreen extends Urge.Screen {
 
 	#updateBossBattle(instant) {
 		const store = this.getStore();
+		if (!this.#ship.isAlive()) {
+			this.#playState = PlayState.DEATH;
+		}
+
 		if (!this.#boss.isAlive()) {
 			this.#playState = PlayState.COMPLETION;
 			this.#boss = null;
