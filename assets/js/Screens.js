@@ -322,7 +322,7 @@ class PlayingScreen extends Urge.Screen {
 	}
 
 	#updatePlaying(instant) {
-		const v = 10;
+		const v = 20;
 		this.#miles += v * instant.elapsed() / 1000;
 		const remaining = this.getRemainingMiles();
 		if (!this.#ship.isAlive()) {
