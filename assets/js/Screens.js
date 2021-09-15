@@ -533,7 +533,7 @@ class GameOverScreen extends Urge.Screen {
 
 	update(instant) {
 		this.#totalElapsed += instant.elapsed();
-		if (this.#totalElapsed > 5000 && this.getScreenState() == Urge.ScreenState.ACTIVE) {
+		if (this.#totalElapsed > 3000 && this.getScreenState() == Urge.ScreenState.ACTIVE) {
 			this.navigate(PlayingScreen);
 		}
 	}
