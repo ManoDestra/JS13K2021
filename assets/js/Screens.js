@@ -321,14 +321,17 @@ class PlayingScreen extends Urge.Screen {
 		}
 	}
 
+	#checkDeath() {
+		if (!this.#ship.isAlive()) {
+			this.#playState = PlayState.DEATH;
+		}
+	}
+
 	#updatePlaying(instant) {
 		const v = 20;
 		this.#miles += v * instant.elapsed() / 1000;
 		const remaining = this.getRemainingMiles();
-		if (!this.#ship.isAlive()) {
-			this.#playState = PlayState.DEATH;
-		}
-
+		this.#checkDeath();
 		if (remaining <= 0) {
 			this.#playState = PlayState.BOSS_BATTLE;
 			if (!this.#boss) {
@@ -355,10 +358,7 @@ class PlayingScreen extends Urge.Screen {
 
 	#updateBossBattle(instant) {
 		const store = this.getStore();
-		if (!this.#ship.isAlive()) {
-			this.#playState = PlayState.DEATH;
-		}
-
+		this.#checkDeath();
 		if (!this.#boss.isAlive()) {
 			this.#playState = PlayState.COMPLETION;
 			this.#boss = null;
