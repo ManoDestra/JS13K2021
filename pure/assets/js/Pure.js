@@ -80,6 +80,34 @@ class Box extends Point2D {
 	getH() {
 		return this.#h;
 	}
+
+	getLeft() {
+		return this.getX();
+	}
+
+	getRight() {
+		return this.getX() + this.getW();
+	}
+
+	getTop() {
+		return this.getY();
+	}
+
+	getBottom() {
+		return this.getY() + this.getH();
+	}
+
+	getArea() {
+		return this.getW() * this.getH();
+	}
+
+	intersects(box) {
+		const left = this.getLeft() >= box.getLeft() && this.getLeft() <= box.getRight();
+		const right = this.getRight() >= box.getLeft() && this.getRight() <= box.getRight();
+		const top = this.getTop() >= box.getTop() && this.getTop() <= box.getBottom();
+		const bottom = this.getBottom() >= box.getTop() && this.getBottom() <= box.getBottom();
+		return (left || right) && (top || bottom);
+	}
 }
 
 class Component {
@@ -104,9 +132,28 @@ class RenderComponent extends Component {
 	}
 }
 
-class Game extends RenderComponent {
+class Layer extends RenderComponent {
 	constructor() {
 		super();
+	}
+}
+
+class Game extends RenderComponent {
+	#title;
+	static #canvasId = 'cvsPure';
+	static #canvasClass = 'canvas-pure';
+
+	constructor(title) {
+		super();
+		this.#title = title ?? this.constructor.name;
+	}
+
+	getTitle() {
+		return this.#title;
+	}
+
+	getCanvas() {
+		return document.querySelector('#' + Game.#canvasId);
 	}
 
 	#setStyle() {
@@ -129,12 +176,16 @@ class Game extends RenderComponent {
 
 	#createCanvas() {
 		const canvas = document.createElement('canvas');
+		canvas.id = Game.#canvasId;
+		canvas.className = Game.#canvasClass;
 		canvas.style.width = '100%';
 		canvas.style.height = '100%';
 		canvas.style.margin = '0px';
 		canvas.style.padding = '0px';
 		canvas.width = document.body.clientWidth;
 		canvas.height = document.body.clientHeight;
+
+		document.title = this.getTitle();
 		document.body.innerHTML = '';
 		document.body.appendChild(canvas);
 	}
@@ -153,5 +204,11 @@ class Game extends RenderComponent {
 		console.log('Starting.,,');
 		Clock.start(instant => this.updateAndRender(instant));
 		console.log('Started');
+	}
+
+	stop() {
+		console.log('Stopping...');
+		Clock.stop();
+		console.log('Stopped');
 	}
 }
