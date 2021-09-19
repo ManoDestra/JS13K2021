@@ -86,12 +86,27 @@ class Component {
 	constructor() {
 	}
 
-	update() {
+	update(instant) {
 	}
 }
 
-class Game {
+class RenderComponent extends Component {
 	constructor() {
+		super();
+	}
+
+	render(instant) {
+	}
+
+	updateAndRender(instant) {
+		this.update(instant);
+		this.render(instant);
+	}
+}
+
+class Game extends RenderComponent {
+	constructor() {
+		super();
 	}
 
 	#setStyle() {
@@ -136,9 +151,7 @@ class Game {
 
 	start() {
 		console.log('Starting.,,');
-		Clock.start(instant => {
-			// TODO: call main loop here
-		});
+		Clock.start(instant => this.updateAndRender(instant));
 		console.log('Started');
 	}
 }
