@@ -111,7 +111,17 @@ class Box extends Point2D {
 }
 
 class Component {
+	#updateActive = true;
+
 	constructor() {
+	}
+
+	isUpdateActive() {
+		return this.#updateActive;
+	}
+
+	setUpdateActive(updateActive) {
+		this.#updateActive = updateActive;
 	}
 
 	update(instant) {
@@ -119,8 +129,18 @@ class Component {
 }
 
 class RenderComponent extends Component {
+	#renderActive = true;
+
 	constructor() {
 		super();
+	}
+
+	isRenderActive() {
+		return this.#renderActive;
+	}
+
+	setRenderActive(renderActive) {
+		this.#renderActive = renderActive;
 	}
 
 	render(instant) {
