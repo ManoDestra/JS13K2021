@@ -4,10 +4,21 @@ class Monoculture extends Game {
 	}
 
 	update(instant) {
-		this.debug(instant, 'Elapsed:', instant.elapsed(), instant.fps());
+		//this.debug(instant, 'Elapsed:', instant.elapsed(), instant.fps());
 	}
 
 	render(instant) {
+		const canvas = this.getCanvas();
+		const ctx = this.getContext();
+
+		ctx.save();
+		ctx.lineWidth = 3;
+		ctx.strokeStyle = 'white';
+		ctx.fillStyle = 'darkred';
+		const width = canvas.width * 0.8;
+		const height = canvas.height * 0.8;
+		ctx.fillRect(width / 8, height / 8, width, height);
+		ctx.restore();
 	}
 }
 

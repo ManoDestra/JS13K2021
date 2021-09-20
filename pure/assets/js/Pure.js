@@ -201,13 +201,22 @@ class Game extends RenderComponent {
 		canvas.style.height = '100%';
 		canvas.style.margin = '0px';
 		canvas.style.padding = '0px';
-		canvas.width = document.body.clientWidth;
-		canvas.height = document.body.clientHeight;
 
 		document.title = this.getTitle();
 		document.body.innerHTML = '';
 		document.body.appendChild(canvas);
+		this.#onResize();
 		this.#context = canvas.getContext('2d');
+	}
+
+	#onResize() {
+		const canvas = this.getCanvas();
+		if (canvas) {
+			canvas.width = document.body.clientWidth;
+			canvas.height = document.body.clientHeight;
+		} else {
+			console.warn('No Canvas Found');
+		}
 	}
 
 	getTitle() {
@@ -236,6 +245,7 @@ class Game extends RenderComponent {
 		console.log('Starting.,,');
 		Clock.start(instant => this.updateAndRender(instant));
 		console.log('Started');
+		window.addEventListener('resize', () => this.#onResize());
 	}
 
 	stop() {
