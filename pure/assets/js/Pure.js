@@ -165,21 +165,14 @@ class Layer extends RenderComponent {
 }
 
 class Game extends RenderComponent {
-	#title;
 	static #canvasId = 'cvsPure';
 	static #canvasClass = 'canvas-pure';
+	#title;
+	#context = null;
 
 	constructor(title) {
 		super();
 		this.#title = title ?? this.constructor.name;
-	}
-
-	getTitle() {
-		return this.#title;
-	}
-
-	getCanvas() {
-		return document.querySelector('#' + Game.#canvasId);
 	}
 
 	#setStyle() {
@@ -214,6 +207,19 @@ class Game extends RenderComponent {
 		document.title = this.getTitle();
 		document.body.innerHTML = '';
 		document.body.appendChild(canvas);
+		this.#context = canvas.getContext('2d');
+	}
+
+	getTitle() {
+		return this.#title;
+	}
+
+	getCanvas() {
+		return document.querySelector('#' + Game.#canvasId);
+	}
+
+	getContext() {
+		return this.#context;
 	}
 
 	async init() {
