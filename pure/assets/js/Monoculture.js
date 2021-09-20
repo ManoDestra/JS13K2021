@@ -11,7 +11,7 @@ class Monoculture extends Game {
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
 
-		// TODO: this call should be automatic
+		// TODO: this call could be automatic
 		this.clearCanvas(canvas, ctx);
 
 		const widthUnit = canvas.width / 10;
@@ -23,7 +23,7 @@ class Monoculture extends Game {
 		ctx.lineWidth = 2;
 		ctx.strokeStyle = 'white';
 		ctx.fillStyle = 'darkred';
-		ctx.globalAlpha = 0.6;
+		//ctx.globalAlpha = 0.7;
 		ctx.strokeRect(widthUnit, heightUnit, width, height);
 		ctx.fillRect(widthUnit, heightUnit, width, height);
 		ctx.restore();
