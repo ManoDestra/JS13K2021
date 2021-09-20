@@ -17,6 +17,7 @@ class Monoculture extends Game {
 		ctx.fillStyle = 'darkred';
 		const width = canvas.width * 0.8;
 		const height = canvas.height * 0.8;
+		ctx.strokeRect(width / 8, height / 8, width, height);
 		ctx.fillRect(width / 8, height / 8, width, height);
 		ctx.restore();
 	}
