@@ -11,14 +11,21 @@ class Monoculture extends Game {
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
 
+		// TODO: this call should be automatic
+		this.clearCanvas(canvas, ctx);
+
+		const widthUnit = canvas.width / 10;
+		const heightUnit = canvas.height / 10;
+		const width = widthUnit * 8;;
+		const height = heightUnit * 8;
+
 		ctx.save();
-		ctx.lineWidth = 3;
+		ctx.lineWidth = 2;
 		ctx.strokeStyle = 'white';
 		ctx.fillStyle = 'darkred';
-		const width = canvas.width * 0.8;
-		const height = canvas.height * 0.8;
-		ctx.strokeRect(width / 8, height / 8, width, height);
-		ctx.fillRect(width / 8, height / 8, width, height);
+		ctx.globalAlpha = 0.6;
+		ctx.strokeRect(widthUnit, heightUnit, width, height);
+		ctx.fillRect(widthUnit, heightUnit, width, height);
 		ctx.restore();
 	}
 }

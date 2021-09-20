@@ -231,6 +231,11 @@ class Game extends RenderComponent {
 		return this.#context;
 	}
 
+	clearCanvas(canvas = this.getCanvas(), ctx = this.getContext()) {
+		const { width, height } = canvas;
+		ctx.clearRect(0, 0, width, height);
+	}
+
 	async init() {
 		console.log('Initializing...');
 		this.#setStyle();
@@ -243,9 +248,9 @@ class Game extends RenderComponent {
 
 	start() {
 		console.log('Starting.,,');
+		window.addEventListener('resize', () => this.#onResize());
 		Clock.start(instant => this.updateAndRender(instant));
 		console.log('Started');
-		window.addEventListener('resize', () => this.#onResize());
 	}
 
 	stop() {
