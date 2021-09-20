@@ -126,6 +126,12 @@ class Component {
 
 	update(instant) {
 	}
+
+	debug(instant, ...params) {
+		if (instant.frame % 60 == 0) {
+			console.log(instant, ...params);
+		}
+	}
 }
 
 class RenderComponent extends Component {

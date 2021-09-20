@@ -4,9 +4,7 @@ class Monoculture extends Game {
 	}
 
 	update(instant) {
-		if (instant.frame % 60 == 0) {
-			console.log('Update:', instant);
-		}
+		this.debug(instant, 'Elapsed:', instant.elapsed(), instant.fps());
 	}
 
 	render(instant) {
