@@ -42,7 +42,7 @@ class Monoculture extends Game {
 		ctx.textAlign = 'center';
 		ctx.font = '48px Segoe UI';
 		ctx.lineWidth = 1.5;
-		ctx.strokeText('FPS: ' + Math.floor(instant.fps()), canvas.width / 2, canvas.height / 2);
+		ctx.strokeText('FPS: ' + Math.floor(instant.fps() * 1000) / 1000, canvas.width / 2, canvas.height / 2);
 
 		ctx.restore();
 	}
