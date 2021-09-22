@@ -41,10 +41,32 @@ class Monoculture extends Game {
 		ctx.fillRect(widthUnit, heightUnit, width, height);
 
 		ctx.textAlign = 'center';
-		ctx.font = '48px Segoe UI';
+		ctx.textBaseline = 'middle';
+		//ctx.font = '48px Segoe UI';
+		ctx.font = '8em Segoe UI';
+		const text = 'FPS: ' + Math.floor(instant.fps() * 1000) / 1000;
+
+		const measure = ctx.measureText(text);
+		//this.debug(instant, measure);
+
+		ctx.save();
 		ctx.lineWidth = 1.5;
 		ctx.fillStyle = 'white';
-		ctx.fillText('FPS: ' + Math.floor(instant.fps() * 1000) / 1000, canvas.width / 2, canvas.height / 2);
+		ctx.shadowOffsetX = 15;
+		ctx.shadowOffsetY = 15;
+		ctx.shadowColor = '#666';
+		ctx.shadowBlur = 3;
+		ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+		ctx.restore();
+
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = 'cornflowerblue';
+		ctx.strokeRect(
+			(canvas.width - measure.width) / 2,
+			(canvas.height / 2) - measure.actualBoundingBoxAscent,
+			measure.width,
+			measure.actualBoundingBoxAscent + measure.actualBoundingBoxDescent
+		);
 
 		ctx.restore();
 	}
@@ -76,12 +98,4 @@ window.addEventListener('load', async () => {
 
 	const transformed = point.matrixTransform(matrix);
 	console.log(transformed);
-	console.log(point);
-
-	const box1 = new Box(55, 55, 45, 45);
-	const box2 = new Box(100, 100, 50, 50);
-	console.log(box1);
-	console.log(box2);
-	console.log(box1.intersects(box2));
-	console.log(box2.intersects(box1));
 });
