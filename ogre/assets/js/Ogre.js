@@ -66,9 +66,6 @@ class Box extends DOMRect {
 class Component {
 	#updateActive = true;
 
-	constructor() {
-	}
-
 	isUpdateActive() {
 		return this.#updateActive;
 	}
@@ -112,8 +109,15 @@ class RenderComponent extends Component {
 }
 
 class Layer extends RenderComponent {
+	#renderTarget = null;
+
 	constructor() {
 		super();
+		this.#renderTarget = document.createElement('canvas');
+
+		// TODO: set width/height dynamically
+		this.#renderTarget.width = 300;
+		this.#renderTarget.height = 300;
 	}
 }
 
