@@ -60,22 +60,24 @@ window.addEventListener('load', async () => {
 	//console.log(DOMQuad);
 	//console.log(DOMMatrix);
 
-	const point = new DOMPoint(3, 4, 5, 1);
+	const point = new DOMPoint(3, 4, 5);
 	console.log(point);
+	console.log(point.toJSON());
+	console.log(JSON.stringify(point.toJSON()));
+
 	const matrix = new DOMMatrix([2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1]);
 	console.log(matrix);
 	console.log(matrix.toFloat32Array());
 	console.log(matrix.toFloat64Array());
+
 	const transformed = point.matrixTransform(matrix);
 	console.log(transformed);
 	console.log(point);
+
 	const box1 = new Box(55, 55, 45, 45);
 	const box2 = new Box(100, 100, 50, 50);
 	console.log(box1);
 	console.log(box2);
-	console.log(box1.area);
-	console.log(box2.area);
-	console.log(box1.boundary);
-	console.log(box2.boundary);
 	console.log(box1.intersects(box2));
+	console.log(box2.intersects(box1));
 });
