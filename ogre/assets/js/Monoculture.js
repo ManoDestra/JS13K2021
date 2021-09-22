@@ -63,9 +63,13 @@ window.addEventListener('load', async () => {
 	const point = new DOMPoint(3, 4, 5);
 	console.log(point);
 	console.log(point.toJSON());
-	console.log(JSON.stringify(point.toJSON()));
 
-	const matrix = new DOMMatrix([2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1]);
+	const matrix = new DOMMatrix([
+		2, 0, 0, 0,
+		0, 2, 0, 0,
+		0, 0, 2, 0,
+		0, 0, 0, 1
+	]);
 	console.log(matrix);
 	console.log(matrix.toFloat32Array());
 	console.log(matrix.toFloat64Array());
