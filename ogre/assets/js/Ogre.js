@@ -233,7 +233,11 @@ class Game extends RenderComponent {
 
 	clearCanvas(canvas = this.getCanvas(), ctx = this.getContext()) {
 		const { width, height } = canvas;
-		ctx.clearRect(0, 0, width, height);
+		ctx.save();
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0, 0, width, height);
+		ctx.restore();
 	}
 
 	async init() {
