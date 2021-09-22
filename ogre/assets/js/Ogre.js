@@ -45,68 +45,21 @@ class Clock {
 	}
 }
 
-class Point2D {
-	#x = 0;
-	#y = 0;
-
-	constructor(x = 0, y = 0) {
-		this.#x = x;
-		this.#y = y;
-	}
-
-	getX() {
-		return this.#x;
-	}
-
-	getY() {
-		return this.#y;
-	}
-}
-
-class Box extends Point2D {
-	#w = 0;
-	#h = 0;
-
-	constructor(x = 0, y = 0, w = 0, h = 0) {
-		super(x, y);
-		this.#w = w;
-		this.#h = h;
-	}
-
-	getW() {
-		return this.#w;
-	}
-
-	getH() {
-		return this.#h;
-	}
-
-	getLeft() {
-		return this.getX();
-	}
-
-	getRight() {
-		return this.getX() + this.getW();
-	}
-
-	getTop() {
-		return this.getY();
-	}
-
-	getBottom() {
-		return this.getY() + this.getH();
-	}
-
-	getArea() {
-		return this.getW() * this.getH();
-	}
-
+class Box extends DOMRect {
 	intersects(box) {
-		const left = this.getLeft() >= box.getLeft() && this.getLeft() <= box.getRight();
-		const right = this.getRight() >= box.getLeft() && this.getRight() <= box.getRight();
-		const top = this.getTop() >= box.getTop() && this.getTop() <= box.getBottom();
-		const bottom = this.getBottom() >= box.getTop() && this.getBottom() <= box.getBottom();
+		const left = this.left >= box.left && this.left <= box.right;
+		const right = this.right >= box.left && this.right <= box.right;
+		const top = this.top >= box.top && this.top <= box.bottom;
+		const bottom = this.bottom >= box.top && this.bottom <= box.bottom;
 		return (left || right) && (top || bottom);
+	}
+
+	get area() {
+		return this.width * this.height;
+	}
+
+	get boundary() {
+		return (this.width + this.height) * 2;
 	}
 }
 

@@ -28,7 +28,8 @@ class Monoculture extends Game {
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
 		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'darkred';
+		ctx.fillStyle = '#222';
+
 		//ctx.translate(20, 30);
 		//ctx.scale(canvas.width, canvas.height);
 
@@ -42,7 +43,8 @@ class Monoculture extends Game {
 		ctx.textAlign = 'center';
 		ctx.font = '48px Segoe UI';
 		ctx.lineWidth = 1.5;
-		ctx.strokeText('FPS: ' + Math.floor(instant.fps() * 1000) / 1000, canvas.width / 2, canvas.height / 2);
+		ctx.fillStyle = 'white';
+		ctx.fillText('FPS: ' + Math.floor(instant.fps() * 1000) / 1000, canvas.width / 2, canvas.height / 2);
 
 		ctx.restore();
 	}
@@ -53,10 +55,10 @@ window.addEventListener('load', async () => {
 	await game.init();
 	game.start();
 
-	console.log(DOMPoint);
-	console.log(DOMRect);
-	console.log(DOMQuad);
-	console.log(DOMMatrix);
+	//console.log(DOMPoint);
+	//console.log(DOMRect);
+	//console.log(DOMQuad);
+	//console.log(DOMMatrix);
 
 	const point = new DOMPoint(3, 4, 5, 1);
 	console.log(point);
@@ -67,4 +69,13 @@ window.addEventListener('load', async () => {
 	const transformed = point.matrixTransform(matrix);
 	console.log(transformed);
 	console.log(point);
+	const box1 = new Box(55, 55, 45, 45);
+	const box2 = new Box(100, 100, 50, 50);
+	console.log(box1);
+	console.log(box2);
+	console.log(box1.area);
+	console.log(box2.area);
+	console.log(box1.boundary);
+	console.log(box2.boundary);
+	console.log(box1.intersects(box2));
 });
