@@ -74,15 +74,15 @@ class Monoculture extends Game {
 
 window.addEventListener('load', async () => {
 	const game = new Monoculture();
-	await game.init();
-	game.start();
-	console.log(game);
+	await game.start();
+	console.log(game.assets);
 
 	//console.log(DOMPoint);
 	//console.log(DOMRect);
 	//console.log(DOMQuad);
 	//console.log(DOMMatrix);
 
+	/*
 	const point = new DOMPoint(3, 4, 5);
 	console.log(point);
 	console.log(point.toJSON());
@@ -99,11 +99,5 @@ window.addEventListener('load', async () => {
 
 	const transformed = point.matrixTransform(matrix);
 	console.log(transformed);
-
-	const c1 = new Component();
-	console.log(c1);
-	const c2 = new Component();
-	console.log(c2);
-	const c3 = new Component();
-	console.log(c3);
+	*/
 });

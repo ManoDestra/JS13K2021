@@ -155,6 +155,7 @@ class Game extends RenderComponent {
 	static #canvasClass = 'canvas-pure';
 	#title;
 	#context = null;
+	#assets = null;
 
 	constructor(title) {
 		super();
@@ -226,26 +227,35 @@ class Game extends RenderComponent {
 		ctx.restore();
 	}
 
-	async init() {
+	async #init() {
 		console.log('Initializing: ' + this.getTitle());
 		this.#setStyle();
 		this.#createCanvas();
 		window.addEventListener('resize', () => this.#onResize());
-
-		// TODO: preload assets here
-
+		this.#assets = await this.loadAssets();
 		console.log('Initialized: ' + this.getTitle());
 	}
 
-	start() {
+	async loadAssets() {
+		return {};
+	}
+
+	get assets() {
+		return this.#assets;
+	}
+
+	async start() {
 		console.log('Starting: ' + this.getTitle());
+		await this.#init();
 		Clock.start(instant => this.updateAndRender(instant));
 		console.log('Started: ' + this.getTitle());
 	}
 
+	/*
 	stop() {
 		console.log('Stopping: ' + this.getTitle());
 		Clock.stop();
 		console.log('Stopped: ' + this.getTitle());
 	}
+	*/
 }
