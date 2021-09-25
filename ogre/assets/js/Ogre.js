@@ -233,6 +233,7 @@ class Game extends RenderComponent {
 		this.#createCanvas();
 		window.addEventListener('resize', () => this.#onResize());
 		this.#assets = await this.loadAssets();
+		Object.freeze(this.#assets);
 		console.log('Initialized: ' + this.getTitle());
 	}
 
