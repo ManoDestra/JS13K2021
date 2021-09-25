@@ -1,3 +1,15 @@
+class StartScreen extends Layer {
+	constructor(dimensions) {
+		super(dimensions);
+	}
+}
+
+class IntroScreen extends Layer {
+	constructor(dimensions) {
+		super(dimensions);
+	}
+}
+
 class Monoculture extends Game {
 	#transform = null;
 
@@ -5,8 +17,16 @@ class Monoculture extends Game {
 		super();
 	}
 
+	loadAssets() {
+		const { width, height } = this.getCanvas();
+		const dimensions = { width, height };
+		const start = new StartScreen(dimensions);
+		const intro = new IntroScreen(dimensions);
+		this.addLayers(start, intro);
+		this.removeLayers(start, intro);
+	}
+
 	update(instant) {
-		//this.debug(instant, 'Elapsed:', instant.elapsed(), instant.fps());
 	}
 
 	render(instant) {
@@ -23,7 +43,6 @@ class Monoculture extends Game {
 
 		ctx.save();
 
-		//ctx.lineWidth = 0.02;
 		ctx.lineWidth = 5;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';

@@ -95,6 +95,9 @@ class Component {
 	update(instant) {
 	}
 
+	onResize(dimensions) {
+	}
+
 	debug(instant, ...params) {
 		if (instant.frame % 60 == 0) {
 			console.log(instant, ...params);
@@ -127,15 +130,14 @@ class RenderComponent extends Component {
 }
 
 class Layer extends RenderComponent {
+	#resizeOptions = null;
 	#renderTarget = null;
 
-	constructor() {
+	constructor(dimensions, resizeOptions = { x: 1, y: 1}) {
 		super();
+		this.#resizeOptions = resizeOptions;
 		this.#renderTarget = document.createElement('canvas');
-
-		// TODO: set width/height dynamically
-		this.#renderTarget.width = 300;
-		this.#renderTarget.height = 300;
+		this.onResize(dimensions);
 	}
 
 	init() {
@@ -144,7 +146,11 @@ class Layer extends RenderComponent {
 	term() {
 	}
 
-	onResize(parentDimensions) {
+	onResize(dimensions) {
+		const { width, height } = dimensions;
+		const { x, y } = this.#resizeOptions;
+		this.#renderTarget.width = width * x;
+		this.#renderTarget.height = height * y;
 	}
 
 	get renderTarget() {
@@ -158,10 +164,19 @@ class Game extends RenderComponent {
 	#title;
 	#context = null;
 	#assets = null;
+	#layers = new Map();
 
 	constructor(title) {
 		super();
 		this.#title = title ?? this.constructor.name;
+	}
+
+	addLayers(...layers) {
+		layers.forEach(layer => this.#layers.set(layer.id, layer));
+	}
+
+	removeLayers(...layers) {
+		layers.map(l => l.id).forEach(i => this.#layers.delete(i));
 	}
 
 	#setStyle() {
