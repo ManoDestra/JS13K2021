@@ -63,8 +63,28 @@ class Box extends DOMRect {
 	}
 }
 
+class UniqueIdentifier {
+	static * get() {
+		let i = 0;
+		while (true) {
+			i++;
+			yield i;
+		}
+	}
+}
+
 class Component {
+	static #idProvider = UniqueIdentifier.get();
+	#id = 0;
 	#updateActive = true;
+
+	constructor() {
+		this.#id = Component.#idProvider.next().value;
+	}
+
+	get id() {
+		return this.#id;
+	}
 
 	isUpdateActive() {
 		return this.#updateActive;
@@ -207,25 +227,25 @@ class Game extends RenderComponent {
 	}
 
 	async init() {
-		console.log('Initializing...');
+		console.log('Initializing: ' + this.getTitle());
 		this.#setStyle();
 		this.#createCanvas();
 		window.addEventListener('resize', () => this.#onResize());
 
 		// TODO: preload assets here
 
-		console.log('Initialized');
+		console.log('Initialized: ' + this.getTitle());
 	}
 
 	start() {
-		console.log('Starting.,,');
+		console.log('Starting: ' + this.getTitle());
 		Clock.start(instant => this.updateAndRender(instant));
-		console.log('Started');
+		console.log('Started: ' + this.getTitle());
 	}
 
 	stop() {
-		console.log('Stopping...');
+		console.log('Stopping: ' + this.getTitle());
 		Clock.stop();
-		console.log('Stopped');
+		console.log('Stopped: ' + this.getTitle());
 	}
 }

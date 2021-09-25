@@ -76,6 +76,7 @@ window.addEventListener('load', async () => {
 	const game = new Monoculture();
 	await game.init();
 	game.start();
+	console.log(game);
 
 	//console.log(DOMPoint);
 	//console.log(DOMRect);
@@ -98,4 +99,11 @@ window.addEventListener('load', async () => {
 
 	const transformed = point.matrixTransform(matrix);
 	console.log(transformed);
+
+	const c1 = new Component();
+	console.log(c1);
+	const c2 = new Component();
+	console.log(c2);
+	const c3 = new Component();
+	console.log(c3);
 });
