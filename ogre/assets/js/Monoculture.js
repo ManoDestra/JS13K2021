@@ -75,7 +75,6 @@ class Monoculture extends Game {
 window.addEventListener('load', async () => {
 	const game = new Monoculture();
 	await game.start();
-	console.log(game.assets);
 
 	//console.log(DOMPoint);
 	//console.log(DOMRect);

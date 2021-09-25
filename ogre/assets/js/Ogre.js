@@ -21,7 +21,6 @@ class Clock {
 		Clock.#hook = callback;
 		Clock.#instant.lastTick = Clock.#instant.tick;
 		Clock.#instant.frame = window.requestAnimationFrame(Clock.#loop);
-		console.log('Clock Started');
 	}
 
 	static stop() {
@@ -30,7 +29,6 @@ class Clock {
 		}
 
 		Clock.#hook = null;
-		console.log('Clock Stopped');
 	}
 
 	static #loop(tick) {
@@ -148,6 +146,10 @@ class Layer extends RenderComponent {
 
 	onResize(parentDimensions) {
 	}
+
+	get renderTarget() {
+		return this.#renderTarget;
+	}
 }
 
 class Game extends RenderComponent {
@@ -228,13 +230,11 @@ class Game extends RenderComponent {
 	}
 
 	async #init() {
-		console.log('Initializing: ' + this.getTitle());
 		this.#setStyle();
 		this.#createCanvas();
 		window.addEventListener('resize', () => this.#onResize());
 		this.#assets = await this.loadAssets();
 		Object.freeze(this.#assets);
-		console.log('Initialized: ' + this.getTitle());
 	}
 
 	async loadAssets() {
@@ -246,17 +246,7 @@ class Game extends RenderComponent {
 	}
 
 	async start() {
-		console.log('Starting: ' + this.getTitle());
 		await this.#init();
 		Clock.start(instant => this.updateAndRender(instant));
-		console.log('Started: ' + this.getTitle());
 	}
-
-	/*
-	stop() {
-		console.log('Stopping: ' + this.getTitle());
-		Clock.stop();
-		console.log('Stopped: ' + this.getTitle());
-	}
-	*/
 }
