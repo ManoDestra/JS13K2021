@@ -119,6 +119,15 @@ class Layer extends RenderComponent {
 		this.#renderTarget.width = 300;
 		this.#renderTarget.height = 300;
 	}
+
+	init() {
+	}
+
+	term() {
+	}
+
+	onResize(parentDimensions) {
+	}
 }
 
 class Game extends RenderComponent {
@@ -201,6 +210,7 @@ class Game extends RenderComponent {
 		console.log('Initializing...');
 		this.#setStyle();
 		this.#createCanvas();
+		window.addEventListener('resize', () => this.#onResize());
 
 		// TODO: preload assets here
 
@@ -209,7 +219,6 @@ class Game extends RenderComponent {
 
 	start() {
 		console.log('Starting.,,');
-		window.addEventListener('resize', () => this.#onResize());
 		Clock.start(instant => this.updateAndRender(instant));
 		console.log('Started');
 	}
