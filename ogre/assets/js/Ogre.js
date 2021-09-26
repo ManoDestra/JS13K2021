@@ -135,6 +135,7 @@ class Layer extends RenderComponent {
 	#renderContext = null;
 	#left = 0;
 	#top = 0;
+	#ratio = 0;
 
 	constructor(dimensions, resizeOptions = { x: 0, y: 0, w: 1, h: 1}) {
 		super();
@@ -174,6 +175,14 @@ class Layer extends RenderComponent {
 			w: this.#renderTarget.width,
 			h: this.#renderTarget.height
 		};
+	}
+
+	get ratio() {
+		return this.#ratio;
+	}
+
+	set ratio(r) {
+		this.#ratio = r;
 	}
 }
 
@@ -233,7 +242,6 @@ class Game extends RenderComponent {
 	}
 
 	#onResize() {
-		console.log('In It To Win It!');
 		const canvas = this.getCanvas();
 		if (canvas) {
 			const { clientWidth: cw, clientHeight: ch } = document.body;
@@ -243,10 +251,8 @@ class Game extends RenderComponent {
 				width: cw,
 				height: ch
 			};
-			console.log(dimensions);
 			canvas.width = dimensions.width;
 			canvas.height = dimensions.height;
-			console.log(canvas);
 			for (let e of this.#layers.entries()) {
 				const [ key, layer ] = e;
 				layer.onResize(dimensions);
@@ -303,16 +309,23 @@ class Game extends RenderComponent {
 	render(instant) {
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
+		this.clearCanvas();
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
 			layer.render(instant);
 
-			// TODO: render layer's canvas to game canvas based on layer dimensions and render target
-			const dimensions = layer.dimensions;
-			const rt = layer.renderTarget;
-			this.debug(instant, dimensions);
-			const { x, y, w, h } = dimensions;
-			ctx.drawImage(rt, x, y, w, h);
+			// TODO: needs to be dynamically handled elsewhere
+			layer.ratio = 1;
+
+			if (layer.ratio > 0) {
+				const dimensions = layer.dimensions;
+				const rt = layer.renderTarget;
+				const { x, y, w, h } = dimensions;
+				ctx.save();
+				ctx.globalAlpha = layer.ratio;
+				ctx.drawImage(rt, x, y, w, h);
+				ctx.restore();
+			}
 		}
 	}
 
