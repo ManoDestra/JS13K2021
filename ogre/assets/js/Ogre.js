@@ -326,12 +326,18 @@ class Game extends RenderComponent {
 			const [ key, layer ] = e;
 			layer.render(instant);
 			if (layer.ratio > 0) {
-				const dimensions = layer.dimensions;
-				const rt = layer.renderTarget;
-				const { x, y, w, h } = dimensions;
+				const { x, y, w, h } = layer.dimensions;
+
 				ctx.save();
 				ctx.globalAlpha = layer.ratio;
-				ctx.drawImage(rt, x, y, w, h);
+				//ctx.filter = 'blur(6px)';
+				//ctx.filter = 'sepia(1)';
+				//ctx.filter = 'grayscale(0.7)';
+				//ctx.filter = 'invert(0)';
+				//ctx.filter = 'brightness(1)';
+				//ctx.filter = 'contrast(1)';
+				//ctx.filter = 'opacity(1)';
+				ctx.drawImage(layer.renderTarget, x, y, w, h);
 				ctx.restore();
 			}
 		}

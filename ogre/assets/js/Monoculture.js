@@ -9,6 +9,8 @@ class StartScreen extends Layer {
 		const deltaHeight = height / 10;
 		this.renderContext.fillStyle = 'darkred';
 		this.renderContext.fillRect(deltaWidth, deltaHeight, deltaWidth * 8, deltaHeight * 8);
+		this.renderContext.strokeStyle = 'white';
+		this.renderContext.strokeRect(0, 0, width, height);
 	}
 }
 
@@ -23,6 +25,8 @@ class IntroScreen extends Layer {
 		const deltaHeight = height / 10;
 		this.renderContext.fillStyle = 'darkblue';
 		this.renderContext.fillRect(deltaWidth, deltaHeight, deltaWidth * 8, deltaHeight * 8);
+		this.renderContext.strokeStyle = 'yellow';
+		this.renderContext.strokeRect(0, 0, width, height);
 	}
 }
 
