@@ -1,12 +1,28 @@
 class StartScreen extends Layer {
 	constructor(dimensions) {
-		super(dimensions);
+		super(dimensions, { x: 0, y: 0, w: 0.5, h: 1 });
+	}
+
+	render(instant) {
+		const { width, height } = this.renderTarget;
+		const deltaWidth = width / 10;
+		const deltaHeight = height / 10;
+		this.renderContext.fillStyle = 'darkred';
+		this.renderContext.fillRect(deltaWidth, deltaHeight, deltaWidth * 8, deltaHeight * 8);
 	}
 }
 
 class IntroScreen extends Layer {
 	constructor(dimensions) {
-		super(dimensions);
+		super(dimensions, { x: 0.5, y: 0, w: 0.5, h: 1 });
+	}
+
+	render(instant) {
+		const { width, height } = this.renderTarget;
+		const deltaWidth = width / 10;
+		const deltaHeight = height / 10;
+		this.renderContext.fillStyle = 'darkblue';
+		this.renderContext.fillRect(deltaWidth, deltaHeight, deltaWidth * 8, deltaHeight * 8);
 	}
 }
 

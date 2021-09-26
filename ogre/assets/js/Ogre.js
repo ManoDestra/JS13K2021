@@ -132,6 +132,7 @@ class RenderComponent extends Component {
 class Layer extends RenderComponent {
 	#resizeOptions = null;
 	#renderTarget = null;
+	#renderContext = null;
 	#left = 0;
 	#top = 0;
 
@@ -139,6 +140,7 @@ class Layer extends RenderComponent {
 		super();
 		this.#resizeOptions = resizeOptions;
 		this.#renderTarget = document.createElement('canvas');
+		this.#renderContext = this.#renderTarget.getContext('2d');
 		this.onResize(dimensions);
 	}
 
@@ -159,6 +161,10 @@ class Layer extends RenderComponent {
 
 	get renderTarget() {
 		return this.#renderTarget;
+	}
+
+	get renderContext() {
+		return this.#renderContext;
 	}
 
 	get dimensions() {
@@ -295,6 +301,8 @@ class Game extends RenderComponent {
 	}
 
 	render(instant) {
+		const canvas = this.getCanvas();
+		const ctx = this.getContext();
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
 			layer.render(instant);
@@ -302,7 +310,9 @@ class Game extends RenderComponent {
 			// TODO: render layer's canvas to game canvas based on layer dimensions and render target
 			const dimensions = layer.dimensions;
 			const rt = layer.renderTarget;
-			this.debug(instant, dimensions, rt);
+			this.debug(instant, dimensions);
+			const { x, y, w, h } = dimensions;
+			ctx.drawImage(rt, x, y, w, h);
 		}
 	}
 
