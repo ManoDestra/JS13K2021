@@ -1,3 +1,11 @@
+const LayerState = {
+	INACTIVE: 0,
+	INITIALIZING: 1,
+	ACTIVE: 2,
+	TERMINATING: 3
+};
+Object.freeze(LayerState);
+
 class Clock {
 	static #hook = null;
 	static #instant = {
@@ -43,6 +51,16 @@ class Clock {
 	}
 }
 
+class UniqueIdentifier {
+	static * get() {
+		let i = 0;
+		while (true) {
+			i++;
+			yield i;
+		}
+	}
+}
+
 class Box extends DOMRect {
 	intersects(box) {
 		const left = this.left >= box.left && this.left <= box.right;
@@ -58,16 +76,6 @@ class Box extends DOMRect {
 
 	get boundary() {
 		return (this.width + this.height) * 2;
-	}
-}
-
-class UniqueIdentifier {
-	static * get() {
-		let i = 0;
-		while (true) {
-			i++;
-			yield i;
-		}
 	}
 }
 
@@ -136,8 +144,9 @@ class Layer extends RenderComponent {
 	#left = 0;
 	#top = 0;
 	#ratio = 0;
+	static #defaultResizeOptions = { x: 0, y: 0, w: 1, h: 1 };
 
-	constructor(dimensions, resizeOptions = { x: 0, y: 0, w: 1, h: 1}) {
+	constructor(dimensions, resizeOptions = Layer.#defaultResizeOptions) {
 		super();
 		this.#resizeOptions = resizeOptions;
 		this.#renderTarget = document.createElement('canvas');
