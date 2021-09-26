@@ -145,6 +145,8 @@ class Layer extends RenderComponent {
 	#top = 0;
 	#ratio = 0;
 	static #defaultResizeOptions = { x: 0, y: 0, w: 1, h: 1 };
+	#state = LayerState.INACTIVE;
+	#previousState = LayerState.INACTIVE;
 
 	constructor(dimensions, resizeOptions = Layer.#defaultResizeOptions) {
 		super();
@@ -152,6 +154,19 @@ class Layer extends RenderComponent {
 		this.#renderTarget = document.createElement('canvas');
 		this.#renderContext = this.#renderTarget.getContext('2d');
 		this.onResize(dimensions);
+	}
+
+	get state() {
+		return this.#state;
+	}
+
+	// TODO: do we need this?
+	set state(s) {
+		this.#state = s;
+	}
+
+	advanceState() {
+		this.#state = (this.#state + 1) % 4;
 	}
 
 	init() {
@@ -330,6 +345,7 @@ class Game extends RenderComponent {
 
 				ctx.save();
 				ctx.globalAlpha = layer.ratio;
+
 				//ctx.filter = 'blur(6px)';
 				//ctx.filter = 'sepia(1)';
 				//ctx.filter = 'grayscale(0.7)';
@@ -337,6 +353,7 @@ class Game extends RenderComponent {
 				//ctx.filter = 'brightness(1)';
 				//ctx.filter = 'contrast(1)';
 				//ctx.filter = 'opacity(1)';
+
 				ctx.drawImage(layer.renderTarget, x, y, w, h);
 				ctx.restore();
 			}
