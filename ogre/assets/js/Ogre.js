@@ -132,8 +132,10 @@ class RenderComponent extends Component {
 class Layer extends RenderComponent {
 	#resizeOptions = null;
 	#renderTarget = null;
+	#left = 0;
+	#top = 0;
 
-	constructor(dimensions, resizeOptions = { x: 1, y: 1}) {
+	constructor(dimensions, resizeOptions = { x: 0, y: 0, w: 1, h: 1}) {
 		super();
 		this.#resizeOptions = resizeOptions;
 		this.#renderTarget = document.createElement('canvas');
@@ -148,13 +150,24 @@ class Layer extends RenderComponent {
 
 	onResize(dimensions) {
 		const { width, height } = dimensions;
-		const { x, y } = this.#resizeOptions;
-		this.#renderTarget.width = width * x;
-		this.#renderTarget.height = height * y;
+		const { x, y, w, h } = this.#resizeOptions;
+		this.#left = width * x;
+		this.#top = height * y;
+		this.#renderTarget.width = width * w;
+		this.#renderTarget.height = height * h;
 	}
 
 	get renderTarget() {
 		return this.#renderTarget;
+	}
+
+	get dimensions() {
+		return {
+			x: this.#left,
+			y: this.#top,
+			w: this.#renderTarget.width,
+			h: this.#renderTarget.height
+		};
 	}
 }
 
@@ -214,10 +227,24 @@ class Game extends RenderComponent {
 	}
 
 	#onResize() {
+		console.log('In It To Win It!');
 		const canvas = this.getCanvas();
 		if (canvas) {
-			canvas.width = document.body.clientWidth;
-			canvas.height = document.body.clientHeight;
+			const { clientWidth: cw, clientHeight: ch } = document.body;
+			const dimensions = {
+				x: 0,
+				y: 0,
+				width: cw,
+				height: ch
+			};
+			console.log(dimensions);
+			canvas.width = dimensions.width;
+			canvas.height = dimensions.height;
+			console.log(canvas);
+			for (let e of this.#layers.entries()) {
+				const [ key, layer ] = e;
+				layer.onResize(dimensions);
+			}
 		} else {
 			console.warn('No Canvas Found');
 		}
@@ -258,6 +285,25 @@ class Game extends RenderComponent {
 
 	get assets() {
 		return this.#assets;
+	}
+
+	update(instant) {
+		for (let e of this.#layers.entries()) {
+			const [ key, layer ] = e;
+			layer.update(instant);
+		}
+	}
+
+	render(instant) {
+		for (let e of this.#layers.entries()) {
+			const [ key, layer ] = e;
+			layer.render(instant);
+
+			// TODO: render layer's canvas to game canvas based on layer dimensions and render target
+			const dimensions = layer.dimensions;
+			const rt = layer.renderTarget;
+			this.debug(instant, dimensions, rt);
+		}
 	}
 
 	async start() {

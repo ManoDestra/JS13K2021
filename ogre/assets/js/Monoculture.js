@@ -18,17 +18,22 @@ class Monoculture extends Game {
 	}
 
 	loadAssets() {
-		const { width, height } = this.getCanvas();
+		const canvas = this.getCanvas();
+		console.log(canvas);
+		const { width, height } = canvas;
+		console.log(width, height);
 		const dimensions = { width, height };
+		console.log('Initial Dimensions:', dimensions);
 		const start = new StartScreen(dimensions);
 		const intro = new IntroScreen(dimensions);
 		this.addLayers(start, intro);
-		this.removeLayers(start, intro);
+		//this.removeLayers(start, intro);
 	}
 
-	update(instant) {
-	}
+	//update(instant) {
+	//}
 
+	/*
 	render(instant) {
 		const canvas = this.getCanvas();
 		const ctx = this.getContext();
@@ -89,9 +94,11 @@ class Monoculture extends Game {
 
 		ctx.restore();
 	}
+	*/
 }
 
 window.addEventListener('load', async () => {
+	console.log(document.body);
 	const game = new Monoculture();
 	await game.start();
 
