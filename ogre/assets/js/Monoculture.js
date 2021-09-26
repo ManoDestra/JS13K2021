@@ -43,6 +43,9 @@ class Monoculture extends Game {
 		const dimensions = { width, height };
 		const start = new StartScreen(dimensions);
 		const intro = new IntroScreen(dimensions);
+		start.advanceState();
+		setTimeout(() => intro.advanceState(), 1000);
+		//intro.advanceState();
 		this.addLayers(start, intro);
 		//this.removeLayers(start, intro);
 	}

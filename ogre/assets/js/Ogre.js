@@ -324,12 +324,31 @@ class Game extends RenderComponent {
 	}
 
 	update(instant) {
+		const transitionDuration = 1000;
+		const delta = instant.elapsed() / transitionDuration;
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
 			layer.update(instant);
+			switch (layer.state) {
+				case LayerState.INITIALIZING:
+					layer.ratio += delta;
+					if (layer.ratio >= 1) {
+						console.log('Activated');
+						layer.ratio = 1;
+						layer.advanceState();
+					}
 
-			// TODO: needs to be dynamically handled
-			layer.ratio = 1;
+					break;
+				case LayerState.TERMINATING:
+					layer.ratio -= delta;
+					if (layer.ratio <= 0) {
+						console.log('Deactivated');
+						layer.ratio = 0;
+						layer.advanceState();
+					}
+
+					break;
+			}
 		}
 	}
 
