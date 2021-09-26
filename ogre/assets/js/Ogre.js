@@ -303,6 +303,9 @@ class Game extends RenderComponent {
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
 			layer.update(instant);
+
+			// TODO: needs to be dynamically handled
+			layer.ratio = 1;
 		}
 	}
 
@@ -313,10 +316,6 @@ class Game extends RenderComponent {
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
 			layer.render(instant);
-
-			// TODO: needs to be dynamically handled elsewhere
-			layer.ratio = 1;
-
 			if (layer.ratio > 0) {
 				const dimensions = layer.dimensions;
 				const rt = layer.renderTarget;
