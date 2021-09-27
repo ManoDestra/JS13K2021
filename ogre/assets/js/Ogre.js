@@ -214,6 +214,7 @@ class Game extends RenderComponent {
 	static #canvasId = 'cvsPure';
 	static #canvasClass = 'canvas-pure';
 	#title;
+	#transitionDuration = 1000;
 	#context = null;
 	#assets = null;
 	#layers = new Map();
@@ -221,6 +222,17 @@ class Game extends RenderComponent {
 	constructor(title) {
 		super();
 		this.#title = title ?? this.constructor.name;
+	}
+
+	getLayer(id) {
+		for (let e of this.#layers.entries()) {
+			const [ key, layer ] = e;
+			if (layer.id == id) {
+				return layer;
+			}
+		}
+
+		return null;
 	}
 
 	addLayers(...layers) {
@@ -324,8 +336,7 @@ class Game extends RenderComponent {
 	}
 
 	update(instant) {
-		const transitionDuration = 1000;
-		const delta = instant.elapsed() / transitionDuration;
+		const delta = instant.elapsed() / this.#transitionDuration;
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
 			layer.update(instant);
@@ -333,7 +344,7 @@ class Game extends RenderComponent {
 				case LayerState.INITIALIZING:
 					layer.ratio += delta;
 					if (layer.ratio >= 1) {
-						console.log('Activated');
+						console.log(layer.constructor.name, 'Activated');
 						layer.ratio = 1;
 						layer.advanceState();
 					}
@@ -342,7 +353,7 @@ class Game extends RenderComponent {
 				case LayerState.TERMINATING:
 					layer.ratio -= delta;
 					if (layer.ratio <= 0) {
-						console.log('Deactivated');
+						console.log(layer.constructor.name, 'Deactivated');
 						layer.ratio = 0;
 						layer.advanceState();
 					}
