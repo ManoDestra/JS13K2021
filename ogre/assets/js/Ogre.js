@@ -336,7 +336,10 @@ class Game extends RenderComponent {
 		const delta = instant.elapsed() / this.#transitionDuration;
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
-			layer.update(instant);
+			if (layer.isUpdateActive()) {
+				layer.update(instant);
+			}
+
 			switch (layer.state) {
 				case LayerState.INITIALIZING:
 					layer.ratio += delta;
@@ -366,23 +369,25 @@ class Game extends RenderComponent {
 		this.clearCanvas();
 		for (let e of this.#layers.entries()) {
 			const [ key, layer ] = e;
-			layer.render(instant);
-			if (layer.ratio > 0) {
-				const { x, y, w, h } = layer.dimensions;
+			if (layer.isRenderActive()) {
+				layer.render(instant);
+				if (layer.ratio > 0) {
+					const { x, y, w, h } = layer.dimensions;
 
-				ctx.save();
-				ctx.globalAlpha = layer.ratio;
+					ctx.save();
+					ctx.globalAlpha = layer.ratio;
 
-				//ctx.filter = 'blur(6px)';
-				//ctx.filter = 'sepia(1)';
-				//ctx.filter = 'grayscale(0.7)';
-				//ctx.filter = 'invert(0)';
-				//ctx.filter = 'brightness(1)';
-				//ctx.filter = 'contrast(1)';
-				//ctx.filter = 'opacity(1)';
+					//ctx.filter = 'blur(6px)';
+					//ctx.filter = 'sepia(1)';
+					//ctx.filter = 'grayscale(0.7)';
+					//ctx.filter = 'invert(0)';
+					//ctx.filter = 'brightness(1)';
+					//ctx.filter = 'contrast(1)';
+					//ctx.filter = 'opacity(1)';
 
-				ctx.drawImage(layer.renderTarget, x, y, w, h);
-				ctx.restore();
+					ctx.drawImage(layer.renderTarget, x, y, w, h);
+					ctx.restore();
+				}
 			}
 		}
 	}
