@@ -225,14 +225,7 @@ class Game extends RenderComponent {
 	}
 
 	getLayer(id) {
-		for (let e of this.#layers.entries()) {
-			const [ key, layer ] = e;
-			if (layer.id == id) {
-				return layer;
-			}
-		}
-
-		return null;
+		return this.#layers.get(id);
 	}
 
 	addLayers(...layers) {
@@ -241,6 +234,10 @@ class Game extends RenderComponent {
 
 	removeLayers(...layers) {
 		layers.map(l => l.id).forEach(i => this.#layers.delete(i));
+	}
+
+	advanceLayers(...layers) {
+		layers.forEach(l => l.advanceState());
 	}
 
 	#setStyle() {
