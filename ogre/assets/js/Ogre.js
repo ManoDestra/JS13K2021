@@ -214,7 +214,7 @@ class Game extends RenderComponent {
 	static #canvasId = 'cvsPure';
 	static #canvasClass = 'canvas-pure';
 	#title;
-	#transitionDuration = 1000;
+	#transitionDuration = 1500;
 	#context = null;
 	#assets = null;
 	#layers = new Map();
