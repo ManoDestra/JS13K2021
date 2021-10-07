@@ -186,19 +186,19 @@ class Ship extends Urge.Sprite {
 		const delta = this.getWidth() * 4 * instant.elapsed() / 1000;
 		const canvas = this.getCanvas();
 		if (this.#active) {
-			if (Nucleus.Keys.checkKey('w')) {
+			if (Nucleus.Keys.checkKey('w') || Nucleus.Keys.checkCode(38)) {
 				this.offsetY(-delta);
 			}
 
-			if (Nucleus.Keys.checkKey('s')) {
+			if (Nucleus.Keys.checkKey('s') || Nucleus.Keys.checkCode(40)) {
 				this.offsetY(delta);
 			}
 
-			if (Nucleus.Keys.checkKey('a')) {
+			if (Nucleus.Keys.checkKey('a') || Nucleus.Keys.checkCode(37)) {
 				this.offsetX(-delta);
 			}
 
-			if (Nucleus.Keys.checkKey('d')) {
+			if (Nucleus.Keys.checkKey('d') || Nucleus.Keys.checkCode(39)) {
 				this.offsetX(delta);
 			}
 
