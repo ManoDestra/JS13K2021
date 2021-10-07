@@ -110,7 +110,6 @@ const Urge = (() => {
 				const validRight = c[0] <= box.getRight();
 				const validTop = c[1] >= box.getTop();
 				const validBottom = c[1] <= box.getBottom();
-				//console.log(c, validLeft, validRight, validTop, validBottom);
 				return validLeft && validRight && validTop && validBottom;
 			});
 
@@ -583,7 +582,6 @@ const Urge = (() => {
 			const incomingRatio = this.#navigationElapsed / this.#transitionDuration;
 			const currentScreenRatio = navigating ? (1 - incomingRatio) : 1;
 			const incomingScreenRatio = navigating ? incomingRatio : 0;
-			//this.debug(instant, 'FPS', instant.fps());
 
 			// TODO: only update current and incoming screens?
 			this.forEachScreen(screen => {

@@ -300,8 +300,8 @@ class PlayingScreen extends Urge.Screen {
 						if (sc instanceof Ship) {
 							if (sc.getBoundingBox().intersects(c.getBoundingBox())) {
 								// TODO: enemy explosion?
+								sc.reduceHealth(c.getHealth());
 								map.delete(id);
-								sc.reduceHealth(25);
 								if (!sc.isAlive()) {
 									scMap.delete(scId);
 								}
@@ -321,14 +321,17 @@ class PlayingScreen extends Urge.Screen {
 		}
 	}
 
-	#updatePlaying(instant) {
-		const v = 10;
-		this.#miles += v * instant.elapsed() / 1000;
-		const remaining = this.getRemainingMiles();
+	#checkDeath() {
 		if (!this.#ship.isAlive()) {
 			this.#playState = PlayState.DEATH;
 		}
+	}
 
+	#updatePlaying(instant) {
+		const v = 20;
+		this.#miles += v * instant.elapsed() / 1000;
+		const remaining = this.getRemainingMiles();
+		this.#checkDeath();
 		if (remaining <= 0) {
 			this.#playState = PlayState.BOSS_BATTLE;
 			if (!this.#boss) {
@@ -355,6 +358,7 @@ class PlayingScreen extends Urge.Screen {
 
 	#updateBossBattle(instant) {
 		const store = this.getStore();
+		this.#checkDeath();
 		if (!this.#boss.isAlive()) {
 			this.#playState = PlayState.COMPLETION;
 			this.#boss = null;
@@ -529,7 +533,7 @@ class GameOverScreen extends Urge.Screen {
 
 	update(instant) {
 		this.#totalElapsed += instant.elapsed();
-		if (this.#totalElapsed > 5000 && this.getScreenState() == Urge.ScreenState.ACTIVE) {
+		if (this.#totalElapsed > 3000 && this.getScreenState() == Urge.ScreenState.ACTIVE) {
 			this.navigate(PlayingScreen);
 		}
 	}
