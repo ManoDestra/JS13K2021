@@ -186,19 +186,19 @@ class Ship extends Urge.Sprite {
 		const delta = this.getWidth() * 4 * instant.elapsed() / 1000;
 		const canvas = this.getCanvas();
 		if (this.#active) {
-			if (Nucleus.Keys.checkKey('w') || Nucleus.Keys.checkCode(38)) {
+			if (Nucleus.Keys.checkKey('w') || Nucleus.Keys.isUp()) {
 				this.offsetY(-delta);
 			}
 
-			if (Nucleus.Keys.checkKey('s') || Nucleus.Keys.checkCode(40)) {
+			if (Nucleus.Keys.checkKey('s') || Nucleus.Keys.isDown()) {
 				this.offsetY(delta);
 			}
 
-			if (Nucleus.Keys.checkKey('a') || Nucleus.Keys.checkCode(37)) {
+			if (Nucleus.Keys.checkKey('a') || Nucleus.Keys.isLeft()) {
 				this.offsetX(-delta);
 			}
 
-			if (Nucleus.Keys.checkKey('d') || Nucleus.Keys.checkCode(39)) {
+			if (Nucleus.Keys.checkKey('d') || Nucleus.Keys.isRight()) {
 				this.offsetX(delta);
 			}
 
@@ -212,7 +212,7 @@ class Ship extends Urge.Sprite {
 				this.setY(Math.min(canvas.height - this.getWidth() - sideLimit, Math.max(sideLimit, this.getY())));
 			}
 
-			const spacePressed = Nucleus.Keys.checkKey(' ');
+			const spacePressed = Nucleus.Keys.checkKey(' ') || Nucleus.Keys.isEnter();
 			if (spacePressed && !this.#lastSpacePressed) {
 				this.#screen.post(MessageType.PLAYER_BULLET);
 			}
