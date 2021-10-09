@@ -135,6 +135,7 @@ Nucleus.Keys = (() => {
 	let keyBindings = null;
 
 	function handleKeyDown(e) {
+		console.log(e.keyCode);
 		keyBindings[e.keyCode] = e;
 	}
 
@@ -176,6 +177,26 @@ Nucleus.Keys = (() => {
 		return checkCode(18);
 	}
 
+	function isLeft() {
+		return checkCode(37);
+	}
+
+	function isRight() {
+		return checkCode(39);
+	}
+
+	function isUp() {
+		return checkCode(38);
+	}
+
+	function isDown() {
+		return checkCode(40);
+	}
+
+	function isEnter() {
+		return checkCode(13);
+	}
+
 	return {
 		start,
 		stop,
@@ -183,7 +204,12 @@ Nucleus.Keys = (() => {
 		checkKey,
 		isShift,
 		isControl,
-		isAlt
+		isAlt,
+		isLeft,
+		isRight,
+		isUp,
+		isDown,
+		isEnter
 	};
 })();
 
