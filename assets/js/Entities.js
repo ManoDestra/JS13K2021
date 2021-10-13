@@ -342,17 +342,23 @@ class Hud extends Urge.RenderComponent {
 }
 
 class Enemy extends Urge.Sprite {
+	#initialHealth;
 	#health;
 	#velocity;
 
 	constructor(context, x, y, width, height, health, velocity) {
 		super(context, x, y, width, height);
+		this.#initialHealth = health;
 		this.#health = health;
 		this.#velocity = velocity;
 	}
 
 	getHealth() {
 		return this.#health;
+	}
+
+	getHealthRatio() {
+		return this.getHealth() / this.#initialHealth;
 	}
 
 	getVelocity() {
@@ -370,15 +376,8 @@ class Enemy extends Urge.Sprite {
 }
 
 class Cell extends Enemy {
-	#initialHealth = 0;
-
 	constructor(context, x, y, size, health, velocity) {
 		super(context, x, y, size, size, health, velocity);
-		this.#initialHealth = health;
-	}
-
-	#getHealthRatio() {
-		return this.getHealth() / this.#initialHealth;
 	}
 
 	update(instant) {
@@ -402,7 +401,7 @@ class Cell extends Enemy {
 		ctx.fill();
 		ctx.closePath();
 
-		const size = this.#getHealthRatio() * this.getWidth() / 6;
+		const size = this.getHealthRatio() * this.getWidth() / 6;
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'red';
 		ctx.fillStyle = 'blue';
