@@ -403,7 +403,6 @@ class Cell extends Enemy {
 		ctx.closePath();
 
 		const size = this.#getHealthRatio() * this.getWidth() / 6;
-		this.debug(instant, this.#getHealthRatio(), size);
 		ctx.lineWidth = 3;
 		ctx.strokeStyle = 'red';
 		ctx.fillStyle = 'blue';
