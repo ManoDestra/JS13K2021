@@ -135,7 +135,6 @@ Nucleus.Keys = (() => {
 	let keyBindings = null;
 
 	function handleKeyDown(e) {
-		console.log(e.keyCode);
 		keyBindings[e.keyCode] = e;
 	}
 
