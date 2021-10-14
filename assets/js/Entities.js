@@ -461,5 +461,13 @@ class Incubator extends Enemy {
 		ctx.lineWidth = 3;
 		ctx.strokeRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		ctx.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+
+		ctx.fillStyle = '#100';
+		const w = this.getHealthRatio() * this.getWidth();
+		const h = this.getHealthRatio() * this.getHeight();
+		const x = this.getX() + ((this.getWidth() - w) / 2);
+		const y = this.getY() + ((this.getHeight() - h) / 2);
+		ctx.strokeRect(x, y, w, h);
+		ctx.fillRect(x, y, w, h);
 	}
 }
