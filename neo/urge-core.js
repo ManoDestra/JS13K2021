@@ -73,6 +73,7 @@ class KeyReader {
 class Pulse {
 	#ctx;
 	#sKey = [];
+	#pKey = [];
 
 	constructor(ctx) {
 		this.#ctx = ctx;
@@ -87,12 +88,12 @@ class Pulse {
 		return { width, height };
 	}
 
-	setKeyState(payload) {
-		this.#sKey = payload;
+	setKeyState(s) {
+		this.#sKey = s;
 	}
 
-	setPadState(payload) {
-		//console.log(payload);
+	setPadState(s) {
+		this.#pKey = s;
 	}
 
 	start() {
@@ -103,12 +104,14 @@ class Pulse {
 		this.#sKey.forEach(e => {
 			e[1] = e[0];
 		});
+		// TODO: reset pad state
 	}
 
 	#loop(tick) {
 		GameTime.update(tick);
 		this.#update();
 		this.#render();
+		this.#resetState();
 		this.#fire();
 	}
 
@@ -120,6 +123,9 @@ class Pulse {
 	}
 
 	#render() {
+		// TODO: move to #update()
+		const reader = new KeyReader(this.#sKey);
+
 		this.#ctx.fillStyle = '#111';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
 
@@ -129,16 +135,13 @@ class Pulse {
 		this.#ctx.fillStyle = 'darkred';
 		const { state } = this.#sKey;
 
-		const reader = new KeyReader(this.#sKey);
 		if (reader.isFire()) {
-			// TODO: fix this, as input state needs to update with the pulse clock, not based on what comes in
-			// the clock is faster than the event updates
-			//console.log('Fire', performance.now(), reader.raw());
+			console.log('Fire', performance.now(), reader.raw());
 		}
 
-		const dX = reader.isLeft() ? -x : (reader.isRight() ? x : 0);
-		const dY = reader.isUp() ? -y : (reader.isDown() ? y : 0);
-		this.#ctx.fillRect(x + dX, y + dY, x, y);
+		const dx = (reader.isLeft() ? -x : 0) + (reader.isRight() ? x : 0);
+		const dy = (reader.isUp() ? -y : 0) + (reader.isDown() ? y : 0);
+		this.#ctx.fillRect(x + dx, y + dy, x, y);
 
 		if (this.#ctx.fillText) {
 			this.#ctx.fillStyle = 'cornflowerblue';
@@ -149,7 +152,5 @@ class Pulse {
 			this.#ctx.fillText(fps, 100, 100);
 			this.#ctx.fillText(tick, 100, 200);
 		}
-
-		this.#resetState();
 	}
 }

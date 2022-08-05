@@ -221,10 +221,10 @@ class Urge {
 				payload: e
 			});
 		});
-		Pads.start(gp => {
+		Pads.start(e => {
 			w.postMessage({
 				type: 'GAMEPAD',
-				payload: gp
+				payload: e
 			});
 		});
 	}
