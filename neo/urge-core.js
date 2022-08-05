@@ -26,53 +26,53 @@ class GameTime {
 }
 
 class KeyReader {
-	#state = [];
+	#s = [];
 
-	constructor(state) {
-		this.#state = state;
+	constructor(s) {
+		this.#s = s;
 	}
 
 	raw() {
-		return structuredClone(this.#state);
+		return structuredClone(this.#s);
 	}
 
 	isShift() {
-		return this.#state?.[16]?.[0];
+		return this.#s?.[16]?.[0];
 	}
 
 	isCtrl() {
-		return this.#state?.[17]?.[0];
+		return this.#s?.[17]?.[0];
 	}
 
 	isAlt() {
-		return this.#state?.[18]?.[0];
+		return this.#s?.[18]?.[0];
 	}
 
 	isLeft() {
-		return this.#state?.[65]?.[0] || this.#state?.[37]?.[0];
+		return this.#s?.[65]?.[0] || this.#s?.[37]?.[0];
 	}
 
 	isRight() {
-		return this.#state?.[68]?.[0] || this.#state?.[39]?.[0];
+		return this.#s?.[68]?.[0] || this.#s?.[39]?.[0];
 	}
 
 	isUp() {
-		return this.#state?.[87]?.[0] || this.#state?.[38]?.[0];
+		return this.#s?.[87]?.[0] || this.#s?.[38]?.[0];
 	}
 
 	isDown() {
-		return this.#state?.[83]?.[0] || this.#state?.[40]?.[0];
+		return this.#s?.[83]?.[0] || this.#s?.[40]?.[0];
 	}
 
 	isFire() {
-		return (this.#state?.[32]?.[0] && !this.#state?.[32]?.[1])
-			|| (this.#state?.[13]?.[0] && !this.#state?.[13]?.[1]);
+		return (this.#s?.[32]?.[0] && !this.#s?.[32]?.[1])
+			|| (this.#s?.[13]?.[0] && !this.#s?.[13]?.[1]);
 	}
 }
 
 class Pulse {
 	#ctx;
-	#keyState = [];
+	#sKey = [];
 
 	constructor(ctx) {
 		this.#ctx = ctx;
@@ -88,7 +88,7 @@ class Pulse {
 	}
 
 	setKeyState(payload) {
-		this.#keyState = payload;
+		this.#sKey = payload;
 	}
 
 	setPadState(payload) {
@@ -99,8 +99,8 @@ class Pulse {
 		this.#fire();
 	}
 
-	#resetKeyState() {
-		this.#keyState.forEach(e => {
+	#resetState() {
+		this.#sKey.forEach(e => {
 			e[1] = e[0];
 		});
 	}
@@ -127,9 +127,9 @@ class Pulse {
 		const y = this.#ctx.canvas.height / 3;
 
 		this.#ctx.fillStyle = 'darkred';
-		const { state } = this.#keyState;
+		const { state } = this.#sKey;
 
-		const reader = new KeyReader(this.#keyState);
+		const reader = new KeyReader(this.#sKey);
 		if (reader.isFire()) {
 			// TODO: fix this, as input state needs to update with the pulse clock, not based on what comes in
 			// the clock is faster than the event updates
@@ -150,6 +150,6 @@ class Pulse {
 			this.#ctx.fillText(tick, 100, 200);
 		}
 
-		this.#resetKeyState();
+		this.#resetState();
 	}
 }
