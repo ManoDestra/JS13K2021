@@ -77,6 +77,8 @@ class Pulse {
 
 	constructor(ctx) {
 		this.#ctx = ctx;
+		const game = new Game();
+		game.test();
 	}
 
 	resize(bounds) {

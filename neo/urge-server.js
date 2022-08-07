@@ -1,6 +1,7 @@
 let pulse = null;
 
-importScripts('urge-core.js?rnd=' + Math.random());
+importScripts('game.js?r=' + Math.random());
+importScripts('urge-core.js?r=' + Math.random());
 
 self.onmessage = e => {
 	try {

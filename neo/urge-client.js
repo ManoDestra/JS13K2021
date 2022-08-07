@@ -195,7 +195,7 @@ class Urge {
 	}
 
 	static #initOffscreen() {
-		const w = new Worker('urge-server.js?rnd=' + Math.random());
+		const w = new Worker('urge-server.js?r=' + Math.random());
 
 		const osc = document.querySelector('canvas').transferControlToOffscreen();
 		w.postMessage({
