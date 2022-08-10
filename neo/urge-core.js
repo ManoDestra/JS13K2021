@@ -1,13 +1,35 @@
+class Watch {
+	#c;
+	#p;
+
+	constructor(c) {
+		this.#p = c;
+		this.#c = c;
+	}
+
+	current() {
+		return this.#c;
+	}
+
+	previous() {
+		return this.#p;
+	}
+
+	set(c) {
+		this.#p = this.#c;
+		this.#c = c;
+	}
+}
+
 class GameTime {
-	static #c = 0;
-	static #p = 0;
+	static #s = new Watch(0);
 
 	static current() {
-		return GameTime.#c;
+		return GameTime.#s.current();
 	}
 
 	static previous() {
-		return GameTime.#p;
+		return GameTime.#s.previous();
 	}
 
 	static elapsed() {
@@ -20,8 +42,7 @@ class GameTime {
 	}
 
 	static update(t) {
-		GameTime.#p = GameTime.#c;
-		GameTime.#c = t;
+		GameTime.#s.set(t);
 	}
 }
 

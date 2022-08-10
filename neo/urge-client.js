@@ -203,6 +203,14 @@ class Urge {
 			payload: osc
 		}, [osc]);
 
+		if (crossOriginIsolated) {
+			const shared = new SharedArrayBuffer(8);
+			const array = new Uint8Array(shared);
+			console.log('Array:', array, array.length);
+		} else {
+			console.warn('You can only use a SharedArrayBuffer in a secure context');
+		}
+
 		const r = () => {
 			const payload = Urge.#getBounds();
 			w.postMessage({
