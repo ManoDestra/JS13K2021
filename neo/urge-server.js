@@ -9,7 +9,7 @@ self.onmessage = e => {
 		switch (type) {
 			case 'INIT':
 				const ctx = payload.getContext('2d');
-				game = new Game(ctx);
+				game = new Game(ctx, true);
 				if (!(game instanceof BaseGame)) {
 					throw new Error('Game Class Must Subclass BaseGame');
 				}

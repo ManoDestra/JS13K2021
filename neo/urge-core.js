@@ -91,22 +91,127 @@ class KeyReader {
 	}
 }
 
+class UpdateNode {
+	#a = false;
+
+	constructor() {
+		// TODO: code
+	}
+
+	isActive() {
+		return this.#a;
+	}
+
+	setActive(a) {
+		this.#a = a;
+	}
+
+	update() {
+		// TODO: code
+	}
+}
+
+class RenderNode extends UpdateNode {
+	#os;
+	#ctx = null;
+	#x = 0;
+	#y = 0;
+	#w = 1;
+	#h = 1;
+	#o = 1;
+
+	constructor(os) {
+		super();
+		this.#os = os;
+		const c = os ? this.buildOffscreenCanvas() : this.buildCanvas();
+		this.#ctx = c.getContext('2d');
+	}
+
+	buildOffscreenCanvas() {
+		return new OffscreenCanvas(256, 256);
+	}
+
+	buildCanvas() {
+		if (!document) {
+			return null;
+		}
+
+		const canvas = document.createElement('canvas');
+		canvas.width = 256;
+		canvas.height = 256;
+		return canvas;
+	}
+
+	isOffscreen() {
+		return this.#os;
+	}
+
+	getCanvas() {
+		return this.#ctx.canvas;
+	}
+
+	getX() {
+		return this.#x;
+	}
+
+	setX(x) {
+		this.#x = x;
+	}
+
+	getY() {
+		return this.#y;
+	}
+
+	setY(y) {
+		this.#y = y;
+	}
+
+	getWidth() {
+		return this.#w;
+	}
+
+	setWidth(w) {
+		this.#w = w;
+	}
+
+	getHeight() {
+		return this.#h;
+	}
+
+	setHeight(h) {
+		this.#h = h;
+	}
+
+	getOpacity() {
+		return this.#o;
+	}
+
+	setOpacity(o) {
+		this.#o = o;
+	}
+
+	render() {
+	}
+}
+
 class BaseGame {
 	#ctx;
+	#os;
+	#nodes = [];
 	#sKey = [];
 	#pKey = [];
 
-	constructor(ctx) {
+	constructor(ctx, os) {
 		this.#ctx = ctx;
+		this.#os = os;
+	}
+
+	isOffscreen() {
+		return this.#os;
 	}
 
 	resize(bounds) {
 		Object.assign(this.#ctx.canvas, bounds);
-	}
-
-	#bounds() {
-		const { width, height } = this.#ctx.canvas;
-		return { width, height };
 	}
 
 	setKeyState(s) {
@@ -119,6 +224,11 @@ class BaseGame {
 
 	start() {
 		this.#fire();
+	}
+
+	#bounds() {
+		const { width, height } = this.#ctx.canvas;
+		return { width, height };
 	}
 
 	#resetState() {
@@ -141,10 +251,22 @@ class BaseGame {
 	}
 
 	#update() {
+		// TODO: possibly pass the KeyReader to the nodes?
+		const reader = new KeyReader(this.#sKey);
+		const isUp = reader.isUp();
+		const isDown = reader.isDown();
+		const isLeft = reader.isLeft();
+		const isRight = reader.isRight();
+		const isFire = reader.isFire();
+		this.#nodes.filter(n => n instanceof UpdateNode).forEach(n => n.update());
 	}
 
 	#render() {
-		// TODO: move to #update()
+		this.#ctx.fillStyle = '#6f0000';
+		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
+		this.#nodes.filter(n => n instanceof RenderNode).forEach(n => n.render());
+
+		/*
 		const reader = new KeyReader(this.#sKey);
 
 		this.#ctx.fillStyle = '#111';
@@ -157,7 +279,7 @@ class BaseGame {
 		const { state } = this.#sKey;
 
 		if (reader.isFire()) {
-			console.log('Fire', performance.now(), reader.raw());
+			console.log('Fire', performance.now());
 		}
 
 		const dx = (reader.isLeft() ? -x : 0) + (reader.isRight() ? x : 0);
@@ -173,5 +295,6 @@ class BaseGame {
 			this.#ctx.fillText(fps, 100, 100);
 			this.#ctx.fillText(tick, 100, 200);
 		}
+		*/
 	}
 }
