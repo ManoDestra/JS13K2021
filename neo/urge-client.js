@@ -182,15 +182,19 @@ class Urge {
 
 	static #initOnscreen() {
 		const ctx = document.querySelector('canvas').getContext('2d');
-		const pulse = new Pulse(ctx);
+		const game = new Game(ctx);
+		if (!(game instanceof BaseGame)) {
+			throw new Error('Game Class Must Subclass BaseGame');
+		}
+
 		const r = () => {
 			const bounds = Urge.#getBounds();
-			pulse.resize(bounds);
+			game.resize(bounds);
 		};
 		Urge.#bindResize(r);
-		pulse.start();
+		game.start();
 
-		KeyWriter.start(e => pulse.setKeyState(e));
+		KeyWriter.start(e => game.setKeyState(e));
 		Pads.start();
 	}
 

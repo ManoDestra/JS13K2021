@@ -91,15 +91,13 @@ class KeyReader {
 	}
 }
 
-class Pulse {
+class BaseGame {
 	#ctx;
 	#sKey = [];
 	#pKey = [];
 
 	constructor(ctx) {
 		this.#ctx = ctx;
-		const game = new Game();
-		game.test();
 	}
 
 	resize(bounds) {

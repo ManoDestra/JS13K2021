@@ -1,7 +1,7 @@
-let pulse = null;
+let game = null;
 
-importScripts('game.js?r=' + Math.random());
 importScripts('urge-core.js?r=' + Math.random());
+importScripts('game.js?r=' + Math.random());
 
 self.onmessage = e => {
 	try {
@@ -9,19 +9,23 @@ self.onmessage = e => {
 		switch (type) {
 			case 'INIT':
 				const ctx = payload.getContext('2d');
-				pulse = new Pulse(ctx);
+				game = new Game(ctx);
+				if (!(game instanceof BaseGame)) {
+					throw new Error('Game Class Must Subclass BaseGame');
+				}
+
 				break;
 			case 'START':
-				pulse.start();
+				game.start();
 				break;
 			case 'RESIZE':
-				pulse.resize(payload);
+				game.resize(payload);
 				break;
 			case 'KEYBOARD':
-				pulse.setKeyState(payload);
+				game.setKeyState(payload);
 				break;
 			case 'GAMEPAD':
-				pulse.setPadState(payload);
+				game.setPadState(payload);
 				break;
 			case 'MOUSE':
 				// TODO: code
