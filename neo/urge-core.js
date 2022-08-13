@@ -146,8 +146,12 @@ class RenderNode extends UpdateNode {
 		return this.#os;
 	}
 
+	getContext() {
+		return this.#ctx;
+	}
+
 	getCanvas() {
-		return this.#ctx.canvas;
+		return this.getContext().canvas;
 	}
 
 	getX() {
@@ -190,6 +194,40 @@ class RenderNode extends UpdateNode {
 		this.#o = o;
 	}
 
+	getPosition() {
+		return { x: this.#x, y: this.#y };
+	}
+
+	setPosition({x, y}) {
+		this.#x = x;
+		this.#y = y;
+	}
+
+	getDimensions() {
+		return { w: this.#w, h: this.#h };
+	}
+
+	setDimensions({ w, h }) {
+		this.#w = w;
+		this.#h = h;
+	}
+
+	getConfig() {
+		return {
+			x: this.#x,
+			y: this.#y,
+			w: this.#w,
+			h: this.#h,
+			o: this.#o,
+		};
+	}
+
+	setConfig({x, y, w, h, o}) {
+		this.setPosition({ x, y });
+		this.setDimensions({ w, h });
+		this.setOpacity(o);
+	}
+
 	render() {
 	}
 }
@@ -208,6 +246,14 @@ class BaseGame {
 
 	isOffscreen() {
 		return this.#os;
+	}
+
+	register(node) {
+		if (!(node instanceof UpdateNode)) {
+			throw new Error('Node Must Subclass UpdateNode:', node);
+		}
+
+		this.#nodes.push(node);
 	}
 
 	resize(bounds) {
@@ -258,13 +304,29 @@ class BaseGame {
 		const isLeft = reader.isLeft();
 		const isRight = reader.isRight();
 		const isFire = reader.isFire();
-		this.#nodes.filter(n => n instanceof UpdateNode).forEach(n => n.update());
+		const updateNodes = this.#nodes.filter(n => n instanceof UpdateNode);
+		updateNodes.forEach(n => n.update());
 	}
 
 	#render() {
 		this.#ctx.fillStyle = '#6f0000';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-		this.#nodes.filter(n => n instanceof RenderNode).forEach(n => n.render());
+		const renderNodes = this.#nodes.filter(n => n instanceof RenderNode);
+		const ctx = this.#ctx;
+		const { width: cw, height: ch } = ctx.canvas;
+		renderNodes.forEach(n => {
+			n.render();
+			const c = n.getCanvas();
+			const cfg = n.getConfig();
+			const x = cfg.x * cw;
+			const y = cfg.y * ch;
+			const w = cfg.w * cw;
+			const h = cfg.h * ch;
+			const { o } = cfg;
+			ctx.globalAlpha = o;
+			ctx.drawImage(c, x, y, w, h);
+			ctx.globalAlpha = 1;
+		});
 
 		/*
 		const reader = new KeyReader(this.#sKey);
