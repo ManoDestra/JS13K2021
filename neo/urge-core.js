@@ -328,5 +328,14 @@ class BaseGame {
 			ctx.drawImage(c, x, y, w, h);
 			ctx.restore();
 		});
+		if (ctx.fillText) {
+			ctx.font = '36px Arial';
+			ctx.fillStyle = 'white';
+			ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 50, 50);
+		} else {
+			if (parseInt(GameTime.previous() / 1000) != parseInt(GameTime.current() / 1000)) {
+				console.log('FPS:' + GameTime.fps());
+			}
+		}
 	}
 }

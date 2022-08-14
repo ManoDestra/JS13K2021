@@ -1,6 +1,13 @@
 class Screen extends RenderNode {
 	constructor(game) {
 		super(game);
+		this.setConfig({
+			x: Math.random(),
+			y: Math.random(),
+			w: 0.01,
+			h: 0.01,
+			o: 0.8
+		});
 	}
 
 	render() {
@@ -11,11 +18,6 @@ class Screen extends RenderNode {
 		const a = this.#randomColor();
 		ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
 		ctx.fillRect(0, 0, 256, 256);
-		ctx.fillStyle = 'black';
-		ctx.font = '24px Arial';
-		if (ctx.fillText) {
-			ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 20, 50);
-		}
 	}
 
 	#randomColor() {
@@ -31,41 +33,11 @@ class Game extends BaseGame {
 		const r = new DOMRect();
 		console.log(p, r);
 
-		const screen1 = new Screen(this);
-		screen1.setConfig({
-			x: 0,
-			y: 0,
-			w: 0.5,
-			h: 0.5,
-			o: 0.7
+		const count = 50;
+		const arr = new Array(count).fill(0);
+		arr.forEach((e, i, a) => {
+			const s = new Screen(this);
+			this.register(s);
 		});
-
-		const screen2 = new Screen(this);
-		screen2.setConfig({
-			x: 0.5,
-			y: 0,
-			w: 0.5,
-			h: 0.5,
-			o: 0.7
-		});
-
-		const screen3 = new Screen(this);
-		screen3.setConfig({
-			x: 0,
-			y: 0.5,
-			w: 0.5,
-			h: 0.5,
-			o: 0.7
-		});
-
-		const screen4 = new Screen(this);
-		screen4.setConfig({
-			x: 0.5,
-			y: 0.5,
-			w: 0.5,
-			h: 0.5,
-			o: 0.7
-		});
-		this.register(screen1, screen2, screen3, screen4);
 	}
 }
