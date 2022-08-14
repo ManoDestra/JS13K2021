@@ -323,40 +323,10 @@ class BaseGame {
 			const w = cfg.w * cw;
 			const h = cfg.h * ch;
 			const { o } = cfg;
+			ctx.save();
 			ctx.globalAlpha = o;
 			ctx.drawImage(c, x, y, w, h);
-			ctx.globalAlpha = 1;
+			ctx.restore();
 		});
-
-		/*
-		const reader = new KeyReader(this.#sKey);
-
-		this.#ctx.fillStyle = '#111';
-		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-
-		const x = this.#ctx.canvas.width / 3;
-		const y = this.#ctx.canvas.height / 3;
-
-		this.#ctx.fillStyle = 'darkred';
-		const { state } = this.#sKey;
-
-		if (reader.isFire()) {
-			console.log('Fire', performance.now());
-		}
-
-		const dx = (reader.isLeft() ? -x : 0) + (reader.isRight() ? x : 0);
-		const dy = (reader.isUp() ? -y : 0) + (reader.isDown() ? y : 0);
-		this.#ctx.fillRect(x + dx, y + dy, x, y);
-
-		if (this.#ctx.fillText) {
-			this.#ctx.fillStyle = 'cornflowerblue';
-			this.#ctx.font = 'bold 48px Segoe UI';
-			const fps = `FPS: ${parseInt(GameTime.fps())}`;
-			const tick = `Tick: ${parseInt(GameTime.current() / 1000)}`;
-			const b = this.#ctx.measureText(fps);
-			this.#ctx.fillText(fps, 100, 100);
-			this.#ctx.fillText(tick, 100, 200);
-		}
-		*/
 	}
 }
