@@ -314,8 +314,9 @@ class BaseGame {
 		const renderNodes = this.#nodes.filter(n => n instanceof RenderNode);
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
+		renderNodes.forEach(n => n.render());
+		ctx.save();
 		renderNodes.forEach(n => {
-			n.render();
 			const c = n.getCanvas();
 			const cfg = n.getConfig();
 			const x = cfg.x * cw;
@@ -323,11 +324,12 @@ class BaseGame {
 			const w = cfg.w * cw;
 			const h = cfg.h * ch;
 			const { o } = cfg;
-			ctx.save();
 			ctx.globalAlpha = o;
 			ctx.drawImage(c, x, y, w, h);
-			ctx.restore();
 		});
+		ctx.restore();
+
+		// FPS Output
 		if (ctx.fillText) {
 			ctx.font = '36px Arial';
 			ctx.fillStyle = 'white';

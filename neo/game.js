@@ -5,7 +5,7 @@ class Screen extends RenderNode {
 			x: Math.random(),
 			y: Math.random(),
 			w: 0.01,
-			h: 0.01,
+			h: 0.05,
 			o: 0.8
 		});
 	}
@@ -33,7 +33,7 @@ class Game extends BaseGame {
 		const r = new DOMRect();
 		console.log(p, r);
 
-		const count = 50;
+		const count = 80;
 		const arr = new Array(count).fill(0);
 		arr.forEach((e, i, a) => {
 			const s = new Screen(this);
