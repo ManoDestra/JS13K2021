@@ -28,8 +28,8 @@ class Game extends BaseGame {
 		super(ctx, os);
 		const screen1 = new Screen(this);
 		screen1.setConfig({
-			x: 0.15,
-			y: 0.15,
+			x: 0,
+			y: 0,
 			w: 0.5,
 			h: 0.5,
 			o: 0.7
@@ -37,8 +37,8 @@ class Game extends BaseGame {
 
 		const screen2 = new Screen(this);
 		screen2.setConfig({
-			x: 0.35,
-			y: 0.35,
+			x: 0.5,
+			y: 0,
 			w: 0.5,
 			h: 0.5,
 			o: 0.7
@@ -46,8 +46,8 @@ class Game extends BaseGame {
 
 		const screen3 = new Screen(this);
 		screen3.setConfig({
-			x: 0.15,
-			y: 0.35,
+			x: 0,
+			y: 0.5,
 			w: 0.5,
 			h: 0.5,
 			o: 0.7
@@ -55,8 +55,8 @@ class Game extends BaseGame {
 
 		const screen4 = new Screen(this);
 		screen4.setConfig({
-			x: 0.35,
-			y: 0.15,
+			x: 0.5,
+			y: 0.5,
 			w: 0.5,
 			h: 0.5,
 			o: 0.7
