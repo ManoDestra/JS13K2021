@@ -26,6 +26,11 @@ class Screen extends RenderNode {
 class Game extends BaseGame {
 	constructor(ctx, os) {
 		super(ctx, os);
+		// TODO: these are available inside Worker, so use them
+		const p = new DOMPoint();
+		const r = new DOMRect();
+		console.log(p, r);
+
 		const screen1 = new Screen(this);
 		screen1.setConfig({
 			x: 0,
