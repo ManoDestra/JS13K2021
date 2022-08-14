@@ -16,6 +16,49 @@ class Feature {
 	}
 }
 
+class Cryo {
+	static #PREFIX = 'com.manodestra.';
+
+	static list() {
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			console.log('Key:', key);
+		}
+	}
+
+	static get(key) {
+		const keyToUse = Cryo.#getKey(key);
+		const text = localStorage.getItem(keyToUse);
+		return JSON.parse(text);
+	}
+
+	static set(key, o) {
+		const keyToUse = Cryo.#getKey(key);
+		const text = JSON.stringify(o);
+		localStorage.setItem(keyToUse, text);
+	}
+
+	static remove(key) {
+		const keyToUse = Cryo.#getKey(key);
+		localStorage.removeItem(keyToUse);
+	}
+
+	static clear(prefix = '') {
+		const prefixToUse = Cryo.#getKey(prefix);
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (key.startsWith(prefixToUse)) {
+				console.log('Removing:', key);
+				localStorage.removeItem(key);
+			}
+		}
+	}
+
+	static #getKey(key) {
+		return Cryo.#PREFIX + key;
+	}
+}
+
 class KeyWriter {
 	static #store = (new Array(256)).fill(null);
 	static #handler = null;
@@ -157,6 +200,19 @@ class Urge {
 			console.log('Onscreen');
 			Urge.#initOnscreen();
 		}
+
+		const key = 'mortimer.save';
+		Cryo.set(key, {
+			id: 616,
+			level: 21
+		});
+
+		const save = Cryo.get(key);
+		console.log('Save:', save);
+
+		Cryo.list();
+
+		Cryo.clear('mortimer');
 	}
 
 	static #setTitle() {
