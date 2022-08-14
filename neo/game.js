@@ -5,8 +5,19 @@ class Screen extends RenderNode {
 
 	render() {
 		const ctx = this.getContext();
-		ctx.fillStyle = 'darkred';
+		const r = this.#randomColor();
+		const g = this.#randomColor();
+		const b = this.#randomColor();
+		const a = this.#randomColor();
+		ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
 		ctx.fillRect(0, 0, 256, 256);
+		ctx.fillStyle = 'black';
+		ctx.font = '24px Arial';
+		ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 20, 50);
+	}
+
+	#randomColor() {
+		return parseInt(Math.random() * 256);
 	}
 }
 
