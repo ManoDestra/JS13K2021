@@ -112,7 +112,7 @@ class UpdateNode {
 }
 
 class RenderNode extends UpdateNode {
-	#os;
+	#game;
 	#ctx = null;
 	#x = 0;
 	#y = 0;
@@ -120,10 +120,10 @@ class RenderNode extends UpdateNode {
 	#h = 1;
 	#o = 1;
 
-	constructor(os) {
+	constructor(game) {
 		super();
-		this.#os = os;
-		const c = os ? this.buildOffscreenCanvas() : this.buildCanvas();
+		this.#game = game;
+		const c = this.#game.isOffscreen() ? this.buildOffscreenCanvas() : this.buildCanvas();
 		this.#ctx = c.getContext('2d');
 	}
 
@@ -143,7 +143,7 @@ class RenderNode extends UpdateNode {
 	}
 
 	isOffscreen() {
-		return this.#os;
+		return this.#game.isOffscreen();
 	}
 
 	getContext() {
@@ -248,12 +248,12 @@ class BaseGame {
 		return this.#os;
 	}
 
-	register(node) {
-		if (!(node instanceof UpdateNode)) {
-			throw new Error('Node Must Subclass UpdateNode:', node);
+	register(...nodes) {
+		if (!nodes.every(n => n instanceof UpdateNode)) {
+			throw new Error('All Nodes Must Subclass UpdateNode', nodes);
 		}
 
-		this.#nodes.push(node);
+		this.#nodes.push(...nodes);
 	}
 
 	resize(bounds) {
@@ -309,7 +309,7 @@ class BaseGame {
 	}
 
 	#render() {
-		this.#ctx.fillStyle = '#6f0000';
+		this.#ctx.fillStyle = '#111';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
 		const renderNodes = this.#nodes.filter(n => n instanceof RenderNode);
 		const ctx = this.#ctx;
