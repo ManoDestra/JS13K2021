@@ -13,7 +13,9 @@ class Screen extends RenderNode {
 		ctx.fillRect(0, 0, 256, 256);
 		ctx.fillStyle = 'black';
 		ctx.font = '24px Arial';
-		ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 20, 50);
+		if (ctx.fillText) {
+			ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 20, 50);
+		}
 	}
 
 	#randomColor() {
