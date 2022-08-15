@@ -46,7 +46,7 @@ class Game extends BaseGame {
 		const r = new DOMRect();
 		console.log(p, r);
 
-		const count = 80;
+		const count = 100;
 		const arr = new Array(count).fill(0);
 		arr.forEach((e, i, a) => {
 			const s = new Screen(this);
