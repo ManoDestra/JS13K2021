@@ -238,7 +238,7 @@ class Urge {
 
 	static #initOnscreen() {
 		const ctx = document.querySelector('canvas').getContext('2d');
-		const game = new Game(ctx, false);
+		const game = new Game(ctx);
 		if (!(game instanceof BaseGame)) {
 			throw new Error('Game Class Must Subclass BaseGame');
 		}
@@ -256,6 +256,9 @@ class Urge {
 
 	static #initOffscreen() {
 		const w = new Worker('urge-server.js?r=' + Math.random());
+		w.onmessage = e => {
+			console.log('Received From Server:', e.data);
+		};
 
 		const osc = document.querySelector('canvas').transferControlToOffscreen();
 		w.postMessage({

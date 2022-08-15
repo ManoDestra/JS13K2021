@@ -3,13 +3,15 @@ let game = null;
 importScripts('urge-core.js?r=' + Math.random());
 importScripts('game.js?r=' + Math.random());
 
+console.log('Worker Self:', self);
+
 self.onmessage = e => {
 	try {
 		const { type, payload } = e.data;
 		switch (type) {
 			case 'INIT':
 				const ctx = payload.getContext('2d');
-				game = new Game(ctx, true);
+				game = new Game(ctx, this);
 				if (!(game instanceof BaseGame)) {
 					throw new Error('Game Class Must Subclass BaseGame');
 				}

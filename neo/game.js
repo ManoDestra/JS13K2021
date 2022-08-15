@@ -25,6 +25,19 @@ class Screen extends RenderNode {
 	}
 }
 
+class SaveTest extends UpdateNode {
+	constructor(game) {
+		super(game);
+	}
+
+	update(reader) {
+		if (reader.isFire()) {
+			console.warn('Fire:', performance.now());
+			this.getGame().send('BLEH', { id: 717 });
+		}
+	}
+}
+
 class Game extends BaseGame {
 	constructor(ctx, os) {
 		super(ctx, os);
@@ -39,5 +52,7 @@ class Game extends BaseGame {
 			const s = new Screen(this);
 			this.register(s);
 		});
+		const saveTest = new SaveTest(this);
+		this.register(saveTest);
 	}
 }

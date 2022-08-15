@@ -92,10 +92,16 @@ class KeyReader {
 }
 
 class UpdateNode {
+	#game;
+	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
 	#a = false;
 
-	constructor() {
-		// TODO: code
+	constructor(game) {
+		this.#game = game;
+	}
+
+	getGame() {
+		return this.#game;
 	}
 
 	isActive() {
@@ -106,13 +112,12 @@ class UpdateNode {
 		this.#a = a;
 	}
 
-	update() {
+	update(reader) {
 		// TODO: code
 	}
 }
 
 class RenderNode extends UpdateNode {
-	#game;
 	#ctx = null;
 	#x = 0;
 	#y = 0;
@@ -121,9 +126,8 @@ class RenderNode extends UpdateNode {
 	#o = 1;
 
 	constructor(game) {
-		super();
-		this.#game = game;
-		const c = this.#game.isOffscreen() ? this.buildOffscreenCanvas() : this.buildCanvas();
+		super(game);
+		const c = this.getGame().isOffscreen() ? this.buildOffscreenCanvas() : this.buildCanvas();
 		this.#ctx = c.getContext('2d');
 	}
 
@@ -143,7 +147,7 @@ class RenderNode extends UpdateNode {
 	}
 
 	isOffscreen() {
-		return this.#game.isOffscreen();
+		return this.getGame().isOffscreen();
 	}
 
 	getContext() {
@@ -234,18 +238,27 @@ class RenderNode extends UpdateNode {
 
 class BaseGame {
 	#ctx;
-	#os;
+	#wc;
 	#nodes = [];
 	#sKey = [];
 	#pKey = [];
 
-	constructor(ctx, os) {
+	constructor(ctx, wc = null) {
+		console.log('BaseGame Construction:', ctx, wc);
 		this.#ctx = ctx;
-		this.#os = os;
+		this.#wc = wc;
+	}
+
+	send(type, payload) {
+		if (this.isOffscreen()) {
+			this.#wc.postMessage({ type, payload });
+		} else {
+			console.warn('Onscreen Send Not Yet Implemented:', type, payload);
+		}
 	}
 
 	isOffscreen() {
-		return this.#os;
+		return !!this.#wc;
 	}
 
 	register(...nodes) {
@@ -297,15 +310,9 @@ class BaseGame {
 	}
 
 	#update() {
-		// TODO: possibly pass the KeyReader to the nodes?
 		const reader = new KeyReader(this.#sKey);
-		const isUp = reader.isUp();
-		const isDown = reader.isDown();
-		const isLeft = reader.isLeft();
-		const isRight = reader.isRight();
-		const isFire = reader.isFire();
 		const updateNodes = this.#nodes.filter(n => n instanceof UpdateNode);
-		updateNodes.forEach(n => n.update());
+		updateNodes.forEach(n => n.update(reader));
 	}
 
 	#render() {
