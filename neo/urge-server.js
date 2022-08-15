@@ -3,8 +3,6 @@ let game = null;
 importScripts('urge-core.js?r=' + Math.random());
 importScripts('game.js?r=' + Math.random());
 
-console.log('Worker Self:', self);
-
 self.onmessage = e => {
 	try {
 		const { type, payload } = e.data;

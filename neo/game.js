@@ -44,7 +44,6 @@ class Game extends BaseGame {
 		// TODO: these are available inside Worker, so use them
 		const p = new DOMPoint();
 		const r = new DOMRect();
-		console.log(p, r);
 
 		const count = 100;
 		const arr = new Array(count).fill(0);
@@ -52,7 +51,7 @@ class Game extends BaseGame {
 			const s = new Screen(this);
 			this.register(s);
 		});
-		const saveTest = new SaveTest(this);
-		this.register(saveTest);
+		const test = new SaveTest(this);
+		this.register(test);
 	}
 }
