@@ -253,7 +253,7 @@ class BaseGame {
 		if (this.isOffscreen()) {
 			this.#wc.postMessage({ type, payload });
 		} else {
-			console.warn('Onscreen Send Not Yet Implemented:', type, payload);
+			Cryo.set('mortimer.save', payload);
 		}
 	}
 

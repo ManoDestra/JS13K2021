@@ -33,7 +33,7 @@ class SaveTest extends UpdateNode {
 	update(reader) {
 		if (reader.isFire()) {
 			console.warn('Fire:', performance.now());
-			this.getGame().send('BLEH', { id: 717 });
+			//this.getGame().send('BLEH', { id: 717 });
 		}
 	}
 }

@@ -257,6 +257,7 @@ class Urge {
 		const w = new Worker('urge-server.js?r=' + Math.random());
 		w.onmessage = e => {
 			console.log('Received From Server:', e.data);
+			Cryo.set('mortimer.save', e.data);
 		};
 
 		const osc = document.querySelector('canvas').transferControlToOffscreen();
