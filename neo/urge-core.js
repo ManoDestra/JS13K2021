@@ -311,14 +311,20 @@ class BaseGame {
 
 	#update() {
 		const reader = new KeyReader(this.#sKey);
-		const updateNodes = this.#nodes.filter(n => n instanceof UpdateNode);
+		const updateNodes = this.#nodes
+			.filter(n => n instanceof UpdateNode)
+			.filter(n => n.isActive());
 		updateNodes.forEach(n => n.update(reader));
 	}
 
 	#render() {
 		this.#ctx.fillStyle = '#111';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-		const renderNodes = this.#nodes.filter(n => n instanceof RenderNode);
+		const renderNodes = this.#nodes
+			.filter(n => n instanceof RenderNode)
+			.filter(n => n.isActive())
+			.filter(n => n.getOpacity() > 0);
+		console.log('To Render:', renderNodes.length);
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
 		renderNodes.forEach(n => n.render());

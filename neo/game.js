@@ -1,12 +1,13 @@
 class Screen extends RenderNode {
 	constructor(game) {
 		super(game);
+		this.setActive(true);
 		this.setConfig({
-			x: Math.random(),
-			y: Math.random(),
-			w: 0.01,
-			h: 0.05,
-			o: 0.8
+			x: Math.random() * 0.95,
+			y: Math.random() * 0.9,
+			w: 0.05,
+			h: 0.1,
+			o: 0.7
 		});
 	}
 
@@ -25,6 +26,30 @@ class Screen extends RenderNode {
 	}
 }
 
+class Ship extends RenderNode {
+}
+
+class Bullet extends RenderNode {
+}
+
+class Alien extends RenderNode {
+}
+
+class Boss extends RenderNode {
+}
+
+class StartScreen extends Screen {
+}
+
+class MenuScreen extends Screen {
+}
+
+class IntroScreen extends Screen {
+}
+
+class PlayScreen extends Screen {
+}
+
 class SaveTest extends UpdateNode {
 	constructor(game) {
 		super(game);
@@ -39,19 +64,19 @@ class SaveTest extends UpdateNode {
 }
 
 class Game extends BaseGame {
-	constructor(ctx, os) {
-		super(ctx, os);
+	constructor(ctx, wCtx) {
+		super(ctx, wCtx);
+
+		const screens = [
+			new StartScreen(this),
+			new MenuScreen(this),
+			new IntroScreen(this),
+			new PlayScreen(this)
+		];
+		this.register(...screens);
+
 		// TODO: these are available inside Worker, so use them
 		const p = new DOMPoint();
 		const r = new DOMRect();
-
-		const count = 100;
-		const arr = new Array(count).fill(0);
-		arr.forEach((e, i, a) => {
-			const s = new Screen(this);
-			this.register(s);
-		});
-		const test = new SaveTest(this);
-		this.register(test);
 	}
 }

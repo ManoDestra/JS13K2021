@@ -201,6 +201,8 @@ class Urge {
 		}
 
 		const key = 'mortimer.save';
+
+		/*
 		Cryo.set(key, {
 			id: 616,
 			level: 21
@@ -210,8 +212,8 @@ class Urge {
 		console.log('Save:', save);
 
 		Cryo.list();
-
 		Cryo.clear('mortimer');
+		*/
 	}
 
 	static #setTitle() {
