@@ -91,8 +91,31 @@ class KeyReader {
 	}
 }
 
+class Rect extends DOMRect {
+	get position() {
+		const { x, y } = this;
+		return { x, y };
+	}
+
+	set position({ x, y }) {
+		this.x = x;
+		this.y = y;
+	}
+
+	get bounds() {
+		const { width, height } = this;
+		return { width, height };
+	}
+
+	set bounds({ width, height }) {
+		this.width = width;
+		this.height = height;
+	}
+}
+
 class UpdateNode {
 	#game;
+
 	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
 	#a = false;
 
@@ -119,10 +142,7 @@ class UpdateNode {
 
 class RenderNode extends UpdateNode {
 	#ctx = null;
-	#x = 0;
-	#y = 0;
-	#w = 1;
-	#h = 1;
+	#rect = new Rect();
 	#o = 1;
 
 	constructor(game) {
@@ -158,36 +178,8 @@ class RenderNode extends UpdateNode {
 		return this.getContext().canvas;
 	}
 
-	getX() {
-		return this.#x;
-	}
-
-	setX(x) {
-		this.#x = x;
-	}
-
-	getY() {
-		return this.#y;
-	}
-
-	setY(y) {
-		this.#y = y;
-	}
-
-	getWidth() {
-		return this.#w;
-	}
-
-	setWidth(w) {
-		this.#w = w;
-	}
-
-	getHeight() {
-		return this.#h;
-	}
-
-	setHeight(h) {
-		this.#h = h;
+	getRect() {
+		return this.#rect;
 	}
 
 	getOpacity() {
@@ -196,40 +188,6 @@ class RenderNode extends UpdateNode {
 
 	setOpacity(o) {
 		this.#o = o;
-	}
-
-	getPosition() {
-		return { x: this.#x, y: this.#y };
-	}
-
-	setPosition({x, y}) {
-		this.#x = x;
-		this.#y = y;
-	}
-
-	getDimensions() {
-		return { w: this.#w, h: this.#h };
-	}
-
-	setDimensions({ w, h }) {
-		this.#w = w;
-		this.#h = h;
-	}
-
-	getConfig() {
-		return {
-			x: this.#x,
-			y: this.#y,
-			w: this.#w,
-			h: this.#h,
-			o: this.#o,
-		};
-	}
-
-	setConfig({x, y, w, h, o}) {
-		this.setPosition({ x, y });
-		this.setDimensions({ w, h });
-		this.setOpacity(o);
 	}
 
 	render() {
@@ -328,15 +286,16 @@ class BaseGame {
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
 		renderNodes.forEach(n => n.render());
+
 		ctx.save();
 		renderNodes.forEach(n => {
 			const c = n.getCanvas();
-			const cfg = n.getConfig();
-			const x = cfg.x * cw;
-			const y = cfg.y * ch;
-			const w = cfg.w * cw;
-			const h = cfg.h * ch;
-			const { o } = cfg;
+			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
+			const x = rx * cw;
+			const y = ry * ch;
+			const w = rw * cw;
+			const h = rh * ch;
+			const o = n.getOpacity();
 			ctx.globalAlpha = o;
 			ctx.drawImage(c, x, y, w, h);
 		});

@@ -2,13 +2,16 @@ class Screen extends RenderNode {
 	constructor(game) {
 		super(game);
 		this.setActive(true);
-		this.setConfig({
+		this.getRect().position = {
 			x: Math.random() * 0.95,
-			y: Math.random() * 0.9,
-			w: 0.05,
-			h: 0.1,
-			o: 0.7
-		});
+			y: Math.random() * 0.9
+		};
+		this.getRect().bounds = {
+			width: 0.05,
+			height: 0.1
+		};
+		this.setOpacity(0.7);
+		console.log(this.getRect());
 	}
 
 	render() {
