@@ -202,6 +202,27 @@ class Urge {
 
 		const key = 'mortimer.save';
 
+		const x = {
+			id: 1,
+			name: 'Peter',
+			accessLevel: 'SUPER_ADMIN',
+			subNet: {
+				protocol: 'https',
+				ip: [192, 168, 1, 1],
+				port: 5250
+			}
+		};
+		const y = {
+			id: 616,
+			email: 'plamb@csa1.com',
+			foo: 'BAR',
+			valid: true
+		};
+		const z = { ...x, ...y };
+		console.log(x);
+		console.log(y);
+		console.log(z);
+
 		/*
 		Cryo.set(key, {
 			id: 616,

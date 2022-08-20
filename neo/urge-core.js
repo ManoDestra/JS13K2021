@@ -202,7 +202,6 @@ class BaseGame {
 	#pKey = [];
 
 	constructor(ctx, wc = null) {
-		console.log('BaseGame Construction:', ctx, wc);
 		this.#ctx = ctx;
 		this.#wc = wc;
 	}
@@ -282,7 +281,6 @@ class BaseGame {
 			.filter(n => n instanceof RenderNode)
 			.filter(n => n.isActive())
 			.filter(n => n.getOpacity() > 0);
-		console.log('To Render:', renderNodes.length);
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
 		renderNodes.forEach(n => n.render());
