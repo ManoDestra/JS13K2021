@@ -1,7 +1,7 @@
 let game = null;
 
 importScripts('urge-core.js?r=' + Math.random());
-importScripts('mortimer.js?r=' + Math.random());
+importScripts('rogue.js?r=' + Math.random());
 
 self.onmessage = e => {
 	try {
