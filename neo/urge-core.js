@@ -285,10 +285,13 @@ class BaseGame extends RenderNode {
 		return new OffscreenCanvas(width, height);
 	}
 
-	buildCanvas(width, height) {
+	buildCanvas(width = 0, height = 0) {
+		const bounds = this.#bounds();
+		const widthToUse = width ? width : bounds.width;
+		const heightToUse = height ? height : bounds.height;
 		return this.isOffscreen()
-			? BaseGame.buildOffscreenCanvas(width, height)
-			: BaseGame.buildOnscreenCanvas(width, height);
+			? BaseGame.buildOffscreenCanvas(widthToUse, heightToUse)
+			: BaseGame.buildOnscreenCanvas(widthToUse, heightToUse);
 	}
 
 	send(type, payload) {
