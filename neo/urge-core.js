@@ -161,6 +161,17 @@ class RenderNode extends UpdateNode {
 		}
 
 		this.#ctx = ctx;
+
+		/*
+		// Works both on and off screen
+		createImageBitmap(c).then(bm => {
+			console.log('Bitmap:', bm);
+
+			// Patterns work off either on or off context
+			const pattern = this.#ctx.createPattern(bm, 'repeat-x');
+			console.log('Pattern:', pattern);
+		});
+		*/
 	}
 
 	getContext() {
@@ -260,57 +271,6 @@ class RenderNode extends UpdateNode {
 
 	static buildOffscreenCanvas(width, height) {
 		return new OffscreenCanvas(width, height);
-	}
-}
-
-class RenderNodeEx extends UpdateNode {
-	#ctx = null;
-	#rect = new Rect(0, 0, 1, 1);
-	#o = 1;
-
-	constructor(game) {
-		super(game);
-		const c = this.getGame().isOffscreen()
-			? RenderNode.buildOffscreenCanvas(256, 256)
-			: RenderNode.buildCanvas(256, 256);
-
-		this.#ctx = c.getContext('2d');
-
-		// Works both on and off screen
-		createImageBitmap(c).then(bm => {
-			console.log('Bitmap:', bm);
-
-			// Patterns work off either on or off context
-			const pattern = this.#ctx.createPattern(bm, 'repeat-x');
-			console.log('Pattern:', pattern);
-		});
-	}
-
-	isOffscreen() {
-		return this.getGame().isOffscreen();
-	}
-
-	getContext() {
-		return this.#ctx;
-	}
-
-	getCanvas() {
-		return this.getContext().canvas;
-	}
-
-	getRect() {
-		return this.#rect;
-	}
-
-	getOpacity() {
-		return this.#o;
-	}
-
-	setOpacity(o) {
-		this.#o = o;
-	}
-
-	render() {
 	}
 }
 
