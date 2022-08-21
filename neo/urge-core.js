@@ -258,8 +258,20 @@ class RenderNode extends UpdateNode {
 			.filter(n => n.isActive())
 			.filter(n => n.getOpacity() > 0);
 	}
+}
 
-	static buildCanvas(width, height) {
+class BaseGame extends RenderNode {
+	#wc;
+	#nodes = [];
+	#sKey = [];
+	#pKey = [];
+
+	constructor(ctx, wc = null) {
+		super(ctx);
+		this.#wc = wc;
+	}
+
+	static buildOnscreenCanvas(width, height) {
 		if (!document) {
 			return null;
 		}
@@ -272,17 +284,11 @@ class RenderNode extends UpdateNode {
 	static buildOffscreenCanvas(width, height) {
 		return new OffscreenCanvas(width, height);
 	}
-}
 
-class BaseGame extends RenderNode {
-	#wc;
-	#nodes = [];
-	#sKey = [];
-	#pKey = [];
-
-	constructor(ctx, wc = null) {
-		super(ctx);
-		this.#wc = wc;
+	buildCanvas(width, height) {
+		return this.isOffscreen()
+			? BaseGame.buildOffscreenCanvas(width, height)
+			: BaseGame.buildOnscreenCanvas(width, height);
 	}
 
 	send(type, payload) {

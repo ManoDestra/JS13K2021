@@ -27,7 +27,8 @@ class Game extends BaseGame {
 	constructor(ctx, wCtx) {
 		super(ctx, wCtx);
 
-		const c = RenderNode.buildCanvas(256, 256).getContext('2d');
+		console.log(this.isOffscreen());
+		const c = this.buildCanvas(256, 256).getContext('2d');
 		const start = new StartScreen(c);
 		const screens = [ start ];
 		this.add(...screens);
