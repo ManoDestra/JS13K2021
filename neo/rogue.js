@@ -18,7 +18,7 @@ class StartScreen extends RenderNode {
 	renderToContext() {
 		const ctx = this.getContext();
 		const { width, height } = ctx.canvas;
-		ctx.fillStyle = 'cornflowerblue';
+		ctx.fillStyle = 'darkred';
 		ctx.fillRect(0, 0, width, height);
 	}
 }
