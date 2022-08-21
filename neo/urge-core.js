@@ -104,6 +104,10 @@ class KeyReader {
 }
 
 class Rect extends DOMRect {
+	constructor(x, y, width, height) {
+		super(x, y, width, height);
+	}
+
 	get position() {
 		const { x, y } = this;
 		return { x, y };
@@ -131,14 +135,6 @@ class UpdateNode {
 	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
 	#a = false;
 
-	constructor(game) {
-		this.#game = game;
-	}
-
-	getGame() {
-		return this.#game;
-	}
-
 	isActive() {
 		return this.#a;
 	}
@@ -154,10 +150,16 @@ class UpdateNode {
 
 class RenderNode extends UpdateNode {
 	#ctx;
+	#rect = new Rect(0, 0, 1, 1);
+	#o = 0;
 	#nodes = [];
 
 	constructor(ctx) {
 		super();
+		if (!ctx) {
+			throw new Error('Context Is Required');
+		}
+
 		this.#ctx = ctx;
 	}
 
@@ -165,11 +167,33 @@ class RenderNode extends UpdateNode {
 		return this.#ctx;
 	}
 
+	getCanvas() {
+		return this.getContext().canvas;
+	}
+
+	getRect() {
+		return this.#rect;
+	}
+
+	getOpacity() {
+		return this.#o;
+	}
+
+	setOpacity(o) {
+		this.#o = o;
+	}
+
 	clear() {
 		this.#nodes.length = 0;
 	}
 
 	add(...nodes) {
+		if (!nodes.every(n => n instanceof UpdateNode)) {
+			throw new Error('All Nodes Must Subclass UpdateNode', nodes);
+		}
+
+		console.log(nodes);
+
 		this.#nodes.push(...nodes);
 	}
 
@@ -241,7 +265,7 @@ class RenderNode extends UpdateNode {
 
 class RenderNodeEx extends UpdateNode {
 	#ctx = null;
-	#rect = new Rect();
+	#rect = new Rect(0, 0, 1, 1);
 	#o = 1;
 
 	constructor(game) {
@@ -311,14 +335,6 @@ class BaseGame extends RenderNode {
 
 	isOffscreen() {
 		return !!this.#wc;
-	}
-
-	register(...nodes) {
-		if (!nodes.every(n => n instanceof UpdateNode)) {
-			throw new Error('All Nodes Must Subclass UpdateNode', nodes);
-		}
-
-		this.#nodes.push(...nodes);
 	}
 
 	resize(bounds) {
