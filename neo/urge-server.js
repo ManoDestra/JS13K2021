@@ -28,10 +28,10 @@ self.onmessage = e => {
 				game.setPadState(payload);
 				break;
 			case 'MOUSE':
-				// TODO: code
+				throw new Error('To Be Implemented');
 				break;
 			case 'TOUCH':
-				// TODO: code
+				throw new Error('To Be Implemented');
 				break;
 			default:
 				throw new Error('Unsupported Type: ' + type);

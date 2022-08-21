@@ -1,3 +1,15 @@
+class Classy {
+	static instantiate(clazz, args) {
+		const c = clazz.constructor;
+		let f = function(){}; // dummy function
+		f.prototype = c.prototype; // reference same prototype
+		let o = new f(); // instantiate dummy function to copy prototype properties
+		c.apply(o, args); // call class constructor, supplying new object as context
+		o.constructor = c; // assign correct constructor (not f)
+		return o;
+	}
+}
+
 class Watch {
 	#c;
 	#p;
@@ -141,29 +153,113 @@ class UpdateNode {
 }
 
 class RenderNode extends UpdateNode {
+	#ctx;
+	#nodes = [];
+
+	constructor(ctx) {
+		super();
+		this.#ctx = ctx;
+	}
+
+	getContext() {
+		return this.#ctx;
+	}
+
+	clear() {
+		this.#nodes.length = 0;
+	}
+
+	add(...nodes) {
+		this.#nodes.push(...nodes);
+	}
+
+	update(reader) {
+		//const reader = new KeyReader(this.#sKey);
+		const updateNodes = this.#nodes
+			.filter(n => n instanceof UpdateNode)
+			.filter(n => n.isActive());
+		updateNodes.forEach(n => n.update(reader));
+	}
+
+	render() {
+		this.#ctx.fillStyle = '#111';
+		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
+		this.renderNodes();
+		this.renderNodesToContext();
+		this.renderToContext();
+	}
+
+	renderNodes() {
+		const renderNodes = this.#getNodesForRender();
+		renderNodes.forEach(n => n.render());
+	}
+
+	renderNodesToContext() {
+		const renderNodes = this.#getNodesForRender();
+		const ctx = this.#ctx;
+		const { width: cw, height: ch } = ctx.canvas;
+		ctx.save();
+		renderNodes.forEach(n => {
+			const c = n.getCanvas();
+			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
+			const x = rx * cw;
+			const y = ry * ch;
+			const w = rw * cw;
+			const h = rh * ch;
+			const o = n.getOpacity();
+			ctx.globalAlpha = o;
+			ctx.drawImage(c, x, y, w, h);
+		});
+		ctx.restore();
+	}
+
+	renderToContext() {
+		// TODO: code
+	}
+
+	#getNodesForRender() {
+		return this.#nodes
+			.filter(n => n instanceof RenderNode)
+			.filter(n => n.isActive())
+			.filter(n => n.getOpacity() > 0);
+	}
+
+	static buildCanvas(width, height) {
+		if (!document) {
+			return null;
+		}
+
+		const canvas = document.createElement('canvas');
+		Object.assign(canvas, { width, height });
+		return canvas;
+	}
+
+	static buildOffscreenCanvas(width, height) {
+		return new OffscreenCanvas(width, height);
+	}
+}
+
+class RenderNodeEx extends UpdateNode {
 	#ctx = null;
 	#rect = new Rect();
 	#o = 1;
 
 	constructor(game) {
 		super(game);
-		const c = this.getGame().isOffscreen() ? this.buildOffscreenCanvas() : this.buildCanvas();
+		const c = this.getGame().isOffscreen()
+			? RenderNode.buildOffscreenCanvas(256, 256)
+			: RenderNode.buildCanvas(256, 256);
+
 		this.#ctx = c.getContext('2d');
-	}
 
-	buildOffscreenCanvas() {
-		return new OffscreenCanvas(256, 256);
-	}
+		// Works both on and off screen
+		createImageBitmap(c).then(bm => {
+			console.log('Bitmap:', bm);
 
-	buildCanvas() {
-		if (!document) {
-			return null;
-		}
-
-		const canvas = document.createElement('canvas');
-		canvas.width = 256;
-		canvas.height = 256;
-		return canvas;
+			// Patterns work off either on or off context
+			const pattern = this.#ctx.createPattern(bm, 'repeat-x');
+			console.log('Pattern:', pattern);
+		});
 	}
 
 	isOffscreen() {
@@ -194,15 +290,14 @@ class RenderNode extends UpdateNode {
 	}
 }
 
-class BaseGame {
-	#ctx;
+class BaseGame extends RenderNode {
 	#wc;
 	#nodes = [];
 	#sKey = [];
 	#pKey = [];
 
 	constructor(ctx, wc = null) {
-		this.#ctx = ctx;
+		super(ctx);
 		this.#wc = wc;
 	}
 
@@ -227,7 +322,7 @@ class BaseGame {
 	}
 
 	resize(bounds) {
-		Object.assign(this.#ctx.canvas, bounds);
+		Object.assign(this.getContext().canvas, bounds);
 	}
 
 	setKeyState(s) {
@@ -243,7 +338,7 @@ class BaseGame {
 	}
 
 	#bounds() {
-		const { width, height } = this.#ctx.canvas;
+		const { width, height } = this.getContext().canvas;
 		return { width, height };
 	}
 
@@ -256,8 +351,8 @@ class BaseGame {
 
 	#loop(tick) {
 		GameTime.update(tick);
-		this.#update();
-		this.#render();
+		this.update();
+		this.render();
 		this.#resetState();
 		this.#fire();
 	}
@@ -266,40 +361,8 @@ class BaseGame {
 		requestAnimationFrame(t => this.#loop(t));
 	}
 
-	#update() {
-		const reader = new KeyReader(this.#sKey);
-		const updateNodes = this.#nodes
-			.filter(n => n instanceof UpdateNode)
-			.filter(n => n.isActive());
-		updateNodes.forEach(n => n.update(reader));
-	}
-
-	#render() {
-		this.#ctx.fillStyle = '#111';
-		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-		const renderNodes = this.#nodes
-			.filter(n => n instanceof RenderNode)
-			.filter(n => n.isActive())
-			.filter(n => n.getOpacity() > 0);
-		const ctx = this.#ctx;
-		const { width: cw, height: ch } = ctx.canvas;
-		renderNodes.forEach(n => n.render());
-
-		ctx.save();
-		renderNodes.forEach(n => {
-			const c = n.getCanvas();
-			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
-			const x = rx * cw;
-			const y = ry * ch;
-			const w = rw * cw;
-			const h = rh * ch;
-			const o = n.getOpacity();
-			ctx.globalAlpha = o;
-			ctx.drawImage(c, x, y, w, h);
-		});
-		ctx.restore();
-
-		// FPS Output
+	renderToContext() {
+		const ctx = this.getContext();
 		if (ctx.fillText) {
 			ctx.font = '36px Arial';
 			ctx.fillStyle = 'white';
