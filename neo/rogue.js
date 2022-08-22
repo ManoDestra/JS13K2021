@@ -15,7 +15,7 @@ class StartScreen extends RenderNode {
 		this.setOpacity(1);
 	}
 
-	renderToContext() {
+	renderNode() {
 		const ctx = this.getContext();
 		const { width, height } = ctx.canvas;
 		ctx.fillStyle = 'darkred';
@@ -26,13 +26,16 @@ class StartScreen extends RenderNode {
 class Game extends BaseGame {
 	constructor(ctx, wCtx) {
 		super(ctx, wCtx);
+		// Activate screen, transition
+	}
 
-		//const c = this.buildCanvas(256, 256).getContext('2d');
+	init() {
 		const c = this.buildCanvas().getContext('2d');
 		const start = new StartScreen(c);
 		const screens = [ start ];
 		this.add(...screens);
+	}
 
-		// Activate screen, transition
+	term() {
 	}
 }

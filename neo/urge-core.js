@@ -161,6 +161,12 @@ class UpdateNode extends UrgeNode {
 	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
 	#a = false;
 
+	init() {
+	}
+
+	term() {
+	}
+
 	isActive() {
 		return this.#a;
 	}
@@ -222,28 +228,20 @@ class RenderNode extends UpdateNode {
 		this.#o = o;
 	}
 
-	add(...nodes) {
-		if (!nodes.every(n => n instanceof RenderNode)) {
-			throw new Error('All Nodes Must Subclass RenderNode', nodes);
-		}
-
-		super.add(...nodes);
-	}
-
 	render() {
 		this.#ctx.fillStyle = '#111';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-		this.renderNodes();
-		this.renderNodesToContext();
-		this.renderToContext();
+		this.renderChildren();
+		this.renderChildrenToContext();
+		this.renderNode();
 	}
 
-	renderNodes() {
+	renderChildren() {
 		const renderNodes = this.#getNodesForRender();
 		renderNodes.forEach(n => n.render());
 	}
 
-	renderNodesToContext() {
+	renderChildrenToContext() {
 		const renderNodes = this.#getNodesForRender();
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
@@ -262,7 +260,7 @@ class RenderNode extends UpdateNode {
 		ctx.restore();
 	}
 
-	renderToContext() {
+	renderNode() {
 	}
 
 	#getNodesForRender() {
@@ -315,6 +313,7 @@ class BaseGame extends RenderNode {
 	}
 
 	start() {
+		this.init();
 		this.#fire();
 	}
 
@@ -372,12 +371,15 @@ class BaseGame extends RenderNode {
 		super.update(reader);
 	}
 
-	renderToContext() {
+	renderNode() {
 		const ctx = this.getContext();
 		if (ctx.fillText) {
 			ctx.font = '36px Arial';
 			ctx.fillStyle = 'white';
-			ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 50, 50);
+			const msg = `FPS: ${parseInt(GameTime.fps())}`;
+			const measure = ctx.measureText(msg);
+			//console.log('Measure:', measure);
+			ctx.fillText(msg, 50, 50);
 		} else {
 			if (parseInt(GameTime.previous() / 1000) != parseInt(GameTime.current() / 1000)) {
 				//console.log('FPS:' + GameTime.fps());
