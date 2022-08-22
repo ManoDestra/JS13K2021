@@ -170,7 +170,10 @@ class UpdateNode extends UrgeNode {
 	}
 
 	update(reader) {
-		// TODO: code
+		const updateNodes = this.getChildren()
+			.filter(n => n instanceof UpdateNode)
+			.filter(n => n.isActive());
+		updateNodes.forEach(n => n.update(reader));
 	}
 }
 
@@ -227,14 +230,6 @@ class RenderNode extends UpdateNode {
 		super.add(...nodes);
 	}
 
-	update(reader) {
-		//const reader = new KeyReader(this.#sKey);
-		const updateNodes = this.getChildren()
-			.filter(n => n instanceof UpdateNode)
-			.filter(n => n.isActive());
-		updateNodes.forEach(n => n.update(reader));
-	}
-
 	render() {
 		this.#ctx.fillStyle = '#111';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
@@ -268,7 +263,6 @@ class RenderNode extends UpdateNode {
 	}
 
 	renderToContext() {
-		// TODO: code
 	}
 
 	#getNodesForRender() {
@@ -371,6 +365,11 @@ class BaseGame extends RenderNode {
 
 	#fire() {
 		requestAnimationFrame(t => this.#loop(t));
+	}
+
+	update(r) {
+		const reader = new KeyReader(this.#sKey);
+		super.update(reader);
 	}
 
 	renderToContext() {
