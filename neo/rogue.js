@@ -2,6 +2,12 @@ class Background extends RenderNode {
 	constructor(ctx) {
 		super(ctx);
 	}
+
+	init() {
+	}
+
+	renderNode() {
+	}
 }
 
 class StartScreen extends RenderNode {
@@ -26,11 +32,6 @@ class StartScreen extends RenderNode {
 }
 
 class Game extends BaseGame {
-	constructor(ctx, wCtx) {
-		super(ctx, wCtx);
-		// Activate screen, transition
-	}
-
 	init() {
 		const c = this.buildCanvas().getContext('2d');
 		const start = new StartScreen(c);
