@@ -129,8 +129,34 @@ class Rect extends DOMRect {
 	}
 }
 
-class UpdateNode {
-	#game;
+class UrgeNode {
+	#nodes = [];
+
+	clear() {
+		this.#nodes.length = 0;
+	}
+
+	add(...nodes) {
+		this.#nodes.push(...nodes);
+	}
+
+	remove(...nodes) {
+		throw new Error('To Be Implemented');
+	}
+
+	getChildren() {
+		return [...this.#nodes];
+	}
+}
+
+class UpdateNode extends UrgeNode {
+	add(...nodes) {
+		if (!nodes.every(n => n instanceof UpdateNode)) {
+			throw new Error('All Nodes Must Subclass UpdateNode', nodes);
+		}
+
+		super.add(...nodes);
+	}
 
 	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
 	#a = false;
@@ -152,7 +178,6 @@ class RenderNode extends UpdateNode {
 	#ctx;
 	#rect = new Rect(0, 0, 1, 1);
 	#o = 0;
-	#nodes = [];
 
 	constructor(ctx) {
 		super();
@@ -194,23 +219,17 @@ class RenderNode extends UpdateNode {
 		this.#o = o;
 	}
 
-	clear() {
-		this.#nodes.length = 0;
-	}
-
 	add(...nodes) {
-		if (!nodes.every(n => n instanceof UpdateNode)) {
-			throw new Error('All Nodes Must Subclass UpdateNode', nodes);
+		if (!nodes.every(n => n instanceof RenderNode)) {
+			throw new Error('All Nodes Must Subclass RenderNode', nodes);
 		}
 
-		console.log(nodes);
-
-		this.#nodes.push(...nodes);
+		super.add(...nodes);
 	}
 
 	update(reader) {
 		//const reader = new KeyReader(this.#sKey);
-		const updateNodes = this.#nodes
+		const updateNodes = this.getChildren()
 			.filter(n => n instanceof UpdateNode)
 			.filter(n => n.isActive());
 		updateNodes.forEach(n => n.update(reader));
@@ -253,7 +272,7 @@ class RenderNode extends UpdateNode {
 	}
 
 	#getNodesForRender() {
-		return this.#nodes
+		return this.getChildren()
 			.filter(n => n instanceof RenderNode)
 			.filter(n => n.isActive())
 			.filter(n => n.getOpacity() > 0);
@@ -262,7 +281,6 @@ class RenderNode extends UpdateNode {
 
 class BaseGame extends RenderNode {
 	#wc;
-	#nodes = [];
 	#sKey = [];
 	#pKey = [];
 
@@ -285,28 +303,12 @@ class BaseGame extends RenderNode {
 		return new OffscreenCanvas(width, height);
 	}
 
-	buildCanvas(width = 0, height = 0) {
-		const bounds = this.#bounds();
-		const widthToUse = width ? width : bounds.width;
-		const heightToUse = height ? height : bounds.height;
-		return this.isOffscreen()
-			? BaseGame.buildOffscreenCanvas(widthToUse, heightToUse)
-			: BaseGame.buildOnscreenCanvas(widthToUse, heightToUse);
-	}
-
-	send(type, payload) {
-		if (this.isOffscreen()) {
-			this.#wc.postMessage({ type, payload });
-		} else {
-			Cryo.set('mortimer.save', payload);
-		}
-	}
-
 	isOffscreen() {
 		return !!this.#wc;
 	}
 
 	resize(bounds) {
+		console.log('Resize:', bounds);
 		Object.assign(this.getContext().canvas, bounds);
 	}
 
@@ -320,6 +322,31 @@ class BaseGame extends RenderNode {
 
 	start() {
 		this.#fire();
+	}
+
+	buildCanvas(width = 0, height = 0) {
+		const bounds = this.#bounds();
+		console.log('Build Canvas Bounds', bounds);
+		const widthToUse = width ? width : bounds.width;
+		const heightToUse = height ? height : bounds.height;
+		console.log('Build Canvas Bounds:', widthToUse, heightToUse);
+		return this.isOffscreen()
+			? BaseGame.buildOffscreenCanvas(widthToUse, heightToUse)
+			: BaseGame.buildOnscreenCanvas(widthToUse, heightToUse);
+	}
+
+	send(type, payload) {
+		switch (type) {
+			case 'SAVE':
+				if (this.isOffscreen()) {
+					this.#wc.postMessage({ type, payload });
+				} else {
+					const key = 'mortimer.save';
+					Cryo.set(key, payload);
+				}
+			default:
+				throw new Error(`Unsupported Type: ${type}`);
+		}
 	}
 
 	#bounds() {
@@ -354,7 +381,7 @@ class BaseGame extends RenderNode {
 			ctx.fillText(`FPS: ${parseInt(GameTime.fps())}`, 50, 50);
 		} else {
 			if (parseInt(GameTime.previous() / 1000) != parseInt(GameTime.current() / 1000)) {
-				console.log('FPS:' + GameTime.fps());
+				//console.log('FPS:' + GameTime.fps());
 			}
 		}
 	}

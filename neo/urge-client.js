@@ -199,42 +199,6 @@ class Urge {
 			console.log('Onscreen');
 			Urge.#initOnscreen();
 		}
-
-		const key = 'mortimer.save';
-
-		const x = {
-			id: 1,
-			name: 'Peter',
-			accessLevel: 'SUPER_ADMIN',
-			subNet: {
-				protocol: 'https',
-				ip: [192, 168, 1, 1],
-				port: 5250
-			}
-		};
-		const y = {
-			id: 616,
-			email: 'plamb@csa1.com',
-			foo: 'BAR',
-			valid: true
-		};
-		const z = { ...x, ...y };
-		console.log(x);
-		console.log(y);
-		console.log(z);
-
-		/*
-		Cryo.set(key, {
-			id: 616,
-			level: 21
-		});
-
-		const save = Cryo.get(key);
-		console.log('Save:', save);
-
-		Cryo.list();
-		Cryo.clear('mortimer');
-		*/
 	}
 
 	static #setTitle() {
@@ -255,6 +219,7 @@ class Urge {
 	static #buildBody() {
 		document.body.innerHTML = '';
 		const c = document.createElement('canvas');
+		//Object.assign(c, {  });
 		document.body.appendChild(c);
 	}
 
