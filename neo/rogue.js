@@ -8,10 +8,12 @@ class StartScreen extends RenderNode {
 	constructor(ctx) {
 		super(ctx);
 		this.setActive(true);
-		this.getRect().x = 0.25;
-		this.getRect().y = 0.25;
-		this.getRect().width = 0.5;
-		this.getRect().height = 0.5;
+		Object.assign(this.getRect(), {
+			x: 0.25,
+			y: 0.25,
+			width: 0.5,
+			height: 0.5
+		});
 		this.setOpacity(1);
 	}
 
