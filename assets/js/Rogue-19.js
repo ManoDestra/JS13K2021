@@ -47,7 +47,7 @@ class Rogue extends Urge.Game {
 	}
 
 	#getStarField(count = 250, minSize = 1, maxDelta = 3) {
-		const canvas = this.getCanvas();
+		const { width, height } = this.getCanvas();
 		return this.generateCanvas(c => {
 			c.strokeStyle = '#0a0';
 			c.fillStyle = 'cornflowerblue';
@@ -56,12 +56,12 @@ class Rogue extends Urge.Game {
 				const g = parseInt(Math.random() * 256);
 				const b = parseInt(Math.random() * 128) + 128;
 				c.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')';
-				const x = parseInt(Math.random() * canvas.width);
-				const y = parseInt(Math.random() * canvas.height);
+				const x = parseInt(Math.random() * width);
+				const y = parseInt(Math.random() * height);
 				const size = parseInt(Math.random() * maxDelta) + minSize;
 				c.fillRect(x, y, size, size);
 			}
-		}, canvas.width, canvas.height);
+		}, width, height);
 	}
 }
 
