@@ -319,10 +319,8 @@ class BaseGame extends RenderNode {
 
 	buildCanvas(width = 0, height = 0) {
 		const bounds = this.#bounds();
-		console.log('Build Canvas Bounds', bounds);
 		const widthToUse = width ? width : bounds.width;
 		const heightToUse = height ? height : bounds.height;
-		console.log('Build Canvas Bounds:', widthToUse, heightToUse);
 		return this.isOffscreen()
 			? BaseGame.buildOffscreenCanvas(widthToUse, heightToUse)
 			: BaseGame.buildOnscreenCanvas(widthToUse, heightToUse);
