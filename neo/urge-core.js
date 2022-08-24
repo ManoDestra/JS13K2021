@@ -31,6 +31,10 @@ class Watch {
 		this.#p = this.#c;
 		this.#c = c;
 	}
+
+	hasChanged() {
+		return this.#c != this.#p;
+	}
 }
 
 class GameTime {
@@ -55,6 +59,24 @@ class GameTime {
 
 	static update(t) {
 		GameTime.#s.set(t);
+	}
+}
+
+class Boundary {
+	static #bounds = new Watch({
+		width: 0,
+		height: 0,
+		maxWidth: 0,
+		maxHeight: 0,
+		orientationType: 'landscape-primary'
+	});
+
+	static get() {
+		return { ...this.#bounds };
+	}
+
+	static set(bounds) {
+		this.#bounds.set(bounds);
 	}
 }
 
@@ -300,7 +322,6 @@ class BaseGame extends RenderNode {
 	}
 
 	resize(bounds) {
-		console.log('Resize:', bounds);
 		Object.assign(this.getContext().canvas, bounds);
 	}
 

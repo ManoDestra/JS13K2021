@@ -233,6 +233,7 @@ class Urge {
 		const r = () => {
 			const bounds = Urge.#getBounds();
 			game.resize(bounds);
+			Boundary.set(bounds);
 		};
 		Urge.#bindResize(r);
 		game.start();
@@ -289,8 +290,11 @@ class Urge {
 	}
 
 	static #getBounds() {
+		console.log('Screen:', screen);
 		const { width, height } = window.visualViewport;
-		return { width, height };
+		const { availWidth: maxWidth, availHeight: maxHeight, orientation: { type: orientationType } } = screen;
+		console.log('Orientation Type:', orientationType);
+		return { width, height, maxWidth, maxHeight, orientationType };
 	}
 
 	static #bindResize(r) {
