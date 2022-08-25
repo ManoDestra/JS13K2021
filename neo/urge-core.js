@@ -399,10 +399,6 @@ class BaseGame extends RenderNode {
 			const measure = ctx.measureText(msg);
 			//console.log('Measure:', measure);
 			ctx.fillText(msg, 50, 50);
-		} else {
-			if (parseInt(GameTime.previous() / 1000) != parseInt(GameTime.current() / 1000)) {
-				//console.log('FPS:' + GameTime.fps());
-			}
 		}
 	}
 }
