@@ -20,6 +20,7 @@ self.onmessage = e => {
 				break;
 			case 'RESIZE':
 				game.resize(payload);
+				Boundary.set(payload);
 				break;
 			case 'KEYBOARD':
 				game.setKeyState(payload);

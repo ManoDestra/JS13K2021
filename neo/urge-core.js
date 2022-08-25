@@ -31,6 +31,10 @@ class Watch {
 		this.#p = this.#c;
 		this.#c = c;
 	}
+
+	hasChanged() {
+		return this.#c != this.#p;
+	}
 }
 
 class GameTime {
@@ -55,6 +59,24 @@ class GameTime {
 
 	static update(t) {
 		GameTime.#s.set(t);
+	}
+}
+
+class Boundary {
+	static #bounds = new Watch({
+		width: 0,
+		height: 0,
+		maxWidth: 0,
+		maxHeight: 0,
+		orientationType: 'landscape-primary'
+	});
+
+	static get() {
+		return { ...this.#bounds };
+	}
+
+	static set(bounds) {
+		this.#bounds.set(bounds);
 	}
 }
 
@@ -300,7 +322,6 @@ class BaseGame extends RenderNode {
 	}
 
 	resize(bounds) {
-		console.log('Resize:', bounds);
 		Object.assign(this.getContext().canvas, bounds);
 	}
 
@@ -374,14 +395,14 @@ class BaseGame extends RenderNode {
 		if (ctx.fillText) {
 			ctx.font = '36px Arial';
 			ctx.fillStyle = 'white';
+			ctx.textAlign = 'left';
+			//ctx.textAlign = 'center';
+			ctx.textBaseline = 'top';
+			//ctx.textBaseline = 'middle';
 			const msg = `FPS: ${parseInt(GameTime.fps())}`;
 			const measure = ctx.measureText(msg);
 			//console.log('Measure:', measure);
-			ctx.fillText(msg, 50, 50);
-		} else {
-			if (parseInt(GameTime.previous() / 1000) != parseInt(GameTime.current() / 1000)) {
-				//console.log('FPS:' + GameTime.fps());
-			}
+			ctx.fillText(msg, 0, 0);
 		}
 	}
 }

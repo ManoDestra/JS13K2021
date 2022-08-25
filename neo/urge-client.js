@@ -232,7 +232,9 @@ class Urge {
 
 		const r = () => {
 			const bounds = Urge.#getBounds();
+			//console.log('OnScreen Bounds:', bounds);
 			game.resize(bounds);
+			Boundary.set(bounds);
 		};
 		Urge.#bindResize(r);
 		game.start();
@@ -264,6 +266,7 @@ class Urge {
 
 		const r = () => {
 			const payload = Urge.#getBounds();
+			//console.log('Offscreen Bounds:', payload);
 			w.postMessage({
 				type: 'RESIZE',
 				payload
@@ -290,7 +293,8 @@ class Urge {
 
 	static #getBounds() {
 		const { width, height } = window.visualViewport;
-		return { width, height };
+		const { availWidth: maxWidth, availHeight: maxHeight, orientation: { angle = 0, type: orientationType } = {} } = screen;
+		return { width, height, maxWidth, maxHeight, angle, orientationType };
 	}
 
 	static #bindResize(r) {

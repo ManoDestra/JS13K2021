@@ -1,6 +1,8 @@
 class Background extends RenderNode {
 	constructor(ctx) {
 		super(ctx);
+		this.setActive(true);
+		this.setOpacity(1);
 	}
 
 	init() {
