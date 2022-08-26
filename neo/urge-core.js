@@ -393,16 +393,16 @@ class BaseGame extends RenderNode {
 	renderNode() {
 		const ctx = this.getContext();
 		if (ctx.fillText) {
-			ctx.font = '36px Arial';
+			ctx.font = '64px Courier New';
 			ctx.fillStyle = 'white';
 			ctx.textAlign = 'left';
 			//ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
 			//ctx.textBaseline = 'middle';
-			const msg = `FPS: ${parseInt(GameTime.fps())}`;
+			const msg = `Frames Per Second (FPS): ${parseInt(GameTime.fps())}`;
 			const measure = ctx.measureText(msg);
 			//console.log('Measure:', measure);
-			ctx.fillText(msg, 0, 0);
+			ctx.fillText(msg, 5, 5);
 		}
 	}
 }
