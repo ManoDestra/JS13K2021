@@ -57,6 +57,10 @@ class GameTime {
 		return elapsed == 0 ? 0 : (1000 / elapsed);
 	}
 
+	static fpsAsInt() {
+		return parseInt(GameTime.fps());
+	}
+
 	static update(t) {
 		GameTime.#s.set(t);
 	}
@@ -219,11 +223,11 @@ class RenderNode extends UpdateNode {
 		this.#ctx = ctx;
 
 		/*
-		// Works both on and off screen
+		// Works both on/off screen
 		createImageBitmap(c).then(bm => {
 			console.log('Bitmap:', bm);
 
-			// Patterns work off either on or off context
+			// Patterns work on/off screen
 			const pattern = this.#ctx.createPattern(bm, 'repeat-x');
 			console.log('Pattern:', pattern);
 		});
@@ -393,14 +397,23 @@ class BaseGame extends RenderNode {
 	renderNode() {
 		const ctx = this.getContext();
 		if (ctx.fillText) {
-			ctx.font = '2.5em Consolas';
+			// TOP-LEFT
+			ctx.font = '32px Consolas';
+
 			ctx.fillStyle = 'white';
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'top';
-			const msg = `Frames Per Second (FPS): ${parseInt(GameTime.fps())}`;
+			const msg = `Frames Per Second (FPS): ${GameTime.fpsAsInt()}`;
 			const measure = ctx.measureText(msg);
 			//console.log('Measure:', measure);
 			ctx.fillText(msg, 5, 5);
+
+			// TOP-RIGHT
+			ctx.textAlign = 'right';
+
+			// BOTTOM-LEFT
+
+			// BOTTOM-RIGHT
 		}
 	}
 }
