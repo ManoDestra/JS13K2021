@@ -398,22 +398,33 @@ class BaseGame extends RenderNode {
 		const ctx = this.getContext();
 		if (ctx.fillText) {
 			// TOP-LEFT
-			ctx.font = '32px Consolas';
+			const fontSize = 36;
+			const fontName = 'Segoe UI';
+			ctx.font = `${fontSize}px ${fontName}`;
 
 			ctx.fillStyle = 'white';
+
+			const msg = `FPS: ${GameTime.fpsAsInt()}`;
+			const measure = ctx.measureText(msg);
+
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'top';
-			const msg = `Frames Per Second (FPS): ${GameTime.fpsAsInt()}`;
-			const measure = ctx.measureText(msg);
-			//console.log('Measure:', measure);
-			ctx.fillText(msg, 5, 5);
+			ctx.fillText(msg, 0, 0);
 
 			// TOP-RIGHT
 			ctx.textAlign = 'right';
+			ctx.textBaseline = 'top';
+			ctx.fillText('Memento Mori (Mortimer\'s Eternal Return)', 1536, 0);
 
 			// BOTTOM-LEFT
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'bottom';
+			ctx.fillText('Score: 616', 0, 431);
 
 			// BOTTOM-RIGHT
+			ctx.textAlign = 'right';
+			ctx.textBaseline = 'bottom';
+			ctx.fillText('Level: 123', 1536, 431);
 		}
 	}
 }
