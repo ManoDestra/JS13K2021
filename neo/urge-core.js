@@ -300,6 +300,8 @@ class RenderNode extends UpdateNode {
 		ctx.save();
 		renderNodes.forEach(n => {
 			const t = n.getSizeType();
+
+			// TODO: we're using rect at present, but we may need to separate that out?
 			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
 			const x = rx * cw;
 			const y = ry * ch;
