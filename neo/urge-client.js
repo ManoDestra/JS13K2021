@@ -219,7 +219,6 @@ class Urge {
 	static #buildBody() {
 		document.body.innerHTML = '';
 		const c = document.createElement('canvas');
-		//Object.assign(c, {  });
 		document.body.appendChild(c);
 	}
 

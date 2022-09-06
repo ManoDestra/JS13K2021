@@ -16,12 +16,12 @@ class StartScreen extends RenderNode {
 	constructor(ctx) {
 		super(ctx);
 		this.setActive(true);
-		Object.assign(this.getRect(), {
-			x: 0.25,
-			y: 0.25,
-			width: 0.5,
-			height: 0.5
-		});
+		//Object.assign(this.getRect(), {
+		//	x: 0.25,
+		//	y: 0.25,
+		//	width: 0.5,
+		//	height: 0.5
+		//});
 		this.setOpacity(1);
 	}
 
@@ -30,6 +30,10 @@ class StartScreen extends RenderNode {
 		const { width, height } = ctx.canvas;
 		ctx.fillStyle = 'darkred';
 		ctx.fillRect(0, 0, width, height);
+	}
+
+	resizeNode(bounds) {
+		super.resizeNode(bounds);
 	}
 }
 

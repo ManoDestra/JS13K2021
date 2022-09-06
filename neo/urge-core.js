@@ -1,3 +1,18 @@
+/*
+*** DESIGN ***
+Urge-client On Its Own For Onscreen
+Urge-client/Urge-server for Offscreen
+
+Either the client or the server instantiates Game
+
+UrgeNode
+UpdateNode
+RenderNode
+
+Game is a RenderNode
+**************
+*/
+
 class Classy {
 	static instantiate(clazz, args) {
 		const c = clazz.constructor;
@@ -55,6 +70,10 @@ class GameTime {
 	static fps() {
 		const elapsed = GameTime.elapsed();
 		return elapsed == 0 ? 0 : (1000 / elapsed);
+	}
+
+	static fpsAsInt() {
+		return parseInt(GameTime.fps());
 	}
 
 	static update(t) {
@@ -207,6 +226,7 @@ class UpdateNode extends UrgeNode {
 
 class RenderNode extends UpdateNode {
 	#ctx;
+	#sizeType = 0;
 	#rect = new Rect(0, 0, 1, 1);
 	#o = 0;
 
@@ -219,11 +239,11 @@ class RenderNode extends UpdateNode {
 		this.#ctx = ctx;
 
 		/*
-		// Works both on and off screen
+		// Works both on/off screen
 		createImageBitmap(c).then(bm => {
 			console.log('Bitmap:', bm);
 
-			// Patterns work off either on or off context
+			// Patterns work on/off screen
 			const pattern = this.#ctx.createPattern(bm, 'repeat-x');
 			console.log('Pattern:', pattern);
 		});
@@ -236,6 +256,14 @@ class RenderNode extends UpdateNode {
 
 	getCanvas() {
 		return this.getContext().canvas;
+	}
+
+	getSizeType() {
+		return this.#sizeType;
+	}
+
+	setSizeType(sizeType) {
+		this.#sizeType = sizeType;
 	}
 
 	getRect() {
@@ -267,22 +295,65 @@ class RenderNode extends UpdateNode {
 		const renderNodes = this.#getNodesForRender();
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
+		const isLandscape = cw >= ch;
+
 		ctx.save();
 		renderNodes.forEach(n => {
-			const c = n.getCanvas();
+			const t = n.getSizeType();
+
+			// TODO: we're using rect at present, but we may need to separate that out?
 			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
 			const x = rx * cw;
 			const y = ry * ch;
-			const w = rw * cw;
-			const h = rh * ch;
-			const o = n.getOpacity();
-			ctx.globalAlpha = o;
-			ctx.drawImage(c, x, y, w, h);
+
+			// TODO: simplify?
+			let w;
+			let h;
+			switch (t) {
+				case 0:
+					w = rw * cw;
+					h = rh * ch;
+					break;
+				case 1:
+					if (isLandscape) {
+						h = rh * ch;
+						w = rw * h;
+					} else {
+						w = rw * cw;
+						h = rh * w;
+					}
+
+					break;
+				case 2:
+					if (isLandscape) {
+						w = rw * cw;
+						h = rh * w;
+					} else {
+						h = rh * ch;
+						w = rw * h;
+					}
+
+					break;
+				default:
+					throw new Error('Invalid Size Type: ' + t);
+			}
+
+			ctx.globalAlpha = n.getOpacity();
+			ctx.drawImage(n.getCanvas(), x, y, w, h);
 		});
 		ctx.restore();
 	}
 
 	renderNode() {
+	}
+
+	resize(bounds) {
+		this.resizeNode(bounds);
+		this.#getNodesForRender().forEach(n => n.resize(bounds));
+	}
+
+	resizeNode(bounds) {
+		Object.assign(this.getContext().canvas, bounds);
 	}
 
 	#getNodesForRender() {
@@ -319,10 +390,6 @@ class BaseGame extends RenderNode {
 
 	isOffscreen() {
 		return !!this.#wc;
-	}
-
-	resize(bounds) {
-		Object.assign(this.getContext().canvas, bounds);
 	}
 
 	setKeyState(s) {
@@ -393,16 +460,37 @@ class BaseGame extends RenderNode {
 	renderNode() {
 		const ctx = this.getContext();
 		if (ctx.fillText) {
-			ctx.font = '64px Courier New';
+			// TOP-LEFT
+			const fontSize = 36;
+			const fontName = 'Segoe UI';
+			const mX = 10;
+			const mY = 10;
+			ctx.font = `${fontSize}px ${fontName}`;
+
 			ctx.fillStyle = 'white';
-			ctx.textAlign = 'left';
-			//ctx.textAlign = 'center';
-			ctx.textBaseline = 'top';
-			//ctx.textBaseline = 'middle';
-			const msg = `Frames Per Second (FPS): ${parseInt(GameTime.fps())}`;
+
+			const msg = `FPS: ${GameTime.fpsAsInt()}`;
 			const measure = ctx.measureText(msg);
-			//console.log('Measure:', measure);
-			ctx.fillText(msg, 5, 5);
+
+			// TOP-LEFT
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'top';
+			ctx.fillText(msg, mX, mY);
+
+			// TOP-RIGHT
+			ctx.textAlign = 'right';
+			ctx.textBaseline = 'top';
+			ctx.fillText('Memento Mori (Mortimer\'s Eternal Return)', this.getCanvas().width - mX, mY);
+
+			// BOTTOM-LEFT
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'bottom';
+			ctx.fillText('Score: 0', mX, this.getCanvas().height - mY);
+
+			// BOTTOM-RIGHT
+			ctx.textAlign = 'right';
+			ctx.textBaseline = 'bottom';
+			ctx.fillText('v0.0.0.1-ALPHA', this.getCanvas().width - mX, this.getCanvas().height - mY);
 		}
 	}
 }
