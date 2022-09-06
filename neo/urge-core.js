@@ -461,6 +461,8 @@ class BaseGame extends RenderNode {
 			// TOP-LEFT
 			const fontSize = 36;
 			const fontName = 'Segoe UI';
+			const mX = 10;
+			const mY = 10;
 			ctx.font = `${fontSize}px ${fontName}`;
 
 			ctx.fillStyle = 'white';
@@ -468,24 +470,25 @@ class BaseGame extends RenderNode {
 			const msg = `FPS: ${GameTime.fpsAsInt()}`;
 			const measure = ctx.measureText(msg);
 
+			// TOP-LEFT
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'top';
-			ctx.fillText(msg, 0, 0);
+			ctx.fillText(msg, mX, mY);
 
 			// TOP-RIGHT
 			ctx.textAlign = 'right';
 			ctx.textBaseline = 'top';
-			ctx.fillText('Memento Mori (Mortimer\'s Eternal Return)', this.getCanvas().width, 0);
+			ctx.fillText('Memento Mori (Mortimer\'s Eternal Return)', this.getCanvas().width - mX, mY);
 
 			// BOTTOM-LEFT
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'bottom';
-			ctx.fillText('Score: 0', 0, this.getCanvas().height);
+			ctx.fillText('Score: 0', mX, this.getCanvas().height - mY);
 
 			// BOTTOM-RIGHT
 			ctx.textAlign = 'right';
 			ctx.textBaseline = 'bottom';
-			ctx.fillText('v0.0.0.1-ALPHA', this.getCanvas().width, this.getCanvas().height);
+			ctx.fillText('v0.0.0.1-ALPHA', this.getCanvas().width - mX, this.getCanvas().height - mY);
 		}
 	}
 }
