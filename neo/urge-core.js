@@ -226,6 +226,7 @@ class UpdateNode extends UrgeNode {
 
 class RenderNode extends UpdateNode {
 	#ctx;
+	#sizeType = 0;
 	#rect = new Rect(0, 0, 1, 1);
 	#o = 0;
 
@@ -257,6 +258,14 @@ class RenderNode extends UpdateNode {
 		return this.getContext().canvas;
 	}
 
+	getSizeType() {
+		return this.#sizeType;
+	}
+
+	setSizeType(sizeType) {
+		this.#sizeType = sizeType;
+	}
+
 	getRect() {
 		return this.#rect;
 	}
@@ -286,19 +295,48 @@ class RenderNode extends UpdateNode {
 		const renderNodes = this.#getNodesForRender();
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
+		const isLandscape = cw >= ch;
 
-		// TODO: this is what's keeping everything rendering correctly.
-		// It needs to render based on what the component specifies
 		ctx.save();
 		renderNodes.forEach(n => {
-			//const c = n.getCanvas();
+			const t = n.getSizeType();
 			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
 			const x = rx * cw;
 			const y = ry * ch;
-			const w = rw * cw;
-			const h = rh * ch;
-			const o = n.getOpacity();
-			ctx.globalAlpha = o;
+
+			// TODO: simplify?
+			let w;
+			let h;
+			switch (t) {
+				case 0:
+					w = rw * cw;
+					h = rh * ch;
+					break;
+				case 1:
+					if (isLandscape) {
+						h = rh * ch;
+						w = rw * h;
+					} else {
+						w = rw * cw;
+						h = rh * w;
+					}
+
+					break;
+				case 2:
+					if (isLandscape) {
+						w = rw * cw;
+						h = rh * w;
+					} else {
+						h = rh * ch;
+						w = rw * h;
+					}
+
+					break;
+				default:
+					throw new Error('Invalid Size Type: ' + t);
+			}
+
+			ctx.globalAlpha = n.getOpacity();
 			ctx.drawImage(n.getCanvas(), x, y, w, h);
 		});
 		ctx.restore();
