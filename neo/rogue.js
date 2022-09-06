@@ -26,10 +26,14 @@ class StartScreen extends RenderNode {
 	}
 
 	renderNode() {
-		//const ctx = this.getContext();
-		//const { width, height } = ctx.canvas;
-		//ctx.fillStyle = 'darkred';
-		//ctx.fillRect(0, 0, width, height);
+		const ctx = this.getContext();
+		const { width, height } = ctx.canvas;
+		ctx.fillStyle = 'darkred';
+		ctx.fillRect(0, 0, width, height);
+	}
+
+	resizeNode(bounds) {
+		super.resizeNode(bounds);
 	}
 }
 

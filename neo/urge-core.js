@@ -1,3 +1,18 @@
+/*
+*** DESIGN ***
+Urge-client On Its Own For Onscreen
+Urge-client/Urge-server for Offscreen
+
+Either the client or the server instantiates Game
+
+UrgeNode
+UpdateNode
+RenderNode
+
+Game is a RenderNode
+**************
+*/
+
 class Classy {
 	static instantiate(clazz, args) {
 		const c = clazz.constructor;
@@ -271,9 +286,12 @@ class RenderNode extends UpdateNode {
 		const renderNodes = this.#getNodesForRender();
 		const ctx = this.#ctx;
 		const { width: cw, height: ch } = ctx.canvas;
+
+		// TODO: this is what's keeping everything rendering correctly.
+		// It needs to render based on what the component specifies
 		ctx.save();
 		renderNodes.forEach(n => {
-			const c = n.getCanvas();
+			//const c = n.getCanvas();
 			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
 			const x = rx * cw;
 			const y = ry * ch;
@@ -281,12 +299,21 @@ class RenderNode extends UpdateNode {
 			const h = rh * ch;
 			const o = n.getOpacity();
 			ctx.globalAlpha = o;
-			ctx.drawImage(c, x, y, w, h);
+			ctx.drawImage(n.getCanvas(), x, y, w, h);
 		});
 		ctx.restore();
 	}
 
 	renderNode() {
+	}
+
+	resize(bounds) {
+		this.resizeNode(bounds);
+		this.#getNodesForRender().forEach(n => n.resize(bounds));
+	}
+
+	resizeNode(bounds) {
+		Object.assign(this.getContext().canvas, bounds);
 	}
 
 	#getNodesForRender() {
@@ -323,10 +350,6 @@ class BaseGame extends RenderNode {
 
 	isOffscreen() {
 		return !!this.#wc;
-	}
-
-	resize(bounds) {
-		Object.assign(this.getContext().canvas, bounds);
 	}
 
 	setKeyState(s) {
@@ -414,17 +437,17 @@ class BaseGame extends RenderNode {
 			// TOP-RIGHT
 			ctx.textAlign = 'right';
 			ctx.textBaseline = 'top';
-			ctx.fillText('Memento Mori (Mortimer\'s Eternal Return)', 1536, 0);
+			ctx.fillText('Memento Mori (Mortimer\'s Eternal Return)', this.getCanvas().width, 0);
 
 			// BOTTOM-LEFT
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'bottom';
-			ctx.fillText('Score: 616', 0, 431);
+			ctx.fillText('Score: 0', 0, this.getCanvas().height);
 
 			// BOTTOM-RIGHT
 			ctx.textAlign = 'right';
 			ctx.textBaseline = 'bottom';
-			ctx.fillText('Level: 123', 1536, 431);
+			ctx.fillText('v0.0.0.1-ALPHA', this.getCanvas().width, this.getCanvas().height);
 		}
 	}
 }
