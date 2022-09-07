@@ -258,6 +258,11 @@ class RenderNode extends UpdateNode {
 		return this.getContext().canvas;
 	}
 
+	clearContext(color = '#111') {
+		this.#ctx.fillStyle = color;
+		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
+	}
+
 	getSizeType() {
 		return this.#sizeType;
 	}
@@ -279,8 +284,7 @@ class RenderNode extends UpdateNode {
 	}
 
 	render() {
-		this.#ctx.fillStyle = '#111';
-		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
+		this.clearContext();
 		this.renderChildren();
 		this.renderChildrenToContext();
 		this.renderNode();
@@ -288,6 +292,12 @@ class RenderNode extends UpdateNode {
 
 	renderChildren() {
 		const renderNodes = this.#getNodesForRender();
+		const c = parseInt(GameTime.current() / 1000);
+		const p = parseInt(GameTime.previous() / 1000);
+		if (c != p) {
+			//console.log('Children:', this, c, renderNodes.length);
+		}
+
 		renderNodes.forEach(n => n.render());
 	}
 
@@ -300,42 +310,23 @@ class RenderNode extends UpdateNode {
 		ctx.save();
 		renderNodes.forEach(n => {
 			const t = n.getSizeType();
+			if (![0, 1, 2].includes(t)) {
+				throw new Error('Invalid Sizing Type: ' + t);
+			}
 
 			// TODO: we're using rect at present, but we may need to separate that out?
 			const { x: rx, y: ry, width: rw, height: rh } = n.getRect();
 			const x = rx * cw;
 			const y = ry * ch;
 
-			// TODO: simplify?
 			let w;
 			let h;
-			switch (t) {
-				case 0:
-					w = rw * cw;
-					h = rh * ch;
-					break;
-				case 1:
-					if (isLandscape) {
-						h = rh * ch;
-						w = rw * h;
-					} else {
-						w = rw * cw;
-						h = rh * w;
-					}
-
-					break;
-				case 2:
-					if (isLandscape) {
-						w = rw * cw;
-						h = rh * w;
-					} else {
-						h = rh * ch;
-						w = rw * h;
-					}
-
-					break;
-				default:
-					throw new Error('Invalid Size Type: ' + t);
+			if ((t == 1 && isLandscape) || t == 2 && !isLandscape) {
+				h = rh * ch;
+				w = rw * h;
+			} else {
+				w = rw * cw;
+				h = t == 0 ? rh * ch : rh * w;
 			}
 
 			ctx.globalAlpha = n.getOpacity();
