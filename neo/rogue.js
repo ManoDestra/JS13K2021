@@ -37,5 +37,6 @@ class Game extends BaseGame {
 		const start = new StartScreen(ctx);
 		const screens = [ start ];
 		this.add(...screens);
+		this.transition(start);
 	}
 }

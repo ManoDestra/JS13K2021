@@ -495,6 +495,9 @@ class BaseGame extends RenderNode {
 	}
 
 	transition(...renderNodes) {
-		console.log(...renderNodes);
+		renderNodes.forEach(n => {
+			const tag = n instanceof UrgeNode ? n.getTag() : n;
+			console.log(tag);
+		});
 	}
 }
