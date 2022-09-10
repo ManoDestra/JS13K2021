@@ -19,6 +19,7 @@ self.onmessage = e => {
 				game.start();
 				break;
 			case 'RESIZE':
+				// TODO: remove the direct game resize?
 				game.resize(payload);
 				Boundary.set(payload);
 				break;

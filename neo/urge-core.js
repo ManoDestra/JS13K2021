@@ -171,7 +171,16 @@ class Rect extends DOMRect {
 }
 
 class UrgeNode {
+	#tag = '';
 	#nodes = [];
+
+	constructor(tag) {
+		this.#tag = tag;
+	}
+
+	getTag() {
+		return this.#tag;
+	}
 
 	clear() {
 		this.#nodes.length = 0;
@@ -191,6 +200,9 @@ class UrgeNode {
 }
 
 class UpdateNode extends UrgeNode {
+	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
+	#a = false;
+
 	add(...nodes) {
 		if (!nodes.every(n => n instanceof UpdateNode)) {
 			throw new Error('All Nodes Must Subclass UpdateNode', nodes);
@@ -198,9 +210,6 @@ class UpdateNode extends UrgeNode {
 
 		super.add(...nodes);
 	}
-
-	// TODO: change to state e.g. INACTIVE, INITIALIZING, ACTIVE, TERMINATING?
-	#a = false;
 
 	init() {
 	}
@@ -230,8 +239,8 @@ class RenderNode extends UpdateNode {
 	#rect = new Rect(0, 0, 1, 1);
 	#o = 0;
 
-	constructor(ctx) {
-		super();
+	constructor(tag, ctx) {
+		super(tag);
 		if (!ctx) {
 			throw new Error('Context Is Required');
 		}
@@ -361,7 +370,7 @@ class BaseGame extends RenderNode {
 	#pKey = [];
 
 	constructor(ctx, wc = null) {
-		super(ctx);
+		super('ROOT', ctx);
 		this.#wc = wc;
 	}
 
@@ -483,5 +492,9 @@ class BaseGame extends RenderNode {
 			ctx.textBaseline = 'bottom';
 			ctx.fillText('v0.0.0.1-ALPHA', this.getCanvas().width - mX, this.getCanvas().height - mY);
 		}
+	}
+
+	transition(...renderNodes) {
+		console.log(...renderNodes);
 	}
 }
