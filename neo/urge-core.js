@@ -498,6 +498,8 @@ class BaseGame extends RenderNode {
 		renderNodes.forEach(n => {
 			const tag = n instanceof UrgeNode ? n.getTag() : n;
 			console.log(tag);
+			n.setActive(true);
+			n.setOpacity(1);
 		});
 	}
 }
