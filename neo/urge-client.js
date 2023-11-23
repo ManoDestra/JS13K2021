@@ -74,7 +74,8 @@ class KeyWriter {
 		//console.log('KeyEvent:', window?.KeyEvent);
 		//console.log('KeyEvent.DOM_VK_0:', window?.KeyEvent?.DOM_VK_0);
 
-		KeyWriter.#clear(handler);		window.addEventListener('keydown', KeyWriter.#down, false);
+		KeyWriter.#clear(handler);
+		window.addEventListener('keydown', KeyWriter.#down, false);
 		window.addEventListener('keyup', KeyWriter.#up, false);
 	}
 
