@@ -179,10 +179,15 @@ class UrgeClient {
 	constructor(server = 'UrgeServer.js') {
 		this.#server = new Worker(`${server}?r=${Math.random()}`);
 		this.#server.onmessage = this.#handleMessage;
+		this.#addComponents();
 	}
 
 	get title() {
 		return 'Game';
+	}
+
+	get components() {
+		// Empty Implementation
 	}
 
 	async init() {
@@ -198,26 +203,28 @@ class UrgeClient {
 		this.#bindResize();
 		this.#bindVisibility();
 		KeyWriter.start(e => {
-			this.#server.postMessage({
-				type: 'KEYBOARD',
-				request: e
-			});
+			this.#post('KEYBOARD', e);
 		});
 		Pads.start(e => {
-			this.#server.postMessage({
-				type: 'GAME_PAD',
-				request: e
-			});
+			this.#post('GAME_PAD', e);
 		});
 
 		/*
 		// Sending ImageData objects to the server works
 		const imageData = new ImageData(1024, 768);
-		this.#server.postMessage({
-			type: 'IMG',
-			request: imageData
-		});
+		this.#post('IMG', imageData);
 		*/
+	}
+
+	#addComponents() {
+		const components = this.components;
+		if (Array.isArray(components) && components.length) {
+			const [ path, ...componentClasses ] = components;
+			const classes = Array.isArray(componentClasses) && componentClasses.length
+				? classes
+				: [path.replace('.js', '')];
+			this.#post('ADD', { path, classes });
+		}
 	}
 
 	#handleMessage(e) {
@@ -225,18 +232,12 @@ class UrgeClient {
 	}
 
 	#handleResize() {
-		const request = this.#getBounds();
-		this.#server.postMessage({
-			type: 'RESIZE',
-			request
-		});
+		const bounds = this.#getBounds();
+		this.#post('RESIZE', bounds);
 	}
 
 	#handleVisibility() {
-		this.#server.postMessage({
-			type: 'VISIBILITY',
-			request: !document.hidden
-		});
+		this.#post('VISIBILITY', !document.hidden);
 	}
 
 	#setStyle() {
@@ -287,5 +288,9 @@ class UrgeClient {
 	#bindVisibility() {
 		const r = () => this.#handleVisibility();
 		addEventListener('visibilitychange', r, false);
+	}
+
+	#post(type = '', request = {}) {
+		this.#server.postMessage({ type, request });
 	}
 }

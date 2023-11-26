@@ -54,21 +54,23 @@ class Handler {
 		const { type, request } = e.data;
 
 		switch (type) {
-			case 'IMPORT':
-				const reqToUse = Array.isArray(request) ? request : [request];
-				importScripts(...request);
-				break;
-			case 'INIT':
-				// TODO: handle assets or just initialize bespoke game class?
+			case 'ADD':
+				console.log(type, request);
+				const { path = '', classes } = request;
+				if (path && Array.isArray(classes) && classes.length) {
+					importScripts(path);
+					classes.forEach(c => {
+						const componentClass = eval(c);
+						const component = new componentClass();
+						console.log('Component:', component);
 
-				const gameClass = eval(request);
-				if (!gameClass) {
-					throw new Error('Class Not Found: ' + request);
+						// TODO: add component to server
+						//component.update();
+						//component.render();
+						//console.log('Updated/Rendered');
+					});
 				}
 
-				// TODO: fix interface, probably gameClass.start() or gameClass.init().
-				const game = new gameClass();
-				game.process();
 				break;
 			case 'START':
 				server = new UrgeServer(request);
