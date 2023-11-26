@@ -1,7 +1,5 @@
 importScripts(`UrgeCore.js?r=${Math.random()}`);
 
-let server = null;
-
 class UrgeServer {
 	#ctx;
 	#active = true;
@@ -152,6 +150,7 @@ class Handler {
 	}
 }
 
+let server = null;
 self.onmessage = Handler.onMessage;
 self.onmessageerror = Handler.onMessageError;
 self.onerror = Handler.onError;
