@@ -44,19 +44,14 @@ class UrgeServer {
 
 	#update(t) {
 		GameTime.update(t);
+
+		// TODO: active only
+		// TODO: will depend on if it's an update component, or only allow UpdateNodes to be added
 		this.#components.forEach(c => c.update());
 	}
 
 	#render(t) {
-		this.#ctx.fillStyle = '#111';
-		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-
-		this.#ctx.font = '50px Segoe UI';
-		this.#ctx.fillStyle = 'white';
-		const text = `FPS: ${GameTime.fpsAsInt()} - ${GameTime.currentSeconds()} Seconds`;
-		const size = this.#ctx.measureText(text);
-		this.#ctx.fillText(text, 20, 60);
-
+		// TODO: active only
 		// TODO: will depend on if it's a render component
 		this.#components.forEach(c => c.render());
 	}
