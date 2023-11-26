@@ -195,16 +195,20 @@ class RenderNode extends UpdateNode {
 
 	render() {
 	}
-
-	clearContext(color = '#111') {
-		const { width, height } = this.#ctx.canvas;
-		this.#ctx.fillStyle = color;
-		this.#ctx.fillRect(0, 0, width, height);
-	}
 }
 
 class UrgeGame extends RenderNode {
 	constructor(ctx) {
 		super('Game', ctx);
+	}
+
+	render() {
+		this.clearContext();
+	}
+
+	clearContext(color = '#111') {
+		const { width, height } = this.ctx.canvas;
+		this.ctx.fillStyle = color;
+		this.ctx.fillRect(0, 0, width, height);
 	}
 }
