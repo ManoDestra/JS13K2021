@@ -220,7 +220,7 @@ class UrgeClient {
 	}
 
 	#handleMessage(e) {
-		console.log('Server Message:', e.data);
+		console.log('Message Received From Server:', e.data);
 	}
 
 	#handleResize() {

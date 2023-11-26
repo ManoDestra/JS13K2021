@@ -128,24 +128,3 @@ class Rect extends DOMRect {
 		this.height = height;
 	}
 }
-
-/*
-// Doesn't look right
-class Boundary {
-	static #bounds = new Watch({
-		width: 0,
-		height: 0,
-		maxWidth: 0,
-		maxHeight: 0,
-		orientationType: 'landscape-primary'
-	});
-
-	static get() {
-		return { ...this.#bounds };
-	}
-
-	static set(bounds) {
-		this.#bounds.set(bounds);
-	}
-}
-*/
