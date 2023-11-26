@@ -3,6 +3,7 @@ importScripts(`UrgeCore.js?r=${Math.random()}`);
 class UrgeServer {
 	#ctx;
 	#active = true;
+	#components = [];
 
 	constructor(osc) {
 		this.#ctx = osc.getContext('2d');
@@ -14,6 +15,10 @@ class UrgeServer {
 
 	set active(value) {
 		this.#active = !!value;
+	}
+
+	add(...c) {
+		this.#components.push(...c);
 	}
 
 	resize(bounds) {
@@ -35,6 +40,7 @@ class UrgeServer {
 
 	#update(t) {
 		GameTime.update(t);
+		this.#components.forEach(c => c.update());
 	}
 
 	#render(t) {
@@ -46,6 +52,9 @@ class UrgeServer {
 		const text = `FPS: ${GameTime.fpsAsInt()} - ${GameTime.currentSeconds()} Seconds`;
 		const size = this.#ctx.measureText(text);
 		this.#ctx.fillText(text, 20, 60);
+
+		// TODO: will depend on if it's a render component
+		this.#components.forEach(c => c.render());
 	}
 }
 
@@ -59,16 +68,11 @@ class Handler {
 				const { path = '', classes } = request;
 				if (path && Array.isArray(classes) && classes.length) {
 					importScripts(path);
-					classes.forEach(c => {
+					const components = classes.map(c => {
 						const componentClass = eval(c);
-						const component = new componentClass();
-						console.log('Component:', component);
-
-						// TODO: add component to server
-						//component.update();
-						//component.render();
-						//console.log('Updated/Rendered');
+						return new componentClass();
 					});
+					server.add(...components);
 				}
 
 				break;

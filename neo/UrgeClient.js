@@ -179,7 +179,6 @@ class UrgeClient {
 	constructor(server = 'UrgeServer.js') {
 		this.#server = new Worker(`${server}?r=${Math.random()}`);
 		this.#server.onmessage = this.#handleMessage;
-		this.#addComponents();
 	}
 
 	get title() {
@@ -202,6 +201,7 @@ class UrgeClient {
 		this.#buildBody();
 		this.#bindResize();
 		this.#bindVisibility();
+		this.#addComponents();
 		KeyWriter.start(e => {
 			this.#post('KEYBOARD', e);
 		});
