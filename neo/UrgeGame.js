@@ -175,21 +175,23 @@ class Pads {
 
 class UrgeGame {
 	#server = null;
-	#title = null;
 
-	constructor(config = {}) {
-		const { server = 'UrgeServer.js', title = 'Game' } = config;
-		this.#title = title;
+	constructor(server = 'UrgeServer.js') {
 		this.#server = new Worker(`${server}?r=${Math.random()}`);
 		this.#server.onmessage = this.#handleMessage;
 	}
 
+	get title() {
+		return 'Game';
+	}
+
 	async init() {
 		// initialize assets, etc.
+		console.warn('Override init(), if you require asynchronous asset initialization');
 	}
 
 	start() {
-		document.title = this.#title;
+		document.title = this.title;
 		document.body.innerText = '';
 		this.#setStyle();
 		this.#buildBody();

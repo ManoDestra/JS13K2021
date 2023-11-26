@@ -3,9 +3,10 @@
 <head>
 	<meta charset="UTF-8" />
 	<script src="UrgeGame.js"></script>
+	<script src="Rogue19.js"></script>
 	<script defer>
 		addEventListener('load', async e => {
-			const game = new UrgeGame({ title: 'Rogue-19' });
+			const game = new Rogue19();
 			await game.init();
 			game.start();
 		}, false);
