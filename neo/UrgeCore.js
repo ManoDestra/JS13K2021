@@ -58,32 +58,6 @@ class GameTime {
 	}
 }
 
-class Rect extends DOMRect {
-	constructor(x, y, width, height) {
-		super(x, y, width, height);
-	}
-
-	get position() {
-		const { x, y } = this;
-		return { x, y };
-	}
-
-	set position({ x, y }) {
-		this.x = x;
-		this.y = y;
-	}
-
-	get bounds() {
-		const { width, height } = this;
-		return { width, height };
-	}
-
-	set bounds({ width, height }) {
-		this.width = width;
-		this.height = height;
-	}
-}
-
 class KeyReader {
 	#s = [];
 
@@ -126,6 +100,32 @@ class KeyReader {
 	isFire() {
 		return (this.#s?.[32]?.[0] && !this.#s?.[32]?.[1])
 			|| (this.#s?.[13]?.[0] && !this.#s?.[13]?.[1]);
+	}
+}
+
+class Rect extends DOMRect {
+	constructor(x, y, width, height) {
+		super(x, y, width, height);
+	}
+
+	get position() {
+		const { x, y } = this;
+		return { x, y };
+	}
+
+	set position({ x, y }) {
+		this.x = x;
+		this.y = y;
+	}
+
+	get bounds() {
+		const { width, height } = this;
+		return { width, height };
+	}
+
+	set bounds({ width, height }) {
+		this.width = width;
+		this.height = height;
 	}
 }
 
