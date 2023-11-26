@@ -1,6 +1,7 @@
 class Rogue19Server {
 	// TODO: inject context, etc.
-	constructor() {
+	constructor(ctx) {
+		console.log('CTX:', ctx);
 	}
 
 	update() {

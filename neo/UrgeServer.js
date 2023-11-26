@@ -9,6 +9,10 @@ class UrgeServer {
 		this.#ctx = osc.getContext('2d');
 	}
 
+	get ctx() {
+		return this.#ctx;
+	}
+
 	start() {
 		this.#fire();
 	}
@@ -69,7 +73,7 @@ class Handler {
 					importScripts(path);
 					const components = classes.map(c => {
 						const componentClass = eval(c);
-						return new componentClass();
+						return new componentClass(server.ctx);
 					});
 					server.add(...components);
 				}
