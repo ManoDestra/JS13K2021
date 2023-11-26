@@ -5,12 +5,11 @@
 	<script src="UrgeCore.js"></script>
 	<script src="UrgeClient.js"></script>
 	<script defer>
-		addEventListener('load', async e => {
-			const client = new UrgeClient({
+		addEventListener('load', e => {
+			UrgeClient.init({
 				title: 'Rogue-19',
 				components: ['Rogue19.js']
 			});
-			client.start();
 		}, false);
 	</script>
 </head>

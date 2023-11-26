@@ -178,6 +178,11 @@ class UrgeClient {
 	#title;
 	#components;
 
+	static init(config) {
+		const client = new UrgeClient(config);
+		client.start();
+	}
+
 	constructor(config = {}) {
 		const { server = 'UrgeServer.js', title = 'Game', components } = config;
 		this.#server = new Worker(`${server}?r=${Math.random()}`);
