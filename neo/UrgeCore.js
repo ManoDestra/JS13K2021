@@ -157,3 +157,48 @@ class UrgeNode {
 		throw new Error('To Be Implemented');
 	}
 }
+
+class UpdateNode extends UrgeNode {
+	#a;
+
+	constructor() {
+		super();
+	}
+
+	get active() {
+		return !!this.#a;
+	}
+
+	set active(a) {
+		this.#a = !!a;
+	}
+
+	update() {
+	}
+}
+
+class RenderNode extends UpdateNode {
+	#ctx;
+
+	constructor(tag, ctx) {
+		super(tag);
+		this.#ctx = Object.freeze(ctx);
+	}
+
+	get ctx() {
+		return this.#ctx;
+	}
+
+	get canvas() {
+		return this.#ctx.canvas;
+	}
+
+	render() {
+	}
+}
+
+class UrgeGame extends RenderNode {
+	constructor(ctx) {
+		super('Game', ctx);
+	}
+}
