@@ -174,28 +174,20 @@ class Pads {
 }
 
 class UrgeClient {
-	#server = null;
+	#server;
+	#title;
+	#components;
 
-	constructor(server = 'UrgeServer.js') {
+	constructor(config = {}) {
+		const { server = 'UrgeServer.js', title = 'Game', components } = config;
 		this.#server = new Worker(`${server}?r=${Math.random()}`);
 		this.#server.onmessage = this.#handleMessage;
-	}
-
-	get title() {
-		return 'Game';
-	}
-
-	get components() {
-		// Empty Implementation
-	}
-
-	async init() {
-		// initialize assets, etc.
-		console.warn('Override init(), if you require asynchronous asset initialization');
+		this.#title = title;
+		this.#components = components;
 	}
 
 	start() {
-		document.title = this.title;
+		document.title = this.#title;
 		document.body.innerText = '';
 		this.#setStyle();
 		this.#buildBody();
@@ -217,7 +209,7 @@ class UrgeClient {
 	}
 
 	#addComponents() {
-		const components = this.components;
+		const components = this.#components;
 		if (Array.isArray(components) && components.length) {
 			const [ path, ...componentClasses ] = components;
 			const classes = Array.isArray(componentClasses) && componentClasses.length
