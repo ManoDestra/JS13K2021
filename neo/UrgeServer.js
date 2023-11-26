@@ -65,7 +65,7 @@ class Handler {
 			case 'ADD':
 				const { path = '', classes } = request;
 				if (path && Array.isArray(classes) && classes.length) {
-					importScripts(path);
+					importScripts(`${path}?r=${Math.random()}`);
 					const components = classes.map(c => {
 						// TODO: validate class name, prevent injection
 						const componentClass = eval(c);

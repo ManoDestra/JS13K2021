@@ -1,7 +1,6 @@
 class Rogue19 extends UrgeGame {
 	render() {
-		this.ctx.fillStyle = '#111';
-		this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+		this.clearContext();
 
 		this.ctx.font = '50px Segoe UI';
 		this.ctx.fillStyle = 'white';
