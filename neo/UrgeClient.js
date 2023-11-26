@@ -279,7 +279,7 @@ class UrgeClient {
 		// This additional call is to get round an issue where Chrome does not fire the initial event.
 		r();
 		visualViewport.addEventListener('resize', r, false);
-		visualViewport.addEventListener('scroll', r, false);
+		//visualViewport.addEventListener('scroll', r, false);
 	}
 
 	#bindVisibility() {
