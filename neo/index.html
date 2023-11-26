@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<script src="UrgeGame.js"></script>
-	<script src="Rogue19.js"></script>
+	<script src="UrgeClient.js"></script>
+	<script src="Rogue19Client.js"></script>
 	<script defer>
 		addEventListener('load', async e => {
-			const game = new Rogue19();
-			await game.init();
-			game.start();
+			const client = new Rogue19Client();
+			await client.init();
+			client.start();
 		}, false);
 	</script>
 </head>

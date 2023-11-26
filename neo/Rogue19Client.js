@@ -1,4 +1,4 @@
-class Rogue19 extends UrgeGame {
+class Rogue19Client extends UrgeClient {
 	constructor(config) {
 		super(config);
 	}

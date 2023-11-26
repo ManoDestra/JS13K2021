@@ -173,7 +173,7 @@ class Pads {
 	}
 }
 
-class UrgeGame {
+class UrgeClient {
 	#server = null;
 
 	constructor(server = 'UrgeServer.js') {
@@ -195,10 +195,8 @@ class UrgeGame {
 		document.body.innerText = '';
 		this.#setStyle();
 		this.#buildBody();
-
 		this.#bindResize();
 		this.#bindVisibility();
-
 		KeyWriter.start(e => {
 			this.#server.postMessage({
 				type: 'KEYBOARD',
