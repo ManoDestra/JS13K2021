@@ -16,25 +16,32 @@ class UrgeServer {
 		this.#active = !!value;
 	}
 
+	#fire() {
+		requestAnimationFrame(t => this.#loop(t));
+	}
+
 	#loop(t) {
 		if (this.#active) {
-			GameTime.update(t);
-
-			this.#ctx.fillStyle = 'purple';
-			this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
-
-			this.#ctx.font = '50px Segoe UI';
-			this.#ctx.fillStyle = 'white';
-			const text = `FPS: ${GameTime.fpsAsInt()} - ${GameTime.currentSeconds()} Seconds`;
-			const size = this.#ctx.measureText(text);
-			this.#ctx.fillText(text, 20, 60);
+			this.#update(t);
+			this.#render(t);
 		}
 
 		this.#fire(t);
 	}
 
-	#fire() {
-		requestAnimationFrame(t => this.#loop(t));
+	#update(t) {
+		GameTime.update(t);
+	}
+
+	#render(t) {
+		this.#ctx.fillStyle = 'purple';
+		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
+
+		this.#ctx.font = '50px Segoe UI';
+		this.#ctx.fillStyle = 'white';
+		const text = `FPS: ${GameTime.fpsAsInt()} - ${GameTime.currentSeconds()} Seconds`;
+		const size = this.#ctx.measureText(text);
+		this.#ctx.fillText(text, 20, 60);
 	}
 
 	resize(bounds) {
