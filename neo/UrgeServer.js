@@ -40,7 +40,7 @@ class UrgeServer {
 	}
 
 	#render(t) {
-		this.#ctx.fillStyle = 'purple';
+		this.#ctx.fillStyle = '#111';
 		this.#ctx.fillRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
 
 		this.#ctx.font = '50px Segoe UI';
