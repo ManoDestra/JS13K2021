@@ -64,7 +64,6 @@ class Handler {
 
 		switch (type) {
 			case 'ADD':
-				console.log(type, request);
 				const { path = '', classes } = request;
 				if (path && Array.isArray(classes) && classes.length) {
 					importScripts(path);
