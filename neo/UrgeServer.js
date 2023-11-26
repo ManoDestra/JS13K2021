@@ -5,8 +5,8 @@ class UrgeServer {
 	#active = true;
 	#components = [];
 
-	constructor(osc) {
-		this.#ctx = osc.getContext('2d');
+	constructor(ctx) {
+		this.#ctx = Object.freeze(ctx);
 	}
 
 	get ctx() {
@@ -72,7 +72,12 @@ class Handler {
 				if (path && Array.isArray(classes) && classes.length) {
 					importScripts(path);
 					const components = classes.map(c => {
+						// TODO: validate class name, prevent injection
 						const componentClass = eval(c);
+						if (!componentClass) {
+							throw new Error('Class Not Found: ' + c);
+						}
+
 						return new componentClass(server.ctx);
 					});
 					server.add(...components);
@@ -80,7 +85,8 @@ class Handler {
 
 				break;
 			case 'START':
-				server = new UrgeServer(request);
+				const ctx = request.getContext('2d');
+				server = new UrgeServer(ctx);
 				server.start();
 				break;
 			case 'RESIZE':
@@ -110,20 +116,6 @@ class Handler {
 
 		/*
 		switch (type) {
-			case 'START':
-				postMessage({
-					type: 'START',
-					request,
-					response: {
-						message: 'The game has been started'
-					}
-				});
-				break;
-			case 'IMPORT':
-				const reqToUse = Array.isArray(request) ? request : [request];
-				importScripts(...request);
-				postMessage('IMPORTED');
-				break;
 			case 'INIT':
 				for (let c of request) {
 					if (['.', ';', ' '].includes(c)) {
