@@ -16,6 +16,10 @@ class UrgeServer {
 		this.#active = !!value;
 	}
 
+	resize(bounds) {
+		Object.assign(this.#ctx.canvas, bounds);
+	}
+
 	#fire() {
 		requestAnimationFrame(t => this.#loop(t));
 	}
@@ -42,10 +46,6 @@ class UrgeServer {
 		const text = `FPS: ${GameTime.fpsAsInt()} - ${GameTime.currentSeconds()} Seconds`;
 		const size = this.#ctx.measureText(text);
 		this.#ctx.fillText(text, 20, 60);
-	}
-
-	resize(bounds) {
-		Object.assign(this.#ctx.canvas, bounds);
 	}
 }
 
