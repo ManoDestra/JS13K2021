@@ -128,3 +128,32 @@ class Rect extends DOMRect {
 		this.height = height;
 	}
 }
+
+class UrgeNode {
+	#tag = '';
+	#nodes = [];
+
+	constructor(tag) {
+		this.#tag = tag;
+	}
+
+	get tag() {
+		return this.#tag;
+	}
+
+	get children() {
+		return [...this.#nodes];
+	}
+
+	clear() {
+		this.#nodes.length = 0;
+	}
+
+	add(...nodes) {
+		this.#nodes.push(...nodes);
+	}
+
+	remove(...nodes) {
+		throw new Error('To Be Implemented');
+	}
+}
