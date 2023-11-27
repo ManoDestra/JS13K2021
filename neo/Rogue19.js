@@ -1,4 +1,7 @@
 class Rogue19 extends UrgeGame {
+	async init() {
+	}
+
 	render() {
 		super.render();
 

@@ -58,7 +58,7 @@ class UrgeServer {
 }
 
 class Handler {
-	static onMessage(e) {
+	static async onMessage(e) {
 		const { type, request } = e.data;
 
 		switch (type) {
@@ -67,14 +67,20 @@ class Handler {
 				if (path && Array.isArray(classes) && classes.length) {
 					importScripts(`${path}?r=${Math.random()}`);
 					const components = classes.map(c => {
-						// TODO: validate class name, prevent injection
+						if (['.', ';', ' '].includes(c)) {
+							throw new Error('Invalid Character: ' + c);
+						}
+
 						const componentClass = eval(c);
 						if (!componentClass) {
 							throw new Error('Class Not Found: ' + c);
 						}
 
+						console.log('Component Class Name:', componentClass.name);
 						return new componentClass(server.ctx);
 					});
+					const results = await Promise.all(components.map(c => c.init()));
+					console.log('Results:', results);
 					server.add(...components);
 				}
 

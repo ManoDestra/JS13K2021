@@ -202,6 +202,13 @@ class UrgeGame extends RenderNode {
 		super('Game', ctx);
 	}
 
+	async init() {
+	}
+
+	update() {
+		super.update();
+	}
+
 	render() {
 		this.clearContext();
 	}
