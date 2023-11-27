@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<style>body {background-color:#111;}</style>
-	<script src="urge-core.js"></script>
-	<script src="rogue.js"></script>
-	<script id="urge"></script>
-	<script>document.querySelector('#urge').src=`urge-client.js?r=${Math.random()}`;</script>
+	<link rel="shortcut icon" href="favicon.bmp" />
+	<script src="UrgeCore.js"></script>
+	<script src="UrgeClient.js"></script>
+	<script defer>
+		addEventListener('load', e => {
+			UrgeClient.init({
+				title: 'Rogue-19',
+				components: ['Rogue19.js']
+			});
+		}, false);
+	</script>
 </head>
 </html>

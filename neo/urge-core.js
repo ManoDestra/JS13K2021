@@ -182,6 +182,10 @@ class UrgeNode {
 		return this.#tag;
 	}
 
+	getChildren() {
+		return [...this.#nodes];
+	}
+
 	clear() {
 		this.#nodes.length = 0;
 	}
@@ -192,10 +196,6 @@ class UrgeNode {
 
 	remove(...nodes) {
 		throw new Error('To Be Implemented');
-	}
-
-	getChildren() {
-		return [...this.#nodes];
 	}
 }
 
