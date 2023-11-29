@@ -40,6 +40,10 @@ class GameTime {
 		return GameTime.#s.previousValue;
 	}
 
+	static previousSeconds() {
+		return parseInt(GameTime.previous() / 1000);
+	}
+
 	static elapsed() {
 		return GameTime.current() - GameTime.previous();
 	}
