@@ -5,22 +5,30 @@ class Rogue19 extends UrgeGame {
 	render() {
 		super.render();
 
+		const opacity = 100;
 		Object.assign(this.ctx, {
 			font: 'bold 48px Segoe UI',
-			strokeStyle: 'silver',
+			strokeStyle: 'white',
 			lineWidth: 2,
+			//lineJoin: 'round',
+			shadowColor: 'silver',
+			shadowBlur: 5,
+			shadowOffsetX: 5,
+			shadowOffsetY: 5,
 			fillStyle: 'white',
 			textAlign: 'left',
-			textBaseline: 'top'
+			textBaseline: 'top',
+			filter: `opacity(${opacity}%)`
 		});
 
-		if (GameTime.currentSeconds() !== GameTime.previousSeconds()) {
-			console.log(GameTime.fps());
+		if (GameTime.secondsChanged()) {
+			console.log(GameTime.currentSeconds() + ' = ' + GameTime.fps());
 		}
 
 		const text = `FPS: ${GameTime.fpsAsInt()} - ${GameTime.currentSeconds()} Seconds`;
 		const size = this.ctx.measureText(text);
-		const border = 10;
+		const border = 16;
 		this.ctx.strokeText(text, border, border);
+		//this.ctx.fillText(text, border, border);
 	}
 }

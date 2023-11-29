@@ -44,6 +44,10 @@ class GameTime {
 		return parseInt(GameTime.previous() / 1000);
 	}
 
+	static secondsChanged() {
+		return GameTime.currentSeconds() !== GameTime.previousSeconds();
+	}
+
 	static elapsed() {
 		return GameTime.current() - GameTime.previous();
 	}
